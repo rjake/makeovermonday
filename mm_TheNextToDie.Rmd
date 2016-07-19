@@ -1,0 +1,108 @@
+---
+title: "mm_NextToDie"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+set-up workspace
+```{r}
+setwd("C:/Users/jriley215/Desktop")
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+#https://deltadna.com/blog/text-mining-in-r-for-term-frequency/
+data <- read.csv("mm_TheNextToDie.csv", stringsAsFactors = F) %>% 
+  mutate(Ord = row_number(),
+         Race = gsub("Native American", "Native.American", Race))
+
+colnames(data)[6] <- "VictimInfo"
+
+victims <- select(data, Ord, VictimInfo) %>%
+  mutate(VictimDelim = gsub(")", ") |", VictimInfo),
+         VictimDelim = gsub("Native American", "Native.American", VictimDelim))
+
+```
+
+breakout victims
+```{r}
+
+unlist(strsplit(victims$VictimDelim[1], "[|]"))
+
+Desc <- data.frame(Ord = victims$Ord[1],
+                   Info = unlist(strsplit(victims$VictimDelim[1], "[|]")), 
+                   stringsAsFactors = F)
+
+for(i in 2:nrow(victims)){
+  if(length(unlist(strsplit(victims$VictimDelim[i], "[|]"))) == 0) next
+
+    d <- data.frame(Ord = victims$Ord[i],
+                    Info = unlist(strsplit(victims$VictimDelim[i], "[|]")), 
+                    stringsAsFactors = F)
+    
+    Desc <<- rbind(d, Desc)
+}
+
+```
+
+describe victims
+```{r}
+victims2 <- Desc %>%
+  mutate(Number = 0,
+         Race = "",
+         Gender = "")
+  
+  for(i in 1:nrow(victims2)){
+    victims2$Number[i] = unlist(strsplit(victims2$Info[i], "[ ]"))[1]
+    victims2$Race[i]   = unlist(strsplit(victims2$Info[i], "[ ]"))[2]
+    victims2$Gender[i] = unlist(strsplit(victims2$Info[i], "[ ]"))[3]
+    victims2$Gender[i] = gsub("\\(s)", "", victims2$Gender[i])    
+  }
+
+table(victims2$Race)
+
+victims3 <- filter(victims2, Ord != 140) %>%
+  rbind(data.frame(Ord =140,
+                 Info = "",
+                 Number = c(129, 2, 5, 32),
+                 Race = c("White", "Native.American", "Latino", "Black"),
+                 Gender = "", 
+                 stringsAsFactors = F)) %>%
+  mutate(Number = as.integer(Number))
+
+
+```
+
+```{r}
+victims4 <- victims3 %>%
+  group_by(Ord) %>%
+  summarise(nVictims = sum(Number)) %>%
+  ungroup()
+
+executions <- data %>%
+  select(-VictimInfo) %>%
+  mutate(Gender = ifelse(Sex == "m", "Male", "Female"),
+         Year = as.integer(substr(Date, nchar(Date)-3, nchar(Date)))) %>%
+  left_join(select(victims4, Ord, nVictims))
+
+table(executions$Race)
+```
+Get state totals
+http://www.fonz.net/blog/archives2008/04/06/csv-of-states-and-state-abbreviations/
+```{r}
+states <- read.csv("states.csv", stringsAsFactors = F) %>% 
+          full_join(group_by(executions, State, Year) %>%
+                    summarise(nVictims = sum(nVictims),
+                              nExecutions = n()), by = c("Abbreviation" = "State"))
+      
+
+```
+
+```{r}
+write.csv(executions, "mm_TheNextToDie_executions.csv", row.names = F)
+write.csv(victims3, "mm_TheNextToDie_victims.csv", row.names = F)
+write.csv(states, "mm_TheNextToDie_states.csv", row.names = F)
+```
