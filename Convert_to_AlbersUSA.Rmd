@@ -1,0 +1,112 @@
+---
+title: "GIS - AlbersUSA"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T, message = F, warning = F, 
+                      comment = F, results = 'hide')
+```
+
+Code adapted from [rd3albers](https://github.com/hrbrmstr/rd3albers/blob/master/R/rd3albers.R) on github. Shapefiles can be downloaded from the Census Bureau ([state](https://www.census.gov/geo/maps-data/data/cbf/cbf_state.html), [county](https://www.census.gov/geo/maps-data/data/cbf/cbf_counties.html)).
+```{r}
+setwd("C:/Users/jriley215/Desktop/Projects/GIS/Josh - Alberusa")
+
+SHPs <- c("2015_US_States", "2015_US_Counties")
+
+library(maptools)
+library(mapproj)
+library(rgeos)
+library(rgdal)
+library(RColorBrewer)
+library(tidyverse)
+
+for(i in 1:length(SHPs)){
+  # https://www.census.gov/geo/maps-data/data/cbf/cbf_counties.html
+  # read U.S. counties moderately-simplified GeoJSON file
+   us <- readOGR(dsn="shp originals", layer= SHPs[i])
+  
+  # convert it to Albers equal area
+    us_aea <- 
+      spTransform(us, 
+                  CRS("+proj=laea +lat_0=45 +lon_0=-100 
+                      +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs"))
+
+    us_aea@data$id <- rownames(us_aea@data)
+  
+  # extract, then rotate, shrink & move alaska (and reset projection)
+  # need to use state IDs via # https://www.census.gov/geo/reference/ansi_statetables.html
+    alaska <- us_aea[us_aea$STATEFP=="02",]
+    alaska <- elide(alaska, rotate=-35)
+    alaska <- elide(alaska, scale=max(apply(bbox(alaska), 1, diff)) / 2.3)
+    alaska <- elide(alaska, shift=c(-2100000, -2500000))
+    proj4string(alaska) <- proj4string(us_aea)
+    plot(alaska)
+  
+  # extract, then rotate & shift hawaii
+    hawaii <- us_aea[us_aea$STATEFP=="15",]
+    hawaii <- elide(hawaii, rotate=-35)
+    hawaii <- elide(hawaii, shift=c(5400000, -1400000))
+    proj4string(hawaii) <- proj4string(us_aea)
+    plot(hawaii)
+    
+  # remove old states and put new ones back in; note the different order
+  # we're also removing puerto rico in this example but you can move it
+  # between texas and florida via similar methods to the ones we just used
+    us_aea <- us_aea[!us_aea$STATEFP %in% c("02", "15", "72"),]
+    us_aea <- rbind(us_aea, alaska, hawaii)
+
+  # get ready for ggplot
+  mapAttr <-
+    data.frame(id = as.character(us_aea$GEOID),
+               state = as.character(us_aea$STATEFP),
+               stringsAsFactors = F)
+  
+  mapPolygons <- 
+    fortify(us_aea, region="GEOID") %>% 
+    left_join(mapAttr, by = "id")
+  
+  mapPoints <- 
+    mapPolygons %>% 
+    group_by(id, state) %>% 
+    summarise(long = mean(long), 
+              lat = mean(lat)) %>% 
+    ungroup() %>% 
+    mutate(lat = ifelse(id != state, lat,
+                 ifelse(state == "02", lat + 250000, 
+                 ifelse(state == "12", lat + 150000,
+                 ifelse(state == "16", lat - 200000,
+                 ifelse(state == "24", lat + 50000,
+                 ifelse(state == "26", lat - 100000, lat)))))),
+           long = ifelse(state == "26", long + 100000, long))
+  
+  # plot it
+    print(
+      ggplot() + 
+      geom_map(data = mapPolygons, map = mapPolygons,
+               aes(x=long, y=lat, map_id=id, group=group, fill = as.integer(state)),
+               color = "white", size = .5) +
+      coord_equal() +
+      theme_void() +
+      ggtitle(paste0(SHPs[i], " - as polygons"))
+    )
+  
+    print(
+      ggplot() + 
+      geom_map(data = mapPolygons, map = mapPolygons,
+               aes(x=long, y=lat, map_id=id, group=group), 
+               fill = NA,
+               color = "grey75", size = .5) +
+      geom_point(data = mapPoints,
+               aes(x=long, y=lat, color = as.integer(state))) +
+      coord_equal() +
+      theme_void() +
+      ggtitle(paste0(SHPs[i], " - as points"))
+    )
+  
+  # write to .csv and .shp
+    write.csv(mapPolygons, paste0(SHPs[i], "_albers.csv"), row.names = F)
+    write.csv(mapPoints, paste0(SHPs[i], "_albers_points.csv"), row.names = F)  
+    writeOGR(obj = us_aea, dsn=".", layer=paste0("shp edited/",SHPs[i], "_albers"), driver="ESRI Shapefile")
+}
+```
