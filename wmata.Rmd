@@ -1,0 +1,141 @@
+---
+title: "wmata"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("C:/Users/jriley215/Desktop/makeovermonday")
+library(tidyverse)
+library(plotly)
+library(ggiraphExtra)
+library(corrplot)
+options(scipen = 999)
+
+data.raw <-
+  read.csv("wmata.csv", stringsAsFactors = F)
+  
+cleanNames <-
+  function(x){
+    x1 <- gsub("\\.", " ", x)
+    x2 <- gsub("(.*)(Injury Rate|Fleet Reliability|On Time Performance|Reliability)", 
+                       "\\2 - \\1", x1)
+    return(x2)
+  }
+
+dataValues <-
+  data.raw %>% 
+  select(-contains("Target")) %>% 
+  gather(key = Metric, value = Value, -c(Year:Month)) %>% 
+  mutate(Metric = 
+           ifelse(Metric == "Customer.Injury.Rate..per.1M.passengers.", 
+                            "Customer.Injury.Rate", 
+           ifelse(Metric == "Employee.Injury.Rate..per.200K.hours.", 
+                            "Employee.Injury.Rate",
+           ifelse(Metric == "Crimes..per.1M.passengers.", "Crimes", Metric))),
+         Metric = cleanNames(Metric))
+
+dataTargets <-
+  data.raw %>% 
+  select(contains("Target")) %>% 
+  gather(key = Metric, value = Target) %>% 
+  filter(!is.na(Target)) %>% 
+  distinct() %>% 
+  mutate(Metric = gsub(".Target", "", Metric),
+         Metric = cleanNames(Metric),
+         MetricType = gsub(" - .*", "", Metric),
+         Affecting = gsub(".* - | Fleet", "", Metric),
+         Ord = row_number())
+
+
+dataCombined <-
+  dataValues %>% 
+  left_join(select(dataTargets, Metric, Target)) %>% 
+  filter(Month != "YTD") %>% 
+  mutate(Year = as.integer(gsub("CY ", "", Year)),
+         Value = as.numeric(gsub("%|,", "", Value)),
+         Target = as.numeric(gsub("%|,", "", Target)),
+         PctTarget = Value/Target,
+         MonthN = match(Month, month.abb))
+
+dataCombined2 <-
+  dataCombined %>%
+  gather()
+  left_join(select(dataCombined, Year, Month, Metric, PctTarget),
+            by = c("Year", "Month", "Metric")) %>% 
+  gather()
+  mutate(PctTarget = ifelse(ValueType == "Target", 1, PctTarget)) %>% 
+  left_join(select(dataTargets, -Target))
+
+#write.csv(dataCombined2, "wmata_long.csv", row.names = F)
+
+#http://www.tableau.com/about/blog/2015/7/use-radar-charts-compare-dimensions-over-several-metrics-41592
+dataRadarPrep <-
+  dataCombined %>%
+  left_join(select(dataTargets, - Target))
+
+dataRadarPrep2 <-
+  dataRadarPrep %>%
+  rbind(dataRadarPrep %>% 
+          mutate(Affecting = "Target",
+                 PctTarget = 1)) 
+
+dataRadar <-
+  dataRadarPrep2 %>% 
+  rbind(filter(dataRadarPrep2, Year == 2016, MonthN == 9)  %>% 
+          mutate(MonthN = 10,
+                 Month = '',
+                 Value = 0,
+                 Target = 0,
+                 PctTarget = 0)) %>%
+  mutate(Value = round(Value, 1),
+         Target = round(Target, 1),
+         PctTarget = round(PctTarget, 1),
+         X = sin((MonthN-1)*2*pi/12),
+         Y = cos((MonthN-1)*2*pi/12), 
+         MeasureX = PctTarget*X,
+         MeasureY = PctTarget*Y) %>% 
+  arrange(MonthN) #%>%filter(!is.na(Value))
+
+write.csv(dataRadar, "wmata_radar.csv", row.names = F)
+
+ggplot(filter(dataRadar, Year == 2016, Metric == "Crimes")) +
+    geom_polygon(aes(x = MeasureX, y = MeasureY, fill = Affecting), alpha = .5)
+
+
+b <- filter(dataRadar, Year == 2016, 
+            Metric == "Crimes")
+with(b, plot(X, Y))
+with(b, text(X, Y), labels = b$MonthN)
+
+a <- c(1:12)
+sinA <- sin((a-1)*2*pi/12)
+cosA <- cos((a-1)*2*pi/12)
+plot(sinA, cosA)
+text(sinA, cosA)
+
+```
+
+```{r eval = F}
+#Not using
+
+dataCombinedNoTarget <-
+  filter(dataCombined2, ValueType != "Target")
+  
+ggplot(filter(dataCombined2, Year == 2016)) +
+  geom_point(aes(x = Month, y = PctTarget, color = Metric, group = Metric)) +
+  geom_line(aes(x = Month, y = PctTarget, color = Metric), alpha = .9) +
+  coord_polar()
+
+dataCorPlot <-
+  dataCombined %>% 
+  select(Year:Value) %>% 
+  filter(Year > 2014) %>% 
+  spread(key = Metric, value = Value) %>% 
+  cor
+
+corrplot(dataCorPlot, type = "upper")
+```
