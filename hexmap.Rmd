@@ -1,0 +1,198 @@
+---
+title: "United Hexagons of Waffles"
+author: "Jake Riley" 
+date: "February 11, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T, message = F, warning = F,
+                      fig.height = 12, fig.width = 12)
+```
+
+This project combines the hexmap and waffle grid data visualization techniques to create a waffle grid that sits witin each hexagon. I will not plot the hexagon in this example but I will show you how to set up the waffle grid for each state.
+
+###Setup workspace
+```{r}
+setwd("C:\\Users\\HP\\Desktop")
+library(plotly)
+library(tidyverse)
+```
+
+###The original data
+I used ```dput()``` to get the structure of my original data. The ```Type``` and ```Tile``` columns are so that I can union this data (hex_map) with the dataset in the next step (hex_grid)
+```{r}
+#I used the dput formula to give you a reproducible example
+hex_map <-
+  structure(
+    list(
+        Row = 
+          c(8, 2, 3, 3, 3, 4, 5, 3, 4, 0, 1, 0, 5, 5, 5, 5, 3, 4, 2, 6, 4, 8, 6, 6, 4, 
+            2, 6, 3, 6, 4, 7, 5, 2, 4, 6, 5, 2, 4, 5, 6, 2, 5, 3, 1, 3, 3, 7, 6, 6, 4, 5), 
+        Column = 
+          c(0.5, 7.5, 6, 3, 2, 3.5, 11, 12, 9.5, 8.5, 8, 0.5, 5, 2, 6, 7, 5, 6.5, 5.5, 
+            10.5, 8.5, 11.5, 7.5, 4.5, 5.5, 6.5, 2.5, 9, 3.5, 4.5, 11, 10, 3.5, 2.5, 
+            9.5, 8, 4.5, 1.5, 9, 11.5, 8.5, 4, 7, 4, 4, 8, 10, 1.5, 5.5, 7.5, 3), 
+        State = 
+          c("Alaska", "Alabama", "Arkansas", "Arizona", "California", "Colorado", 
+            "Connecticut", "District of Columbia", "Delaware", "Florida", "Georgia", 
+            "Hawaii", "Iowa", "Idaho", "Illinois", "Indiana", "Kansas", "Kentucky", 
+            "Louisiana", "Massachusetts", "Maryland", "Maine", "Michigan", "Minnesota", 
+            "Missouri", "Mississippi", "Montana", "North Carolina", "North Dakota", 
+            "Nebraska", "New Hampshire", "New Jersey", "New Mexico", "Nevada", 
+            "New York", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", 
+            "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Virginia",
+            "Vermont", "Washington", "Wisconsin", "West Virginia",
+            "Wyoming"), 
+        Abbreviation = 
+          c("AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI", 
+            "IA","ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", 
+            "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", 
+            "OK", "OR", "PA","RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", 
+            "WI", "WV", "WY"),
+        Type = rep("Hex", 51), 
+        Tile = rep(0, 51)
+    ), 
+    class = "data.frame", 
+    .Names = c("Row", "Column", "State", "Abbreviation", "Type", "Tile"), 
+    row.names = c(NA, -51L))
+```
+
+###Here's what it looks like:
+I created this canvas of overlapping circles to simulate a hex grid
+```{r echo = F}
+test_canvas <-
+  #create a XY matrix
+    expand.grid(X = c(-0:13),
+                Y = c(-1:9),
+                KEEP.OUT.ATTRS = F) %>% 
+  #offset the circles of the even rows
+    mutate(X = ifelse(Y %% 2 == 0, X - 0.5, X)) 
+
+```
+
+And then lay my states on top of it
+```{r}
+gg_canvas <-
+  ggplot() +
+  geom_point(data = test_canvas, aes(X, Y), size = 28, alpha = .03)+
+  geom_point(data = hex_map, aes(Column, Row), size = 28, alpha = .2)+
+  geom_text(data = hex_map, aes(Column, Row + 0.5, label = Abbreviation), 
+             size = 4, fontface = "bold")+
+  coord_fixed(ratio = 1) +
+  xlim(-2, 14) +  ylim(-2, 14) +
+  theme_void()
+
+gg_canvas
+```
+
+###Parameters
+Before I create the waffle grid data frame. I need to set up some parameters:
+*```grid_modulo``` controls when to switch to a new row
+*```grid_width```  controls the distance of the waffle chart
+*```grid_offset``` repositions the bottom left corner of the grid based on the centroid of the hexagon
+*```grid_spacing``` use the 
+
+```{r}
+#number of columns for grid. 1, 11, 21 in the first column
+  grid_modulo <- 10
+
+#the distance between centroids of the hexagons is 1 so I want to create a distance .7 wide. To do this, I divide 'grid_width' by 2 and move the starting point 0.35 down and 0.35 over with 'grid_offset'
+  grid_width <- .7
+  grid_offset <- grid_width/2   
+  
+#once the columns are established the column number can be multiplied by the 1 tenth of the total width. Column 1 will start on 1*.07, Column 2 will start on 2*.07, etc
+  grid_spacing <- grid_width/grid_modulo
+
+#create a matrix to get the X & Y coordinates of the tiles
+  waffle_matrix <-
+    matrix(data = c(1:100), nrow = 10) %>% 
+    t()
+  
+  waffle_matrix  
+
+#this formula finds the position of '2' in the matrix
+  which(waffle_matrix == 2, arr.ind = T)
+
+#We can use this to create functions
+  return_row <-
+    function(x){
+      which(waffle_matrix == x, arr.ind = T)[1] #row = 1st value
+      #((x - 1) %/% grid_modulo) #using modular arithmetic
+    }
+
+  return_col <- 
+    function(x){
+      which(waffle_matrix == x, arr.ind = T)[2] #column = 2nd value
+      #(x-((x-1) %/% grid_modulo)*grid_modulo) #using modular arithmetic
+    }
+
+#make sure they work. Expand the console to fit the 10 values per row
+  data.frame(Tile = c(1:20)) %>% 
+  rowwise() %>% 
+  mutate(row = return_row(Tile),
+         col = return_col(Tile))  %>% 
+  as.data.frame()
+
+```
+
+```{r fig.height = 4, fig.width = 4}
+#build the table. First, 
+hex_grid <-
+  #fist create tiles 1:100 for each state (hex_map$Abbreviation)
+    expand.grid(Abbreviation = hex_map$Abbreviation,
+              Tile = as.numeric(c(1:100)),
+              KEEP.OUT.ATTRS = F,
+              stringsAsFactors = F) %>% 
+    arrange(Abbreviation) %>% 
+  #join in the original Row & Column coordinates
+    left_join(select(hex_map, Row:Abbreviation)) %>%
+    rowwise() %>% 
+    mutate(
+       Type = "Waffle",
+     #first move the starting point of the Row & Columns
+       AdjustCol = Column - grid_offset,
+       AdjustRow = Row - grid_offset,
+     #use the functions above on the value of [Tile] to set new coordinates
+       WaffleCol = return_col(Tile) - .5,
+       WaffleRow = return_row(Tile) - .5,
+     #use the original column + (the waffle column * grid spacing)
+       FinalCol = AdjustCol + (WaffleCol * grid_spacing),
+       FinalRow = AdjustRow + (WaffleRow * grid_spacing)
+     )
+
+#confirm that grid is iin the correct order & aligned with the centroid
+ggplot(filter(hex_grid, Abbreviation == "PA"), aes(x = Column, y = Row)) +
+  geom_point(size = 115, shape = 4, stroke = 3, color = "grey60") +
+  geom_point(size = 115, shape = 0, stroke = 3, color = "grey60") +
+  geom_point(size = 5) +
+  geom_label(aes(x = FinalCol, y = FinalRow, label = Tile, fill = Tile), 
+             alpha = .8, show.legend = F) +
+  scale_fill_continuous(low = "yellow", high = "orange") +
+  coord_equal() +
+  theme_void()
+```
+
+A sample of the map
+```{r}
+gg_canvas +
+  geom_point(data = hex_grid,
+             aes(x = FinalCol, y = FinalRow, color = Tile < 37), 
+             show.legend = F, size = .9) + #theme_void() +
+  scale_color_manual(values = c("white", "#00C0AF"))
+```
+
+###The final data frame
+```{r}
+final_hex <-
+  #take some columns from the new data frame and then rename them
+    hex_grid %>% 
+    select(State, Abbreviation, Tile, Type, FinalCol, FinalRow) %>% 
+    rename(Column = FinalCol,
+           Row = FinalRow) %>% 
+  #union the original dataframe to the new one
+    rbind(hex_map)
+
+#write dataframe
+  write.csv(final_hex, "final_hex.csv", row.names = F)
+```
