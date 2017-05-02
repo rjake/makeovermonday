@@ -1,0 +1,146 @@
+---
+title: "#MakeoverMonday"
+author: "Jake"
+date: "May 1, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r workspace}
+setwd("C:/Users/foxtr/Desktop/makeoverMonday/weekly scripts")
+library(tidyverse)
+library(httr)
+library(googlesheets)
+library(forcats)
+options(scipen = 999)
+#library(lubridate)
+#library(stringr)
+
+challenge_week <- 17
+```
+
+```{r scrape table}
+#google sheet to read in
+  google_key <- 
+    gs_key("1XpDdIfrHLaL5Iiu7x8eVAIlDuq83zwUNqJSUsYSAh18")
+
+#get names of worksheets
+  gs_ws_ls(google_key)
+
+#get twitter links to scrape
+  data_raw <- 
+    gs_read(google_key, 
+            ws = as.character(challenge_week), 
+            lookup = T) %>% 
+    mutate(Skill = gsub(" and ", " and\n", Skill))
+```
+
+Challenge: 70 skills, 15 countries. Not all skills rated for each country. Top 25 for 2014 & 2015, Top 10 for 2016
+```{r}
+data_raw %>% 
+  group_by(Country, Year) %>% 
+  summarise(nSkills = n_distinct(Skill)) %>% 
+  spread(key = Year, value = nSkills)
+
+table(data_raw$Country)
+
+cutoff <- 5
+
+data_final <-
+  data_raw %>% 
+  group_by(Skill, Year) %>% 
+  filter(n_distinct(Country) >= cutoff) %>%
+  group_by(Skill) %>% 
+  filter(n_distinct(Year) == 3) %>% 
+  group_by(Skill, Year) %>% 
+  do(mutate(., year_median = median(Rank))) %>% 
+  group_by(Skill) %>% 
+  arrange(Year) %>% 
+  mutate(growth = first(year_median) - last(year_median),
+         growth = paste0("Growth: ", 
+                         ifelse(growth > 0, "+", growth))) %>% 
+  ungroup()
+  
+
+
+
+factor_skill <-
+  data_rank %>% 
+  filter(Year == 2016) %>% 
+  mutate(rank_2016 = year_rank) %>% 
+  select(-year_rank) %>% 
+  arrange(rank_2016, Skill)
+
+data_plot <-
+  data_raw %>%
+  filter(Skill %in% data_rank$Skill) %>% 
+  left_join(data_rank) %>% 
+  left_join(factor_skill) %>%
+  left_join(data_range %>% 
+              select(Skill, Growth) %>% 
+              mutate(Year = 2016)
+            ) %>% 
+  mutate(Skill = factor(Skill, 
+                        levels = factor_skill$Skill,
+                        ordered = T)) %>%
+  #fct_reorder(Skill, rank_2016)
+  group_by(Skill, Year, Rank) %>% 
+  mutate(n_country = n_distinct(Country)) %>% 
+  ungroup()
+
+levels(data_plot$Skill) %>% head()
+
+data_n_countries$Skill <-
+    factor(data_n_countries$Skill, 
+           levels = factor_skill$Skill,
+           ordered = T)
+
+ggplot(data_plot) +
+  ggtitle(label = 
+          "Statistical Analysis & Data Mining are ranked highest
+on average while User Interface Design has seen the
+most growth between 2014 - 2016",
+          subtitle = 
+          "From LinkedIn's annual Top Skills Reports: 2014, 2015, and 2016. Skills are ranked by average
+ranking in 2016. Only skills that were ranked each year by 5 or more countries are included. 
+
+Author: Jake Riley     @yake_84") +
+  facet_grid(Skill~., switch = 'y') +
+  geom_point(aes(x = Rank, y = factor(Year),
+                 color = factor(Year),
+                 size = n_country),
+             alpha = .5) +
+  scale_color_manual(values = c("grey65", "grey45", "blue"),
+                     name = "Year") +
+  scale_size(range = c(2, 4), name = "# of Countries") +
+  geom_point(aes(x = year_rank, y = factor(Year), color = factor(Year)),
+             shape = "I", size = 6) +
+  geom_text(data = data_n_countries,
+            aes(x = -2, y = factor(Year), label = n_countries),
+             size = 4) +  
+  geom_text(data = data_plot,
+            aes(x = 25, y = factor(Year), 
+                label = Growth),
+             size = 4, color = "grey60", hjust = 1) +  
+    # theme_minimal() +
+  theme(strip.text.y = element_text(angle = 180),
+        strip.background = element_rect(color = "grey40"),
+        plot.title = element_text(vjust = 2, size = 18, color = "grey30"),
+        plot.subtitle = element_text(vjust = 2, color = "grey30"),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        panel.background = element_rect(fill = "white",color = "grey50"))
+  
+  
+  ggplot(data_plot) +
+    facet_grid(.~Country) +
+    geom_line(aes(x = Year, y = Skill,
+                  size = 25-Rank,
+                  color = Rank))
+    
+
+```
