@@ -15,6 +15,8 @@ library(tidyverse)
 library(httr)
 library(googlesheets)
 library(forcats)
+library(extrafont)
+library(xkcd)
 options(scipen = 999)
 #library(lubridate)
 #library(stringr)
@@ -49,98 +51,91 @@ table(data_raw$Country)
 
 cutoff <- 5
 
-data_final <-
+data_plot_all <-
   data_raw %>% 
   group_by(Skill, Year) %>% 
   filter(n_distinct(Country) >= cutoff) %>%
   group_by(Skill) %>% 
   filter(n_distinct(Year) == 3) %>% 
+  ungroup() %>% 
+  mutate(Skill = factor(Skill))
+
+data_plot_single <-
+  data_plot_all %>% 
   group_by(Skill, Year) %>% 
-  do(mutate(., year_median = median(Rank))) %>% 
+  summarise(year_median = median(Rank) %>% round(., 2),
+            n_countries = n_distinct(Country)) %>% 
   group_by(Skill) %>% 
   arrange(Year) %>% 
   mutate(growth = first(year_median) - last(year_median),
-         growth = paste0("Growth: ", 
-                         ifelse(growth > 0, "+", growth))) %>% 
+         growth = ifelse(Year !=2016, NA,
+                         paste0("Growth: ", 
+                         ifelse(growth > 0, "+", ""), growth))) %>% 
   ungroup()
-  
 
-
+#  do(mutate(., year_median = median(Rank))) %>% 
 
 factor_skill <-
-  data_rank %>% 
+  data_plot_single %>% 
+  select(Skill:year_median) %>% 
   filter(Year == 2016) %>% 
-  mutate(rank_2016 = year_rank) %>% 
-  select(-year_rank) %>% 
-  arrange(rank_2016, Skill)
+  arrange(year_median, Skill)
 
-data_plot <-
-  data_raw %>%
-  filter(Skill %in% data_rank$Skill) %>% 
-  left_join(data_rank) %>% 
-  left_join(factor_skill) %>%
-  left_join(data_range %>% 
-              select(Skill, Growth) %>% 
-              mutate(Year = 2016)
-            ) %>% 
-  mutate(Skill = factor(Skill, 
-                        levels = factor_skill$Skill,
-                        ordered = T)) %>%
-  #fct_reorder(Skill, rank_2016)
-  group_by(Skill, Year, Rank) %>% 
-  mutate(n_country = n_distinct(Country)) %>% 
-  ungroup()
+factor_levels <- fct_inorder(factor_skill$Skill)
 
-levels(data_plot$Skill) %>% head()
+data_plot_all$Skill <-
+  factor(data_plot_all$Skill, levels = factor_levels, ordered = T)
 
-data_n_countries$Skill <-
-    factor(data_n_countries$Skill, 
-           levels = factor_skill$Skill,
-           ordered = T)
+data_plot_single$Skill <-
+  factor(data_plot_single$Skill, levels = factor_levels, ordered = T)
 
-ggplot(data_plot) +
-  ggtitle(label = 
-          "Statistical Analysis & Data Mining are ranked highest
-on average while User Interface Design has seen the
-most growth between 2014 - 2016",
-          subtitle = 
-          "From LinkedIn's annual Top Skills Reports: 2014, 2015, and 2016. Skills are ranked by average
-ranking in 2016. Only skills that were ranked each year by 5 or more countries are included. 
 
-Author: Jake Riley     @yake_84") +
+levels(data_plot_single$Skill) %>% head()
+```
+
+##Plots
+```{r}
+#bring in fonts
+  font_import(pattern="xkcd", prompt = F)
+
+#function for wrapping text
+  wrapper <- 
+    function(x, ...) {
+      paste(strwrap(x, ...), collapse = "\n")
+    }
+
+plot_title <- "Statistical Analysis and Data Mining was ranked highest on average in 2016 while User Interface Design has seen the most growth 2014 - 2016"  %>% wrapper(., width = 70)
+
+  
+plot_subtitle <- "\nFrom LinkedIn's annual Top Skills Reports - 2014, 2015, and 2016. Skills are ranked by average ranking in 2016. Only skills that were ranked each year by 5 or more countries are included.\nMarker indicates median values.\n\nAuthor: Jake Riley\n" %>% wrapper(., width = 90)
+  
+  
+ggplot(data_plot_all) +
   facet_grid(Skill~., switch = 'y') +
-  geom_point(aes(x = Rank, y = factor(Year),
-                 color = factor(Year),
-                 size = n_country),
+  geom_count(aes(x = Rank, y = factor(Year), color = factor(Year)),
              alpha = .5) +
-  scale_color_manual(values = c("grey65", "grey45", "blue"),
+  scale_color_manual(values = c("grey65", "grey45", "darkblue"),
                      name = "Year") +
-  scale_size(range = c(2, 4), name = "# of Countries") +
-  geom_point(aes(x = year_rank, y = factor(Year), color = factor(Year)),
+  scale_size_continuous(range = c(2, 4), breaks= c(1,5,10), name="Countries") +
+  geom_point(data = data_plot_single,
+             aes(x = year_median, y = factor(Year), color = factor(Year)),
              shape = "I", size = 6) +
-  geom_text(data = data_n_countries,
+  geom_text(data = data_plot_single,
             aes(x = -2, y = factor(Year), label = n_countries),
-             size = 4) +  
-  geom_text(data = data_plot,
+             size = 4, family="xkcd") +  
+  geom_text(data = data_plot_single,
             aes(x = 25, y = factor(Year), 
-                label = Growth),
-             size = 4, color = "grey60", hjust = 1) +  
-    # theme_minimal() +
-  theme(strip.text.y = element_text(angle = 180),
+                label = growth),
+             size = 4, color = "grey50", hjust = 1) +  
+  theme(text = element_text(family="xkcd", size = 14),
+        strip.text.y = element_text(angle = 180, size = 14),
         strip.background = element_rect(color = "grey40"),
-        plot.title = element_text(vjust = 2, size = 18, color = "grey30"),
-        plot.subtitle = element_text(vjust = 2, color = "grey30"),
+        plot.title = element_text(hjust = 1,size = 16, color = "grey30", face = "bold"),
+        plot.subtitle = element_text(hjust = 1, size = 14, color = "grey50"),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
         axis.title.y = element_blank(),
-        panel.background = element_rect(fill = "white",color = "grey50"))
-  
-  
-  ggplot(data_plot) +
-    facet_grid(.~Country) +
-    geom_line(aes(x = Year, y = Skill,
-                  size = 25-Rank,
-                  color = Rank))
-    
+        panel.background = element_rect(fill = "white",color = "grey50"))+
+  ggtitle(label = plot_title, subtitle = plot_subtitle)
 
 ```
