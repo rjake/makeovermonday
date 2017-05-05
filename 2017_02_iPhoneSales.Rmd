@@ -117,6 +117,24 @@ ggplot(mtcars, aes(x=wt, y=mpg)) + geom_point() +
 ```
 *The observations in the remainder section with grey dots behind the line plot indicate outliers (> 1 SD)*
 
+##arrange
+```{r}
+    savePic <-  
+      grid.arrange(baseplot, plot1, plot2, dist_hist, 
+                   layout_matrix = rbind(c(1,2,3),
+                                         c(1,2,3),
+                                         c(1,2,3),
+                                         c(1,2,3),
+                                         c(4,2,3)))
+    
+    ggsave(filename = paste0("region pdfs/", RegionLoop$group[1], ".png"), 
+           plot = savePic, 
+           width = 11, 
+           height = 6,
+           dpi = 200
+           )
+```
+
 
 
 ##Plots
