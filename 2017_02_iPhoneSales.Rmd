@@ -1,21 +1,165 @@
----title: "#MakeoverMonday"author: "Jake"date: "May 1, 2017"output: html_document---
-```{r setup, include=FALSE}knitr::opts_chunk$set(echo = TRUE)```
-```{r workspace}library(tidyverse)library(googlesheets)library(forcats)library(extrafont)library(gridExtra)  #combines ggplot charts#library(extrafontdb)#library(Rttf2pt1)library(xkcd)#time serieslibrary(TTR)library(lubridate)library(plotly)options(scipen = 999)
-challenge_week <- 2```
-```{r scrape table}#google sheet to read in  google_key <-     gs_key("1XpDdIfrHLaL5Iiu7x8eVAIlDuq83zwUNqJSUsYSAh18")
-#get names of worksheets  gs_ws_ls(google_key)
-#get twitter links to scrape  data_raw <-     gs_read(google_key,             ws = as.character(challenge_week),             lookup = T) %>%     rename(Value = units_sold_millions) %>%     mutate(reporting_date = paste0(substr(year, 3,4), "-", quarter),           running_total = cumsum(Value))  data_raw$running_total = cumsum(data_raw$Value)```
-Challenge: iPhone Sales over time, units sold in millions```{r}cut_by <- length(data_raw)```
-###Time series decompositionThis report covers the time between ```r min(Data$Date)``` and ```r max(Data$Date)```.```{r}#Manipulate initial data. Create a variable that aggregates the weeks (HxWeek)data_ts <-   data_raw$Value %>%  ts(frequency = cut_by)   data_ts_decomp <-   as.data.frame(stl(data_ts, s.window = 'periodic')$time.series) %>%  cbind(select(data_raw, -Value)) %>%#  mutate_each(funs(as.integer), trend:remainder) %>%  mutate(original = as.numeric(trend+seasonal+remainder)) %>%  gather(key = Measure, value = Value, -c(quarter:reporting_date)) %>%  mutate(Measure = factor(Measure,                 levels = c("original", "trend", "seasonal", "remainder", "running_total")))
-Outliers <-   data_ts_decomp %>%  filter(Measure == "remainder") %>%  mutate(SD = sd(Value),         Outlier = abs(Value) > SD)
-#write.csv(ts3, "Sales.csv", row.names = F)```
-###Create plot```{r}#bring in fonts  font_import(pattern="xkcd", prompt = F)  fonttable()
-ggplot(mtcars, aes(x=wt, y=mpg)) + geom_point() +  ggtitle("Fuel Efficiency of 32 Cars") +  xlab("Weight (x1000 lb)") + ylab("Miles per Gallon") +  theme(text=element_text(size=16, family="xkcd"))
-#p <-   ggplot() +  geom_line(data = Outliers, aes(x = reporting_date, y = SD), group = 1) +  geom_line(data = Outliers, aes(x = reporting_date, y = -SD), group = 1) +  #geom_point(data = filter(Outliers, Outlier == T),   #           aes(x = reporting_date, y = Value), size = 4) +  geom_col(data = data_ts_decomp,             aes(x = reporting_date, y = Value, color = Measure, fill = quarter, group = 1)) +  #geom_point(data = data_ts_decomp,   #          aes(x = reporting_date, y = Value, color = Measure), size = 2) +  facet_grid(Measure~., scales = "free_y") +  geom_hline(yintercept = 0) +  theme(#text = element_text(family="xkcd", size = 14),        #strip.text.y = element_text(angle = 180, size = 14),        strip.background = element_rect(color = "grey40"),        plot.title = element_text(hjust = 1,size = 16, color = "grey30", face = "bold"),        plot.subtitle = element_text(hjust = 1, size = 14, color = "grey50"),#        axis.text.y = element_blank(),        axis.ticks.y = element_blank(),        axis.title.y = element_blank(),        #axis.text.x = element_text(family="xkcd", angle = 90, hjust = 1, size = 8),        panel.background = element_rect(fill = "white",color = "grey50")) +  ggtitle("Number of iPhones Sold (in millions) Q1 2009 - Q4 2016")
-#ggplotly(p)```*The observations in the remainder section with grey dots behind the line plot indicate outliers (> 1 SD)*
+---
+title: "#MakeoverMonday"
+author: "Jake"
+date: "May 1, 2017"
+output: html_document
+---
 
-##Plots```{r}
-#function for wrapping text  wrapper <-     function(x, ...) {      paste(strwrap(x, ...), collapse = "\n")    }
-plot_title <- "Statistical Analysis and Data Mining was ranked highest on average in 2016 while User Interface Design has seen the most growth 2014 - 2016"  %>% wrapper(., width = 70)
-  plot_subtitle <- "\nFrom LinkedIn's annual Top Skills Reports - 2014, 2015, and 2016. Skills are ranked by average ranking in 2016. Only skills that were ranked each year by 5 or more countries are included.\nMarker indicates median values.\n\nAuthor: Jake Riley\n" %>% wrapper(., width = 90)    ggplot(data_plot_all) +  facet_grid(Skill~., switch = 'y') +  geom_count(aes(x = Rank, y = factor(Year), color = factor(Year)),             alpha = .5) +  scale_color_manual(values = c("grey65", "grey45", "darkblue"),                     name = "Year") +  scale_size_continuous(range = c(2, 4), breaks= c(1,5,10), name="Countries") +  geom_point(data = data_plot_single,             aes(x = year_median, y = factor(Year), color = factor(Year)),             shape = "I", size = 6) +  geom_text(data = data_plot_single,            aes(x = -2, y = factor(Year), label = n_countries),             size = 4, family="xkcd") +    geom_text(data = data_plot_single,            aes(x = 25, y = factor(Year),                 label = growth),             size = 4, color = "grey50", hjust = 1) +    theme(text = element_text(family="xkcd", size = 14),        strip.text.y = element_text(angle = 180, size = 14),        strip.background = element_rect(color = "grey40"),        plot.title = element_text(hjust = 1,size = 16, color = "grey30", face = "bold"),        plot.subtitle = element_text(hjust = 1, size = 14, color = "grey50"),        axis.text.y = element_blank(),        axis.ticks.y = element_blank(),        axis.title.y = element_blank(),        panel.background = element_rect(fill = "white",color = "grey50"))+  ggtitle(label = plot_title, subtitle = plot_subtitle)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r workspace}
+library(tidyverse)
+library(googlesheets)
+library(forcats)
+library(extrafont)
+library(gridExtra)  #combines ggplot charts
+#library(extrafontdb)
+#library(Rttf2pt1)
+library(xkcd)
+#time series
+library(TTR)
+library(lubridate)
+library(plotly)
+options(scipen = 999)
+
+challenge_week <- 2
+```
+
+```{r scrape table}
+#google sheet to read in
+  google_key <- 
+    gs_key("1XpDdIfrHLaL5Iiu7x8eVAIlDuq83zwUNqJSUsYSAh18")
+
+#get names of worksheets
+  gs_ws_ls(google_key)
+
+#get twitter links to scrape
+  data_raw <- 
+    gs_read(google_key, 
+            ws = as.character(challenge_week), 
+            lookup = T) %>% 
+    rename(Value = units_sold_millions) %>% 
+    mutate(reporting_date = paste0(substr(year, 3,4), "-", quarter),
+           running_total = cumsum(Value))
+  
+data_raw$running_total = cumsum(data_raw$Value)
+```
+
+Challenge: iPhone Sales over time, units sold in millions
+```{r}
+cut_by <- length(data_raw)
+```
+
+###Time series decomposition
+This report covers the time between ```r min(Data$Date)``` and ```r max(Data$Date)```.
+```{r}
+#Manipulate initial data. Create a variable that aggregates the weeks (HxWeek)
+data_ts <- 
+  data_raw$Value %>%
+  ts(frequency = cut_by) 
+  
+data_ts_decomp <- 
+  as.data.frame(stl(data_ts, s.window = 'periodic')$time.series) %>%
+  cbind(select(data_raw, -Value)) %>%
+#  mutate_each(funs(as.integer), trend:remainder) %>%
+  mutate(original = as.numeric(trend+seasonal+remainder)) %>%
+  gather(key = Measure, value = Value, -c(quarter:reporting_date)) %>%
+  mutate(Measure = factor(Measure, 
+                levels = c("original", "trend", "seasonal", "remainder", "running_total")))
+
+Outliers <- 
+  data_ts_decomp %>%
+  filter(Measure == "remainder") %>%
+  mutate(SD = sd(Value),
+         Outlier = abs(Value) > SD)
+
+#write.csv(ts3, "Sales.csv", row.names = F)
+```
+
+###Create plot
+```{r}
+#bring in fonts
+  font_import(pattern="xkcd", prompt = F)
+  fonttable()
+
+ggplot(mtcars, aes(x=wt, y=mpg)) + geom_point() +
+  ggtitle("Fuel Efficiency of 32 Cars") +
+  xlab("Weight (x1000 lb)") + ylab("Miles per Gallon") +
+  theme(text=element_text(size=16, family="xkcd"))
+
+#p <- 
+  ggplot() +
+  geom_line(data = Outliers, aes(x = reporting_date, y = SD), group = 1) +
+  geom_line(data = Outliers, aes(x = reporting_date, y = -SD), group = 1) +
+  #geom_point(data = filter(Outliers, Outlier == T), 
+  #           aes(x = reporting_date, y = Value), size = 4) +
+  geom_col(data = data_ts_decomp, 
+            aes(x = reporting_date, y = Value, color = Measure, fill = quarter, group = 1)) +
+  #geom_point(data = data_ts_decomp, 
+  #          aes(x = reporting_date, y = Value, color = Measure), size = 2) +
+  facet_grid(Measure~., scales = "free_y") +
+  geom_hline(yintercept = 0) +
+  theme(#text = element_text(family="xkcd", size = 14),
+        #strip.text.y = element_text(angle = 180, size = 14),
+        strip.background = element_rect(color = "grey40"),
+        plot.title = element_text(hjust = 1,size = 16, color = "grey30", face = "bold"),
+        plot.subtitle = element_text(hjust = 1, size = 14, color = "grey50"),
+#        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        #axis.text.x = element_text(family="xkcd", angle = 90, hjust = 1, size = 8),
+        panel.background = element_rect(fill = "white",color = "grey50")) +
+  ggtitle("Number of iPhones Sold (in millions) Q1 2009 - Q4 2016")
+
+#ggplotly(p)
+```
+*The observations in the remainder section with grey dots behind the line plot indicate outliers (> 1 SD)*
+
+
+
+##Plots
+```{r}
+
+#function for wrapping text
+  wrapper <- 
+    function(x, ...) {
+      paste(strwrap(x, ...), collapse = "\n")
+    }
+
+plot_title <- "Statistical Analysis and Data Mining was ranked highest on average in 2016 while User Interface Design has seen the most growth 2014 - 2016"  %>% wrapper(., width = 70)
+
+  
+plot_subtitle <- "\nFrom LinkedIn's annual Top Skills Reports - 2014, 2015, and 2016. Skills are ranked by average ranking in 2016. Only skills that were ranked each year by 5 or more countries are included.\nMarker indicates median values.\n\nAuthor: Jake Riley\n" %>% wrapper(., width = 90)
+  
+  
+ggplot(data_plot_all) +
+  facet_grid(Skill~., switch = 'y') +
+  geom_count(aes(x = Rank, y = factor(Year), color = factor(Year)),
+             alpha = .5) +
+  scale_color_manual(values = c("grey65", "grey45", "darkblue"),
+                     name = "Year") +
+  scale_size_continuous(range = c(2, 4), breaks= c(1,5,10), name="Countries") +
+  geom_point(data = data_plot_single,
+             aes(x = year_median, y = factor(Year), color = factor(Year)),
+             shape = "I", size = 6) +
+  geom_text(data = data_plot_single,
+            aes(x = -2, y = factor(Year), label = n_countries),
+             size = 4, family="xkcd") +  
+  geom_text(data = data_plot_single,
+            aes(x = 25, y = factor(Year), 
+                label = growth),
+             size = 4, color = "grey50", hjust = 1) +  
+  theme(text = element_text(family="xkcd", size = 14),
+        strip.text.y = element_text(angle = 180, size = 14),
+        strip.background = element_rect(color = "grey40"),
+        plot.title = element_text(hjust = 1,size = 16, color = "grey30", face = "bold"),
+        plot.subtitle = element_text(hjust = 1, size = 14, color = "grey50"),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        panel.background = element_rect(fill = "white",color = "grey50"))+
+  ggtitle(label = plot_title, subtitle = plot_subtitle)
+
 ```
