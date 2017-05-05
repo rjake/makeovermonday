@@ -40,78 +40,163 @@ challenge_week <- 2
     gs_read(google_key, 
             ws = as.character(challenge_week), 
             lookup = T) %>% 
+    filter(year >= 2008) %>% 
     rename(Value = units_sold_millions) %>% 
-    mutate(reporting_date = paste0(substr(year, 3,4), "-", quarter),
-           running_total = cumsum(Value))
-  
-data_raw$running_total = cumsum(data_raw$Value)
+    mutate(quarter_n = substr(quarter, 2,3),
+           reporting_date = paste0(substr(year, 3,4), "-", quarter),
+           running_total = cumsum(Value),
+           time = year >= 2012)
+
 ```
 
 Challenge: iPhone Sales over time, units sold in millions
 ```{r}
-cut_by <- length(data_raw)
+cut_by <- 4 #length(data_raw)
 ```
 
 ###Time series decomposition
-This report covers the time between ```r min(Data$Date)``` and ```r max(Data$Date)```.
-```{r}
-#Manipulate initial data. Create a variable that aggregates the weeks (HxWeek)
-data_ts <- 
-  data_raw$Value %>%
-  ts(frequency = cut_by) 
-  
-data_ts_decomp <- 
-  as.data.frame(stl(data_ts, s.window = 'periodic')$time.series) %>%
-  cbind(select(data_raw, -Value)) %>%
-#  mutate_each(funs(as.integer), trend:remainder) %>%
-  mutate(original = as.numeric(trend+seasonal+remainder)) %>%
-  gather(key = Measure, value = Value, -c(quarter:reporting_date)) %>%
-  mutate(Measure = factor(Measure, 
-                levels = c("original", "trend", "seasonal", "remainder", "running_total")))
-
-Outliers <- 
-  data_ts_decomp %>%
-  filter(Measure == "remainder") %>%
-  mutate(SD = sd(Value),
-         Outlier = abs(Value) > SD)
-
-#write.csv(ts3, "Sales.csv", row.names = F)
-```
-
-###Create plot
 ```{r}
 #bring in fonts
   font_import(pattern="xkcd", prompt = F)
   fonttable()
 
-ggplot(mtcars, aes(x=wt, y=mpg)) + geom_point() +
-  ggtitle("Fuel Efficiency of 32 Cars") +
-  xlab("Weight (x1000 lb)") + ylab("Miles per Gallon") +
-  theme(text=element_text(size=16, family="xkcd"))
+```
 
-#p <- 
+
+```{r}
+######
+  pre2012 <-
+    filter(data_raw, time == F) %>% 
+    .$Value %>%
+    ts(frequency = cut_by)
+  
+  pre2012_table <-
+    as.data.frame(stl(pre2012, s.window = 'periodic')$time.series) %>% 
+    mutate(time = "2008 - 2011")
+
+######
+  post2012 <-
+    filter(data_raw, time == T) %>% 
+    .$Value %>%
+    ts(frequency = cut_by)
+  
+  post2012_table <-
+    as.data.frame(stl(post2012, s.window = 'periodic')$time.series) %>% 
+    mutate(time = "2012-2016")
+
+#####
+data_ts_decomp <-
+    pre2012_table %>% 
+  rbind(post2012_table) %>% 
+  cbind(select(data_raw, running_total, quarter_n, reporting_date)) %>%
+#  mutate_each(funs(as.integer), trend:remainder) %>%
+  mutate(original = as.numeric(trend + seasonal + remainder)) %>%
+  gather(key = Measure, value = Value, -c(time, quarter_n:reporting_date)) %>%
+  mutate(Measure = factor(Measure, 
+                levels = c("original", "trend", "seasonal", "remainder", "running_total")))
+
+outliers <- 
+  data_ts_decomp %>%
+  filter(Measure == "remainder") %>%
+  group_by(time) %>% 
+  mutate(SD = sd(Value),
+         Outlier = abs(Value) > SD) 
+
+#write.csv(ts3, "Sales.csv", row.names = F)
+```
+
+#xkcd + dataman
+```{r}
+datascaled <- data.frame(x=c(0,20),y=c(0,1000))
+p <- ggplot(data=datascaled, aes(x=x,y=y)) + geom_point()
+
+
+mapping <- aes(measure = Measure,
+               time = time,
+               x = x,
+               y = y,
+               scale = scale,
+               ratioxy = ratioxy,
+               angleofspine = angleofspine,
+               anglerighthumerus = anglerighthumerus,
+               anglelefthumerus = anglelefthumerus,
+               anglerightradius = anglerightradius,
+               angleleftradius = angleleftradius,
+               anglerightleg = anglerightleg,
+               angleleftleg = angleleftleg,
+               angleofneck = angleofneck,
+               color = color )
+
+dataman <- data.frame( x= "08-Q2", y= 600,
+                       Measure = "running_total",
+                       time = "2008 - 2011",
+                       scale = 200,
+                       ratioxy = 0.008,
+                       angleofspine = -1.7 ,
+                       anglerighthumerus = -0.52,
+                       anglelefthumerus = 3.66,
+                       anglerightradius = 0,
+                       angleleftradius = -0.78,
+                       angleleftleg = 4.97 ,
+                       anglerightleg = 4.45,
+                       angleofneck = 4.39,
+                       color=c("A"))
+p + xkcdman(mapping, dataman)
+
+xkcd_quote <-
+  data.frame(reporting_date = "08-Q3",
+             Value = 750,
+             Measure = "running_total",
+             time = "2008 - 2011")
+```
+##titles
+```{r}
+#function for wrapping text
+  wrapper <- 
+    function(x, ...) {
+      paste(strwrap(x, ...), collapse = "\n")
+    }
+
+plot_title <-
+  "With over 1 BILLION iPhones sold between 2008-2016, how much more can the iPhone sell?" %>% 
+  wrapper(., width = 60)
+
+plot_subtitle <- 
+  "\nFrom Statista. All Y-axis values are in the millions. The release of the 4S in 2011 - Q4, marked a shift in the volume of sales the iPhone has each quarter. After two very high Q1 sales periods in 2016 and total units in the billions, it looks like it will be hard for Apple to keep up the pace.\n\nAuthor: Jake Riley\n" %>% 
+  wrapper(., width = 90)
+```
+
+###Create plot
+```{r}  
   ggplot() +
-  geom_line(data = Outliers, aes(x = reporting_date, y = SD), group = 1) +
-  geom_line(data = Outliers, aes(x = reporting_date, y = -SD), group = 1) +
-  #geom_point(data = filter(Outliers, Outlier == T), 
-  #           aes(x = reporting_date, y = Value), size = 4) +
-  geom_col(data = data_ts_decomp, 
-            aes(x = reporting_date, y = Value, color = Measure, fill = quarter, group = 1)) +
-  #geom_point(data = data_ts_decomp, 
-  #          aes(x = reporting_date, y = Value, color = Measure), size = 2) +
-  facet_grid(Measure~., scales = "free_y") +
-  geom_hline(yintercept = 0) +
-  theme(#text = element_text(family="xkcd", size = 14),
-        #strip.text.y = element_text(angle = 180, size = 14),
-        strip.background = element_rect(color = "grey40"),
-        plot.title = element_text(hjust = 1,size = 16, color = "grey30", face = "bold"),
-        plot.subtitle = element_text(hjust = 1, size = 14, color = "grey50"),
-#        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.title.y = element_blank(),
-        #axis.text.x = element_text(family="xkcd", angle = 90, hjust = 1, size = 8),
-        panel.background = element_rect(fill = "white",color = "grey50")) +
-  ggtitle("Number of iPhones Sold (in millions) Q1 2009 - Q4 2016")
+    #identify outlier range
+      geom_line(data = outliers, aes(x = reporting_date, y = SD), group = 1) +
+      geom_line(data = outliers, aes(x = reporting_date, y = -SD), group = 1) +
+      geom_point(data = filter(outliers, Outlier == T), aes(x = reporting_date, y = Value), shape = "o", size = 8, color = "orange") +
+    #plot time series lines
+      geom_line(data = data_ts_decomp,
+                aes(x = reporting_date, y = Value, group = 1)) + #fill = quarter_n, 
+      geom_point(data = data_ts_decomp, 
+               aes(x = reporting_date, y = Value, color = quarter_n), size = 3) +
+      scale_color_manual(values = c("blue", "grey30", "grey55", "grey70", "black")) +
+    #dataman
+      xkcdman(mapping, dataman) +
+      geom_text(data = xkcd_quote, aes(x = reporting_date, y = Value),
+                family = "xkcd", hjust = 0, size = 6,
+                label = "How many iPhones can the \nworld handle?") +
+    #plot aesthetics
+      facet_grid(Measure ~ time, scales = "free") +
+      geom_hline(yintercept = 0) +
+      ggtitle(label = plot_title, subtitle = plot_subtitle) +
+      theme(text = element_text(family="xkcd", size = 14),
+            #strip.text.y = element_text(angle = 180, size = 14),
+            strip.background = element_rect(color = "grey40"),
+            plot.title = element_text(hjust = 1,size = 18, color = "grey30", face = "bold"),
+            plot.subtitle = element_text(hjust = 1, size = 14, color = "grey50"),
+            axis.ticks.y = element_blank(),
+            axis.title.y = element_blank(),
+            axis.text.x = element_text(angle = 90, size = 12),
+            panel.background = element_rect(fill = "white",color = "grey50"))
 
 #ggplotly(p)
 ```
@@ -133,51 +218,4 @@ ggplot(mtcars, aes(x=wt, y=mpg)) + geom_point() +
            height = 6,
            dpi = 200
            )
-```
-
-
-
-##Plots
-```{r}
-
-#function for wrapping text
-  wrapper <- 
-    function(x, ...) {
-      paste(strwrap(x, ...), collapse = "\n")
-    }
-
-plot_title <- "Statistical Analysis and Data Mining was ranked highest on average in 2016 while User Interface Design has seen the most growth 2014 - 2016"  %>% wrapper(., width = 70)
-
-  
-plot_subtitle <- "\nFrom LinkedIn's annual Top Skills Reports - 2014, 2015, and 2016. Skills are ranked by average ranking in 2016. Only skills that were ranked each year by 5 or more countries are included.\nMarker indicates median values.\n\nAuthor: Jake Riley\n" %>% wrapper(., width = 90)
-  
-  
-ggplot(data_plot_all) +
-  facet_grid(Skill~., switch = 'y') +
-  geom_count(aes(x = Rank, y = factor(Year), color = factor(Year)),
-             alpha = .5) +
-  scale_color_manual(values = c("grey65", "grey45", "darkblue"),
-                     name = "Year") +
-  scale_size_continuous(range = c(2, 4), breaks= c(1,5,10), name="Countries") +
-  geom_point(data = data_plot_single,
-             aes(x = year_median, y = factor(Year), color = factor(Year)),
-             shape = "I", size = 6) +
-  geom_text(data = data_plot_single,
-            aes(x = -2, y = factor(Year), label = n_countries),
-             size = 4, family="xkcd") +  
-  geom_text(data = data_plot_single,
-            aes(x = 25, y = factor(Year), 
-                label = growth),
-             size = 4, color = "grey50", hjust = 1) +  
-  theme(text = element_text(family="xkcd", size = 14),
-        strip.text.y = element_text(angle = 180, size = 14),
-        strip.background = element_rect(color = "grey40"),
-        plot.title = element_text(hjust = 1,size = 16, color = "grey30", face = "bold"),
-        plot.subtitle = element_text(hjust = 1, size = 14, color = "grey50"),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.title.y = element_blank(),
-        panel.background = element_rect(fill = "white",color = "grey50"))+
-  ggtitle(label = plot_title, subtitle = plot_subtitle)
-
 ```
