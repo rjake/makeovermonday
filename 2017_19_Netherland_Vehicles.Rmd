@@ -1,0 +1,229 @@
+```{r setup}
+  library(data.table)
+  library(ggrepel)
+  library(forcats)
+  library(lubridate)
+  library(tidyverse)
+  library(grid)
+  library(gridExtra)
+  library(stringr)
+  options(scipen = 999)
+
+  setwd("C:\\Users\\foxtr\\Desktop")
+
+  get_file <- "RDW_Passenger_Cars.csv"
+```
+
+```{r raw_data_query}
+data_sample <- 
+  read.csv(get_file, nrows = 10000, stringsAsFactors = F)
+
+
+raw_data <- 
+  fread(get_file, select = c(3, 6, 8, 21), #nrows = 500,
+        check.names = T, data.table = F) %>% 
+  mutate(year.admission = dmy(date.first.admission) %>% year(.),
+         date.ascription = dmy(date.ascription),
+         year.ascription = year(date.ascription),
+         week.ascription = week(date.ascription))
+
+b <- 
+  raw_data %>% 
+  count(brand)
+
+```
+
+```{r data_rollup_query}
+data_rollup <-
+  raw_data %>% 
+  mutate(brand = fct_lump(brand, n = 10),
+         setup = fct_lump(setup, n = 10)) %>% 
+#  group_by(brand) %>% summarise(n = n()) %>% arrange(-n)
+  group_by(year.ascription, year.admission, brand, setup) %>% 
+  summarise(N = n()) %>%
+  ungroup() 
+
+rm(raw_data)
+```
+
+```{r decade_query}
+round_down <-
+  function(x, round.val){
+    x - (x %% round.val)
+  }
+
+decade <- 
+  data_rollup %>% 
+  filter(year.ascription >= 1975) %>% 
+  mutate(decade = round_down(year.admission, 5),
+         decade = paste0(decade, " - ", decade + 4)
+           #cut(year.admission, breaks = seq(1949,2020, 5))
+         ) %>% 
+  group_by(year.admission, decade, year.ascription) %>% 
+  summarise(n = sum(N)) %>% 
+  group_by(year.ascription) %>% #####this one:  year.ascription 
+  mutate(pct = n / sum(n)) %>% 
+  ungroup() %>% 
+  mutate(years_in_market = year.ascription - year.admission,
+         pct = round(pct, 4) * 100) %>% 
+  filter(years_in_market < 20,
+         year.admission >= 1975,
+         year.admission < 2015)
+```
+
+```{r peaks}
+#peaks
+peak_1 <-
+  decade %>% 
+  filter(years_in_market == 0) %>% 
+  group_by(decade) %>%
+  filter(pct == max(pct)) %>% 
+  ungroup() %>% 
+  mutate(label = paste0(year.admission),
+         peak = 1)
+
+peak_2 <-
+  decade %>% 
+  filter(years_in_market > 0) %>% 
+  group_by(decade) %>% #### decade
+  filter(pct == max(pct)) %>% 
+  ungroup() %>% 
+  mutate(label = years_in_market, 
+         peak = 2)
+
+peak_3 <-
+  decade %>%
+  filter(years_in_market != 0) %>% 
+  anti_join(select(peak_2, decade, years_in_market)) %>%
+  anti_join(select(peak_2, decade, year.admission)) %>% 
+  group_by(decade) %>%
+  filter(pct == max(pct)) %>% 
+  ungroup() %>% 
+  mutate(label = years_in_market,
+         peak = 3)
+
+peaks <-
+  rbind(peak_1, peak_2, peak_3) %>% 
+  mutate(size = 6 - peak,
+         x = years_in_market,
+         y = pct,
+         xend = ifelse(peak == 1, years_in_market + 1, years_in_market),
+         yend = ifelse(peak == 1, pct, 
+                ifelse(peak == 2, pct + 10, pct + 5))
+         )
+
+peak_each_year <-
+  decade %>% 
+  filter(years_in_market > 0) %>% 
+  group_by(year.admission) %>%
+  arrange(-pct) %>% 
+  slice(1) %>% 
+  ungroup()
+```
+
+```{r plot_titles}
+plot_title_subtitle <-
+  "This chart shows the percentage of total cars registered by the year the vehicle was made.The year of the model (each line) are arranged by 5-year intervals and the x-axis is the length of time the vehicles have been on the market. Changes in the 1990s may be attributed to increased leasing rates (more research is needed). In 2000, car registrations took off and cars released in that year made up 40% of the registrations." %>% 
+  str_wrap(150)
+
+plot_lines_title <-
+  "Proportion of registrations by vehicle year: The large dark number at the beginning of each panel represents the year that made up the largest percentage of cars registered within that period. The second dark number shows the largest peak after year 0, and the smallest number shows the year with the next largest peak." %>% 
+  str_wrap(110)
+
+plot_heatmap_title <-
+  "The dot indicates the largest peak after year 0 by year of release."
+
+```
+
+```{r plot_creates}
+plot_title <-{
+  ggplot()+
+  ggtitle(label = "Cars released 1990+ have second wind 3-4 years after entering the market",
+          subtitle = plot_title_subtitle) +
+  coord_fixed(ratio = .01) +
+  theme(plot.title = element_text(hjust = 1,size = 20, color = "grey30", face = "bold"),
+        plot.subtitle = element_text(hjust = 1, size = 14, color = "grey50"))
+}
+
+plot_lines <-{
+  ggplot(decade, aes(x = years_in_market, y = pct)) +
+  facet_wrap(~ decade, nrow = 3) +
+  scale_x_continuous(breaks = seq(0, 20, 4)) +
+  geom_line(aes(group = year.admission), 
+            color = "navyblue", alpha = .3, size = 1, alpha = .6) +
+  ylim(0, 45) +
+  labs(x = "Years in Market", 
+       y = "% of Cars Registered") +
+  geom_point(data = peaks, color = "navyblue") +
+  geom_segment(data = peaks, aes(xend = xend, 
+                                 yend = yend),
+               color = "grey50") +
+  geom_text(data = peaks, aes(x = xend, y = yend, label = label, 
+                              size = size, color = (peak < 3)),
+            vjust = "bottom", hjust = "left") +
+  scale_size(range = c(4,6), guide = F) +
+  scale_color_manual(values = c("grey50", "grey20"), guide = F) +
+  ggtitle(label = plot_lines_title) +
+  theme(panel.background = element_rect(fill = "white", color = "grey50"),
+        plot.title = element_text(hjust = 0, size = 12, color = "grey30"))
+}
+plot_lines
+
+plot_heatmap <-{
+  decade %>% 
+  mutate(pct = ifelse(pct > 30, 30, pct)) %>% 
+  ggplot(aes(x = years_in_market, y = year.admission, fill = pct)) +
+    facet_grid(decade ~ ., scales = "free_y") +
+    geom_tile(color = "grey75") +
+    geom_point(data = peak_each_year, color = "grey40") +
+    scale_y_reverse(breaks = seq(2015, 1975, -5)) +
+    scale_fill_gradient2(low = "white", high = "navyblue", midpoint = .01) +
+    labs(y = "year_admission") +
+    ggtitle(label = plot_heatmap_title) +
+    theme(panel.background = element_blank(),
+          strip.background = element_blank(),
+          strip.text = element_blank(),
+          plot.title = element_text(hjust = 0,size = 12, color = "grey30"))
+}
+plot_heatmap
+
+grid.arrange(plot_title, plot_lines, plot_heatmap,
+             layout_matrix = rbind(c(1,1,1,1,1),
+                                   c(2,2,2,3,3),
+                                   c(2,2,2,3,3),
+                                   c(2,2,2,3,3),
+                                   c(2,2,2,3,3)))
+```
+
+#Not using
+```{r not_using}
+ggplot(data_rollup) +
+  geom_col(aes(year.ascription, N)) +
+  xlim(1975, 2016)
+
+data_sample %>% 
+  mutate(var = catalog.price,
+         date = dmy(date.ascription),
+         year = year(date)) %>%
+  filter(year > 2004, year < 2017) %>% 
+  select(date.ascription, var, year) %>%
+  group_by(year) %>% 
+  summarize(var = median(var, na.rm = T)) %>% 
+  ungroup()  %>% 
+  as_tibble() %>% 
+  ggplot(aes(year, var)) +
+    geom_col()
+
+data_rollup %>%
+  filter(year.admission > 2000) %>% 
+  group_by(year.admission, year.ascription, brand) %>% 
+  summarise(n = sum(N)) %>% 
+  group_by(year.admission, brand) %>% 
+  mutate(freq = n / sum(n) * 1000) %>% 
+  ungroup() %>% 
+  mutate(year.diff = year.ascription - year.admission) %>% 
+  ggplot() +
+    geom_point(aes(year.admission, year.ascription, 
+                   size = n, color = factor(year.admission))) +
+    facet_wrap(~brand)
+  ```
