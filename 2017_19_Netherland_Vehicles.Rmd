@@ -14,6 +14,7 @@
   get_file <- "RDW_Passenger_Cars.csv"
 ```
 
+This file is humongous (~9M records) so I read in a sample before reading in the whole thing. ```fread()``` in ```library(data.table)``` makes this much faster than ```read.csv()```
 ```{r raw_data_query}
 data_sample <- 
   read.csv(get_file, nrows = 10000, stringsAsFactors = F)
@@ -26,13 +27,9 @@ raw_data <-
          date.ascription = dmy(date.ascription),
          year.ascription = year(date.ascription),
          week.ascription = week(date.ascription))
-
-b <- 
-  raw_data %>% 
-  count(brand)
-
 ```
 
+Because I need this to be manageable, I use ```fct_lump()``` from ```library(forcats)``` to lump together the largest groups for brand and setup
 ```{r data_rollup_query}
 data_rollup <-
   raw_data %>% 
@@ -46,6 +43,7 @@ data_rollup <-
 rm(raw_data)
 ```
 
+This decade query cuts the data into 5 year intervals using a custom ```round_down()``` function. The intent of the analysis is to look at the proportion of vehicles registered by year that vehicle was created. I expect that there are much fewer vehicles registered in year 9 than in year 2. I also expect that the highest point for registration will be the year the vehicle becomes available.
 ```{r decade_query}
 round_down <-
   function(x, round.val){
@@ -71,6 +69,7 @@ decade <-
          year.admission < 2015)
 ```
 
+To label my line charts, I need to identify the vehicle year within each 5-year intervals that was most registered as well as the second and third highest peaks. 
 ```{r peaks}
 #peaks
 peak_1 <-
@@ -111,7 +110,10 @@ peaks <-
          yend = ifelse(peak == 1, pct, 
                 ifelse(peak == 2, pct + 10, pct + 5))
          )
+```
 
+I also need a table for my heatmap.
+```{r}
 peak_each_year <-
   decade %>% 
   filter(years_in_market > 0) %>% 
@@ -121,6 +123,7 @@ peak_each_year <-
   ungroup()
 ```
 
+Separating out the titles here allows me to edit them more efficiently. I am using the ```str_wrap()``` command from ```library(stringr)``` 
 ```{r plot_titles}
 plot_title_subtitle <-
   "This chart shows the percentage of total cars registered by the year the vehicle was made.The year of the model (each line) are arranged by 5-year intervals and the x-axis is the length of time the vehicles have been on the market. Changes in the 1990s may be attributed to increased leasing rates (more research is needed). In 2000, car registrations took off and cars released in that year made up 40% of the registrations." %>% 
@@ -135,7 +138,13 @@ plot_heatmap_title <-
 
 ```
 
-```{r plot_creates}
+Here I create 3 plots.
+* A small plot for the title & subtitle
+* Line charts
+* Heatmap
+
+I then use ```grid.arrange()``` by ```library(gridExtra)``` to piece them all together
+```{r plot_create}
 plot_title <-{
   ggplot()+
   ggtitle(label = "Cars released 1990+ have second wind 3-4 years after entering the market",
