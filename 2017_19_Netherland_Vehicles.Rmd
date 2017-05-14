@@ -103,7 +103,7 @@ peak_3 <-
 
 peaks <-
   rbind(peak_1, peak_2, peak_3) %>% 
-  mutate(size = 6 - peak,
+  mutate(size = ifelse(peak == 1, 6, 4),
          x = years_in_market,
          y = pct,
          xend = ifelse(peak == 1, years_in_market + 1, years_in_market),
@@ -126,11 +126,11 @@ peak_each_year <-
 Separating out the titles here allows me to edit them more efficiently. I am using the ```str_wrap()``` command from ```library(stringr)``` 
 ```{r plot_titles}
 plot_title_subtitle <-
-  "This chart shows the percentage of total cars registered by the year the vehicle was made.The year of the model (each line) are arranged by 5-year intervals and the x-axis is the length of time the vehicles have been on the market. Changes in the 1990s may be attributed to increased leasing rates (more research is needed). In 2000, car registrations took off and cars released in that year made up 40% of the registrations." %>% 
-  str_wrap(150)
+  "#MakeoverMonday - Vehicle Registration in the Netherlands: These charts show the percentage of vehicles registered each year by the year the vehicle was made.The year of the model (each line) are arranged by 5-year intervals and the x-axis is the length of time the vehicles have been in the market. Changes in the 1990s may be attributed to increased leasing rates (more research is needed). In 2000, car registrations took off and cars released in that year made up 40% of the registrations." %>% 
+  str_wrap(165)
 
 plot_lines_title <-
-  "Proportion of registrations by vehicle year: The large dark number at the beginning of each panel represents the year that made up the largest percentage of cars registered within that period. The second dark number shows the largest peak after year 0, and the smallest number shows the year with the next largest peak." %>% 
+  "Proportion of registrations by vehicle year: There are 5 lines in each panel -- one for each year within the panel header. The large dark number at the beginning of each panel represents the year that made up the largest percentage of cars registered within that period. The dashed line indicates the next largest peak after year 0." %>% 
   str_wrap(110)
 
 plot_heatmap_title <-
@@ -159,22 +159,27 @@ plot_lines <-{
   facet_wrap(~ decade, nrow = 3) +
   scale_x_continuous(breaks = seq(0, 20, 4)) +
   geom_line(aes(group = year.admission), 
-            color = "navyblue", alpha = .3, size = 1, alpha = .6) +
+            color = "navyblue", alpha = .3, size = 1, alpha = .6,
+            position = position_dodge(width=0.5)) +
   ylim(0, 45) +
   labs(x = "Years in Market", 
        y = "% of Cars Registered") +
-  geom_point(data = peaks, color = "navyblue") +
-  geom_segment(data = peaks, aes(xend = xend, 
-                                 yend = yend),
+  geom_vline(data = filter(peaks, peak == 2), 
+             aes(xintercept = x),
+             color = "navyblue", linetype = 2, alpha = .5) +
+  geom_segment(data = filter(peaks, peak == 1), 
+               aes(xend = xend, yend = yend),
                color = "grey50") +
-  geom_text(data = peaks, aes(x = xend, y = yend, label = label, 
-                              size = size, color = (peak < 3)),
+  geom_text(data = filter(peaks, peak == 1), 
+            aes(x = xend, y = yend, label = label, 
+                    size = size, color = (peak < 3)),
             vjust = "bottom", hjust = "left") +
-  scale_size(range = c(4,6), guide = F) +
+  scale_size(range = c(5,6), guide = F) +
   scale_color_manual(values = c("grey50", "grey20"), guide = F) +
   ggtitle(label = plot_lines_title) +
-  theme(panel.background = element_rect(fill = "white", color = "grey50"),
-        plot.title = element_text(hjust = 0, size = 12, color = "grey30"))
+  theme(panel.background = element_rect(fill = "grey95", color = "grey50"),
+        plot.title = element_text(hjust = 0, size = 12, color = "grey30"),
+        text = element_text(size = 16))
 }
 plot_lines
 
