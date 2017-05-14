@@ -1,24 +1,23 @@
+The data this week is quite large. [Find it here](https://fileshare.theinformationlab.co.uk/index.php/s/i032l95DDKrDuBj).
 ```{r setup}
-  library(data.table)
-  library(ggrepel)
-  library(forcats)
-  library(lubridate)
-  library(tidyverse)
-  library(grid)
-  library(gridExtra)
-  library(stringr)
-  options(scipen = 999)
+library(data.table)
+library(forcats)
+library(extrafont)
+library(gridExtra)
+library(lubridate)
+library(stringr)
+library(tidyverse)
+options(scipen = 999)
 
-  setwd("C:\\Users\\foxtr\\Desktop")
+setwd("../Desktop")
 
-  get_file <- "RDW_Passenger_Cars.csv"
+get_file <- "RDW_Passenger_Cars.csv"
 ```
 
 This file is humongous (~9M records) so I read in a sample before reading in the whole thing. ```fread()``` in ```library(data.table)``` makes this much faster than ```read.csv()```
 ```{r raw_data_query}
 data_sample <- 
   read.csv(get_file, nrows = 10000, stringsAsFactors = F)
-
 
 raw_data <- 
   fread(get_file, select = c(3, 6, 8, 21), #nrows = 500,
@@ -38,23 +37,28 @@ data_rollup <-
 #  group_by(brand) %>% summarise(n = n()) %>% arrange(-n)
   group_by(year.ascription, year.admission, brand, setup) %>% 
   summarise(N = n()) %>%
-  ungroup() 
+  ungroup()
+
+write.csv(data_rollup, "2017_19.csv", row.names = F)
 
 rm(raw_data)
 ```
 
 This decade query cuts the data into 5 year intervals using a custom ```round_down()``` function. The intent of the analysis is to look at the proportion of vehicles registered by year that vehicle was created. I expect that there are much fewer vehicles registered in year 9 than in year 2. I also expect that the highest point for registration will be the year the vehicle becomes available.
 ```{r decade_query}
+break_by <- 10
+
 round_down <-
-  function(x, round.val){
-    x - (x %% round.val)
+  function(x){
+    x - (x %% break_by)
   }
 
 decade <- 
   data_rollup %>% 
-  filter(year.ascription >= 1975) %>% 
-  mutate(decade = round_down(year.admission, 5),
-         decade = paste0(decade, " - ", decade + 4)
+  filter(year.ascription >= 1970) %>% 
+  mutate(decade = round_down(year.admission),
+         decade = paste0(decade, " - ", decade + break_by - 1),
+         decade = ifelse(year.admission >= 2010, "2010 - 2015", decade)
            #cut(year.admission, breaks = seq(1949,2020, 5))
          ) %>% 
   group_by(year.admission, decade, year.ascription) %>% 
@@ -62,11 +66,12 @@ decade <-
   group_by(year.ascription) %>% #####this one:  year.ascription 
   mutate(pct = n / sum(n)) %>% 
   ungroup() %>% 
-  mutate(years_in_market = year.ascription - year.admission,
+  mutate(year_number = year.admission %% break_by,
+         years_in_market = year.ascription - year.admission + 1,
          pct = round(pct, 4) * 100) %>% 
-  filter(years_in_market < 20,
-         year.admission >= 1975,
-         year.admission < 2015)
+  filter(years_in_market <= 20,
+         year.admission >= 1970,
+         year.admission <= 2015)
 ```
 
 To label my line charts, I need to identify the vehicle year within each 5-year intervals that was most registered as well as the second and third highest peaks. 
@@ -74,7 +79,7 @@ To label my line charts, I need to identify the vehicle year within each 5-year 
 #peaks
 peak_1 <-
   decade %>% 
-  filter(years_in_market == 0) %>% 
+  filter(years_in_market == 1) %>% 
   group_by(decade) %>%
   filter(pct == max(pct)) %>% 
   ungroup() %>% 
@@ -83,7 +88,7 @@ peak_1 <-
 
 peak_2 <-
   decade %>% 
-  filter(years_in_market > 0) %>% 
+  filter(years_in_market > 1) %>% 
   group_by(decade) %>% #### decade
   filter(pct == max(pct)) %>% 
   ungroup() %>% 
@@ -92,7 +97,7 @@ peak_2 <-
 
 peak_3 <-
   decade %>%
-  filter(years_in_market != 0) %>% 
+  filter(years_in_market != 1) %>% 
   anti_join(select(peak_2, decade, years_in_market)) %>%
   anti_join(select(peak_2, decade, year.admission)) %>% 
   group_by(decade) %>%
@@ -116,7 +121,7 @@ I also need a table for my heatmap.
 ```{r}
 peak_each_year <-
   decade %>% 
-  filter(years_in_market > 0) %>% 
+  filter(years_in_market > 1) %>% 
   group_by(year.admission) %>%
   arrange(-pct) %>% 
   slice(1) %>% 
@@ -126,15 +131,15 @@ peak_each_year <-
 Separating out the titles here allows me to edit them more efficiently. I am using the ```str_wrap()``` command from ```library(stringr)``` 
 ```{r plot_titles}
 plot_title_subtitle <-
-  "#MakeoverMonday - Vehicle Registration in the Netherlands: These charts show the percentage of vehicles registered each year by the year the vehicle was made.The year of the model (each line) are arranged by 5-year intervals and the x-axis is the length of time the vehicles have been in the market. Changes in the 1990s may be attributed to increased leasing rates (more research is needed). In 2000, car registrations took off and cars released in that year made up 40% of the registrations." %>% 
-  str_wrap(165)
+  "MakeoverMonday - Vehicle Registration in the Netherlands: Given the data, these charts show the percentage of vehicles registered each year by the year the vehicle was made. Each line in the charts, and each row on the heatmap, represent the year the vehicles were made, and the x-axis is the length of time the vehicles have been in the market. Changes in the 1990s may be attributed to increased leasing rates, although more research is needed." %>% 
+  str_wrap(170)
 
 plot_lines_title <-
-  "Proportion of registrations by vehicle year: There are 5 lines in each panel -- one for each year within the panel header. The large dark number at the beginning of each panel represents the year that made up the largest percentage of cars registered within that period. The dashed line indicates the next largest peak after year 0." %>% 
-  str_wrap(110)
+  "There are 10 lines in each panel. Each line represents the proportion of registrations for vehicles released in that year over time. The large number at the beginning of each panel represents the production year that had the highest proportion of registrations in the first year of its release. The dashed line indicates the next largest peak." %>% 
+  str_wrap(120)
 
 plot_heatmap_title <-
-  "The dot indicates the largest peak after year 0 by year of release."
+  "The dot indicates the largest peak after the year of release.\n\n."
 
 ```
 
@@ -145,25 +150,38 @@ Here I create 3 plots.
 
 I then use ```grid.arrange()``` by ```library(gridExtra)``` to piece them all together
 ```{r plot_create}
+font_family <- "xkcd"
+
+font_import(pattern = "font_family", prompt = F)
+
+fonttable()
+  
+  
 plot_title <-{
   ggplot()+
-  ggtitle(label = "Cars released 1990+ have second wind 3-4 years after entering the market",
+  ggtitle(label = "Cars released after 1990 have second wind 4-5 years after entering the market",
           subtitle = plot_title_subtitle) +
   coord_fixed(ratio = .01) +
-  theme(plot.title = element_text(hjust = 1,size = 20, color = "grey30", face = "bold"),
-        plot.subtitle = element_text(hjust = 1, size = 14, color = "grey50"))
+  theme(text = element_text(family = font_family, hjust = 1),
+        plot.title = element_text(size = 20, color = "grey30", face = "bold"),
+        plot.subtitle = element_text(size = 14, color = "grey50"))
 }
+plot_title
 
 plot_lines <-{
   ggplot(decade, aes(x = years_in_market, y = pct)) +
-  facet_wrap(~ decade, nrow = 3) +
-  scale_x_continuous(breaks = seq(0, 20, 4)) +
-  geom_line(aes(group = year.admission), 
-            color = "navyblue", alpha = .3, size = 1, alpha = .6,
-            position = position_dodge(width=0.5)) +
-  ylim(0, 45) +
+  facet_wrap(~ decade, nrow = 2) +
+  scale_x_continuous(breaks = seq(0, 20, 5)) +
+  geom_line(aes(group = year.admission, color = year_number), 
+            alpha = .3, size = 1, alpha = .6,
+            position = position_dodge(width = 0.7)) +
+  scale_color_gradient(#low = "grey70", high = "navyblue", 
+                       name = "Year Released \nin Decade",
+                       breaks = c(1, 5, 10, 11)) +
+  ylim(0, 48) +
   labs(x = "Years in Market", 
-       y = "% of Cars Registered") +
+       y = "Percent of Vehicles Registered",
+       caption = plot_lines_title) +
   geom_vline(data = filter(peaks, peak == 2), 
              aes(xintercept = x),
              color = "navyblue", linetype = 2, alpha = .5) +
@@ -171,35 +189,48 @@ plot_lines <-{
                aes(xend = xend, yend = yend),
                color = "grey50") +
   geom_text(data = filter(peaks, peak == 1), 
-            aes(x = xend, y = yend, label = label, 
-                    size = size, color = (peak < 3)),
-            vjust = "bottom", hjust = "left") +
-  scale_size(range = c(5,6), guide = F) +
-  scale_color_manual(values = c("grey50", "grey20"), guide = F) +
-  ggtitle(label = plot_lines_title) +
-  theme(panel.background = element_rect(fill = "grey95", color = "grey50"),
-        plot.title = element_text(hjust = 0, size = 12, color = "grey30"),
-        text = element_text(size = 16))
+            aes(x = xend, y = yend, label = label),
+            vjust = "center", hjust = "left", size = 6, color = "grey50", family = font_family) +
+  theme(text = element_text(size = 12, family = font_family),
+        panel.background = element_rect(fill = "grey95", color = "grey50"),
+        strip.text.x = element_text(size = 16),
+        plot.caption = element_text(hjust = 0, size = 12, color = "grey30"),
+        legend.title = element_text(color = "grey30"), 
+        legend.position = c(0.85, 0.1),
+        legend.direction = "horizontal", 
+        panel.grid.minor.y = element_blank()
+        )
 }
+
 plot_lines
+
 
 plot_heatmap <-{
   decade %>% 
-  mutate(pct = ifelse(pct > 30, 30, pct)) %>% 
-  ggplot(aes(x = years_in_market, y = year.admission, fill = pct)) +
-    facet_grid(decade ~ ., scales = "free_y") +
+  mutate(pct = ifelse(pct > 30, 30, pct),
+         year.admission = fct_rev(factor(year.admission))) %>% 
+  ggplot(aes(x = years_in_market, y = as.factor(year.admission), fill = pct)) +
+    facet_grid(decade ~ ., scales = "free_y", space = "free_y") +
     geom_tile(color = "grey75") +
     geom_point(data = peak_each_year, color = "grey40") +
-    scale_y_reverse(breaks = seq(2015, 1975, -5)) +
-    scale_fill_gradient2(low = "white", high = "navyblue", midpoint = .01) +
-    labs(y = "year_admission") +
-    ggtitle(label = plot_heatmap_title) +
-    theme(panel.background = element_blank(),
+#    scale_y_reverse(breaks = seq(2020, 1970, -5)) + 
+    scale_fill_gradient2(low = "white", high = "navyblue", midpoint = .01, 
+                         name = "Percent of \nVehicles \nRegistered") +
+    labs(x = "Years in Market",
+         y = "Year Released",
+         caption = plot_heatmap_title) +
+    theme(text = element_text(size = 12, family = font_family), 
+          panel.background = element_blank(),
           strip.background = element_blank(),
           strip.text = element_blank(),
-          plot.title = element_text(hjust = 0,size = 12, color = "grey30"))
+          plot.caption = element_text(hjust = 0,size = 12, color = "grey30"),
+          legend.title = element_text(color = "grey30"), 
+          legend.position = c(0.77, 0.1),
+          legend.direction = "horizontal"
+          )
 }
 plot_heatmap
+
 
 grid.arrange(plot_title, plot_lines, plot_heatmap,
              layout_matrix = rbind(c(1,1,1,1,1),
