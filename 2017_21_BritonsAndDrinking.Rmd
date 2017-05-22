@@ -1,0 +1,60 @@
+---
+title: "#MakeoverMonday week 21"
+author: "Jake"
+date: "May 21, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r workspace}
+library(tidyverse)
+library(googlesheets)
+library(forcats)
+library(extrafont)
+library(gridExtra)  #combines ggplot charts
+library(xkcd)
+options(scipen = 999)
+
+challenge_week <- 21
+```
+
+```{r scrape table}
+#google sheet to read in
+  google_key <- 
+    gs_key("1XpDdIfrHLaL5Iiu7x8eVAIlDuq83zwUNqJSUsYSAh18")
+
+#get names of worksheets
+  gs_ws_ls(google_key)
+
+#get twitter links to scrape
+  data_raw <- 
+    gs_read(google_key, 
+            ws = as.character(challenge_week), 
+            lookup = T)
+  
+  colnames(data_raw) <- gsub(" ", ".", colnames(data_raw))
+  
+  data_clean <-
+    data_raw %>% 
+    mutate(Proportion = parse_number(Proportion),
+           Age.Range = factor(Age.Range),
+           Question = factor(Question) %>% 
+                      lvls_reorder(idx = c(2, 1, 3)))
+
+  head_tail <- 
+      function(x, n){
+        slice(x, c(1:n, (n()-(n-1)):n()))
+      }
+  
+  data_clean %>% 
+    group_by(Year, Age.Range, Gender) %>% 
+    summarise(Pct = sum(Proportion)) %>% 
+    ungroup() %>% 
+    arrange(Pct) %>% 
+    head_tail(3)
+```
+
+I am choosing not to do this week's challenge as the sum of proportions go both over and under 100%. If proportions all were >=100%, I might think that the "drinks 5+ times a week" were part of the "had a drink" category. With values as low as 72% and as high as 115%, I am too unsure of the quality of the data.
