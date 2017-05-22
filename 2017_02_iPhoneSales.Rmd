@@ -42,7 +42,7 @@ challenge_week <- 2
             lookup = T) %>% 
     filter(year >= 2008) %>% 
     rename(Value = units_sold_millions) %>% 
-    mutate(quarter_n = substr(quarter, 2,3),
+    mutate(quarter = substr(quarter, 2,3),
            reporting_date = paste0(substr(year, 3,4), "-", quarter),
            running_total = cumsum(Value),
            time = year >= 2012)
@@ -88,10 +88,10 @@ cut_by <- 4 #length(data_raw)
 data_ts_decomp <-
     pre2012_table %>% 
   rbind(post2012_table) %>% 
-  cbind(select(data_raw, running_total, quarter_n, reporting_date)) %>%
+  cbind(select(data_raw, running_total, quarter, reporting_date)) %>%
 #  mutate_each(funs(as.integer), trend:remainder) %>%
   mutate(original = as.numeric(trend + seasonal + remainder)) %>%
-  gather(key = Measure, value = Value, -c(time, quarter_n:reporting_date)) %>%
+  gather(key = Measure, value = Value, -c(time, quarter:reporting_date)) %>%
   mutate(Measure = factor(Measure, 
                 levels = c("original", "trend", "seasonal", "remainder", "running_total")))
 
@@ -144,7 +144,7 @@ dataman <- data.frame( x= "08-Q2", y= 600,
 p + xkcdman(mapping, dataman)
 
 xkcd_quote <-
-  data.frame(reporting_date = "08-Q3",
+  data.frame(reporting_date = "08-Q1",
              Value = 750,
              Measure = "running_total",
              time = "2008 - 2011")
@@ -162,60 +162,49 @@ plot_title <-
   wrapper(., width = 60)
 
 plot_subtitle <- 
-  "\nFrom Statista. All Y-axis values are in the millions. The release of the 4S in 2011 - Q4, marked a shift in the volume of sales the iPhone has each quarter. After two very high Q1 sales periods in 2016 and total units in the billions, it looks like it will be hard for Apple to keep up the pace.\n\nAuthor: Jake Riley\n" %>% 
-  wrapper(., width = 90)
+  "\nFrom Statista. All Y-axis values are in the millions. The release of the 4S in Q4 2011, marked a shift in the volume of sales the iPhone has each quarter. After two very high Q1 sales periods in 2016 and total units in the billions, it looks like it might be hard for Apple to keep up the pace. Author: Jake Riley\n" %>% 
+  wrapper(., width = 85)
+
+plot_caption <-
+"The observations in the remainder section with orange circles behind the dots indicate outliers beyond 1 standard deviation"%>% 
+  wrapper(., width = 85)
+
 ```
 
 ###Create plot
 ```{r}  
   ggplot() +
+      facet_grid(Measure ~ time, scales = "free") +
     #identify outlier range
       geom_line(data = outliers, aes(x = reporting_date, y = SD), group = 1) +
       geom_line(data = outliers, aes(x = reporting_date, y = -SD), group = 1) +
-      geom_point(data = filter(outliers, Outlier == T), aes(x = reporting_date, y = Value), shape = "o", size = 8, color = "orange") +
+      geom_point(data = filter(outliers, Outlier == T), 
+                 aes(x = reporting_date, y = Value), 
+                 shape = "o", size = 8, color = "orange") +
     #plot time series lines
       geom_line(data = data_ts_decomp,
-                aes(x = reporting_date, y = Value, group = 1)) + #fill = quarter_n, 
+                aes(x = reporting_date, y = Value, group = 1)) + #, fill = quarter)) + 
       geom_point(data = data_ts_decomp, 
-               aes(x = reporting_date, y = Value, color = quarter_n), size = 3) +
-      scale_color_manual(values = c("blue", "grey30", "grey55", "grey70", "black")) +
+               aes(x = reporting_date, y = Value, color = quarter), size = 3) +
+      scale_color_manual(values = c("navyblue", "grey50", "grey65", "grey70", "black")) +
     #dataman
       xkcdman(mapping, dataman) +
       geom_text(data = xkcd_quote, aes(x = reporting_date, y = Value),
-                family = "xkcd", hjust = 0, size = 6,
-                label = "How many iPhones can the \nworld handle?") +
+                family = "xkcd", hjust = .2, size = 5,
+                label = "If we market these in utero, how \ncan we keep the 'i' prefix?") +
     #plot aesthetics
-      facet_grid(Measure ~ time, scales = "free") +
       geom_hline(yintercept = 0) +
-      ggtitle(label = plot_title, subtitle = plot_subtitle) +
+      labs(title = plot_title, subtitle = plot_subtitle, caption = plot_caption) +
       theme(text = element_text(family="xkcd", size = 14),
-            #strip.text.y = element_text(angle = 180, size = 14),
+            strip.text.y = element_text(size = 14),
             strip.background = element_rect(color = "grey40"),
             plot.title = element_text(hjust = 1,size = 18, color = "grey30", face = "bold"),
             plot.subtitle = element_text(hjust = 1, size = 14, color = "grey50"),
-            axis.ticks.y = element_blank(),
-            axis.title.y = element_blank(),
-            axis.text.x = element_text(angle = 90, size = 12),
+            plot.caption = element_text(hjust = 1, size = 14, color = "grey50"),
+            axis.ticks = element_blank(),
+            axis.title = element_blank(),
+            axis.text.x = element_blank(), #text(angle = 90, size = 12),
             panel.background = element_rect(fill = "white",color = "grey50"))
 
 #ggplotly(p)
-```
-*The observations in the remainder section with grey dots behind the line plot indicate outliers (> 1 SD)*
-
-##arrange
-```{r}
-    savePic <-  
-      grid.arrange(baseplot, plot1, plot2, dist_hist, 
-                   layout_matrix = rbind(c(1,2,3),
-                                         c(1,2,3),
-                                         c(1,2,3),
-                                         c(1,2,3),
-                                         c(4,2,3)))
-    
-    ggsave(filename = paste0("region pdfs/", RegionLoop$group[1], ".png"), 
-           plot = savePic, 
-           width = 11, 
-           height = 6,
-           dpi = 200
-           )
 ```
