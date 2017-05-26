@@ -1,5 +1,5 @@
 ---
-title: "proportions"
+title: "How often does Steph Curry make his shots?"
 output: html_document
 ---
 
@@ -83,6 +83,14 @@ colExclude <- #excludes the column of the dep var
     gsub(" .*" , "",.) %>% 
     gsub("\\(" , "",.)
   
+
+pct_occur <- 
+  (sum(data.raw$TestDV)/nrow(data.raw)) %>% 
+  round(., 3) * 100
+
+pct_occur <- 
+  as.character(pct_occur) %>% 
+  paste0(., "%")
 ```
 
 ```{r}
@@ -169,7 +177,9 @@ data.both <-
   ungroup()
 ```
 
-**Quick plots**
+###Quick plots for when `r test.dv`
+
+####On average this occurs `r pct_occur` of the time.
 
 ```{r}
 theme_forcharts <- 
