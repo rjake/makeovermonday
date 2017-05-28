@@ -1,0 +1,104 @@
+---
+title: "#MakeoverMonday"
+author: "Jake"
+date: "May 22, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r workspace}
+library(tidyverse)
+library(googlesheets)
+library(forcats)
+library(extrafont)
+library(gridExtra)
+library(xkcd)
+#time series
+library(TTR)
+library(lubridate)
+options(scipen = 999)
+
+challenge_week <- 15
+```
+
+```{r scrape table}
+#google sheet to read in
+  google_key <- 
+    gs_key("1XpDdIfrHLaL5Iiu7x8eVAIlDuq83zwUNqJSUsYSAh18")
+
+#get names of worksheets
+  gs_ws_ls(google_key)
+
+#get twitter links to scrape
+  data_raw <- 
+    gs_read(google_key, 
+            ws = as.character(challenge_week), 
+            lookup = T) %>% 
+    filter(complete.cases(.),
+           Year > 1983)
+  
+  data_clean <-
+    data_raw  %>% 
+    rowwise() %>% 
+    mutate(Month = which(month.abb == substr(Month, 1, 3)),
+           Date = mdy(paste(Month, 1, Year, sep = "-"))) %>%
+    gather(key = Metric, value = Price, -c(Year, Month, Date))
+  
+  
+  ggplot(data_clean) +
+    facet_grid(Metric ~ ., scales = "free_y") +
+    geom_line(aes(x = Date, y = Price))
+    
+```
+
+#time series
+```{r}
+ts_transform <-
+  function(x){
+    #x = "Gold Price"
+    
+    ts_data <-
+      data_clean %>% 
+      filter(Metric == x)
+    
+    ts_values <-
+      ts_data %>% 
+      .$Price %>% log(.) %>% 
+      ts(frequency = 12, c(1984, 1)) %>% 
+      stl(s.window = 'periodic')
+
+    cbind(ts_data, as.data.frame(ts_values$time.series))
+}
+
+
+data_final <-
+  rbind(ts_transform("Gold Price"),
+        ts_transform("Oil Price"),
+        ts_transform("CPI")) %>%
+  gather(key = Measure, value = Value, -c(Year:Metric)) %>%
+  mutate(Measure = factor(Measure, 
+                levels = c("Price", "trend", "seasonal", "remainder"))) %>% 
+  filter(!(Measure == "seasonal" & Date >= "1986-01-01"))
+```
+
+```{r}
+ggplot(data_final) +
+  facet_wrap(~Measure, scales = "free") +
+  geom_line(aes(x = Date, y = Value, color = Metric))
+
+ggplot(data_final) +
+  facet_wrap(Metric ~ Measure, scales = "free", ncol = 4) +
+  geom_line(aes(x = Date, y = Value))
+
+data_raw %>%
+  filter(complete.cases(.)) %>% 
+  mutate(Ord = row_number()) %>% 
+  ggplot(aes(x = `Gold Price`, y = `Oil Price`,
+             color = Year)) + 
+  geom_smooth(alpha = .1) +
+  geom_point(size = 1, alpha = .5) +
+  geom_path()
+```
