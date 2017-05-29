@@ -1,5 +1,5 @@
 ---
-title: "What factors are related to aircraft damage?"
+title: "What factors are related to aircraft damage from wildlife strikes?"
 output: html_document
 ---
 
@@ -18,7 +18,7 @@ Using the space below, enter the file name and variable you wish to test. Enter 
 library(tidyverse)
 library(lubridate)
 library(forcats)
-setwd("C:\\Users\\jake\\Desktop\\wildlife")
+setwd("C:\\Users\\foxtr\\Desktop\\wildlife")
 #get raw data
   fileName <- "data_wildlife_clean.csv"
 
@@ -100,7 +100,7 @@ data_col_date <-
 #Character data
 cData <- 
   select(data.raw, data_col_char, -TestDV) %>% 
-  mutate_all(funs(replace(., is.na(.), "Unknown"))) %>% 
+  mutate_all(funs(replace(., is.na(.), "UNKNOWN"))) %>% 
   cbind(select(data.raw, TestDV))
 
 if(length(cData) >1){
@@ -192,7 +192,7 @@ chart_colors <- c("#aba5a5", "#ea7e26")
   
 chart_text <-
   ggplot(cData, aes(x=Original, y=N,  fill = TestDV)) +
-  facet_wrap(~Var, scales="free", ncol = 5) +
+  facet_wrap(~Var, scales="free", ncol = 7) +
   theme_forcharts +
   geom_bar(stat="identity") +
   scale_fill_manual(values = chart_colors) +
@@ -202,7 +202,7 @@ chart_text
 
 chart_numeric <-
   ggplot(nData, aes(x = Original, fill = TestDV)) +
-  facet_wrap(~Var, scales="free", ncol = 5) +
+  facet_wrap(~Var, scales="free", ncol = 7) +
   theme_forcharts +
   geom_histogram(aes(group = TestDV, weight = N)) +
   scale_fill_manual(values = chart_colors) +
