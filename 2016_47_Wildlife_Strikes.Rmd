@@ -14,20 +14,18 @@ This script is used to look at patterns within your data. The script goes throug
 
 Using the space below, enter the file name and variable you wish to test. Enter the ```fileName``` with its extension and put it in quotes (ex. "this is my data.csv"). Then type the logical test you want to observe (ex. "Sepal.Length >= 6.5") This should be the column name of your data. Note that R column names do not have spaces or other punctuation. These characters will be replaced by a period when R reads in the file. Thus, use a period here or edit the column names before bringing in the file. 
 
-Note: In this example, I am pulling from my google drive so the steps above are slightly altered.
-
 ```{r}
 library(tidyverse)
 library(lubridate)
 library(forcats)
-setwd("C:\\Users\\foxtr\\Desktop\\wildlife")
+setwd("C:\\Users\\jake\\Desktop\\wildlife")
 #get raw data
   fileName <- "data_wildlife_clean.csv"
 
 #logical statement to test, left side is column name, right side is test
   test.dv <- "(Damage.Aircraft == 1)"
   
-  #Examples; "(diagnosis == 'M')"   "(Dalc > 3)"   "(dep_delay > 30)"
+  #Examples: "(diagnosis == 'M')"   "(Dalc > 3)"   "(dep_delay > 30)"
   
 ```
 
