@@ -23,9 +23,6 @@ library(googlesheets)
 library(tidyverse)
 library(plotly)
 
-#library(dbscan)     #clustering
-#library(geosphere)  #calculates distances
-
 options(scipen = 999)
 
 challenge_week <- 22
