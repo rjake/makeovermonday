@@ -1,0 +1,189 @@
+---
+title: "Change in Internet Usage per 100 people, 2005 to 2010 \nMakeoverMonday challenge for week 22 2017"
+date: "May 30, 2017"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, warning = F, message = F, 
+                      cache = T,
+                      fig.height = 3.5, fig.width = 4)
+```
+
+####Find more information here:
+
+* [MakeoverMonday](http://www.makeovermonday.co.uk/data/)
+* [Original Data](https://knoema.com/atlas/topics/Telecommunication/Internet-Users/Internet-users-per-100-people?action=export&gadget=tranking-container)
+
+
+```{r setup_workspace}
+library(googlesheets)
+
+library(tidyverse)
+library(plotly)
+
+#library(dbscan)     #clustering
+#library(geosphere)  #calculates distances
+
+options(scipen = 999)
+
+challenge_week <- 22
+```
+
+```{r read_data}
+#google sheet to read in
+  google_key <- 
+    gs_key("1XpDdIfrHLaL5Iiu7x8eVAIlDuq83zwUNqJSUsYSAh18")
+
+#get names of worksheets
+#  gs_ws_ls(google_key)
+
+#get twitter links to scrape
+  data_raw <- 
+    gs_read(google_key, 
+            ws = as.character(challenge_week), 
+            lookup = T) %>% 
+    data.frame()
+    
+  data_clean <-
+    data_raw  %>%
+    rename(users_per_100 = internet_users_per_100_people) %>% 
+    group_by(country) %>% 
+    filter(year >= 2005) %>% 
+    filter(year == min(year)|
+           year == max(year)) %>%
+    filter(!is.na(users_per_100)) %>% 
+    filter(n_distinct(year) == 2) %>% 
+    ungroup() %>% 
+    mutate(year = paste0("year_", year))
+```
+
+```{r create_clusters}
+  data_spread <-
+    data_clean %>% 
+    spread(key = year, value = users_per_100) %>% 
+    #sample_n(50) %>% 
+    mutate(diff = year_2015 - year_2005)
+
+  clusters <- 
+    hclust(
+      dist(data_spread %>% 
+             select(diff, year_2015)
+           ))
+
+  data_spread$group <- 
+      paste0("cluster ",
+             cutree(clusters, 
+                    k = 6))
+                    #h = mean(clusters$height)))
+```
+
+```{r create_outlines}
+Regions <- 
+  data_spread %>%
+  distinct(group)
+
+group_outline <- 
+  data.frame(diff = vector("numeric", 0),
+             year_2015 = vector("numeric", 0),
+             group = vector("character", length = 0))
+
+for(i in 1:nrow(Regions)){
+#  i = 2
+  group_points <-  
+    data_spread %>% 
+    filter(group == Regions$group[i]) %>% 
+    select(diff, year_2015)
+  
+  select_hull <- chull(group_points)
+  select_hull <- c(select_hull, select_hull[1])
+  
+  group_outline <- 
+    rbind(group_outline,
+          group_points[select_hull, ] %>%
+    mutate(group = Regions$group[i]))
+
+}
+```
+
+###*The median rate of internet users per 100 people has seen a large shift from 2005 to 2015 (n = 185 countries)*
+```{r plot_boxplot, fig.height = 3, fig.width = 6}
+ggplot(data_clean) +
+  geom_boxplot(aes(x = year, 
+                   y = users_per_100,
+                   group = year)) +
+  coord_flip()
+```
+
+####These charts use ```plotly```. You can zoom in, exclude values, and hover over points for more information.
+
+###*Growth of internet usage per 100 people (by country) can be grouped into different categories:*
+* Low usage rate in 2005 and little growth by 2015 (bottom left)
+* High rate in 2005 and small increase in 2015 (bottom right)
+* Moderate rate in 2005 and 20-40% growth by 2015 (middle right)
+* Low rate in 2005 and 50-70% growth by 2015Large increases to high rates in 2015 (top right)
+
+```{r plot_main}
+ggplotly(
+  ggplot() +
+    geom_polygon(data = group_outline, 
+                 aes(x = year_2015, 
+                     y = diff, 
+                     group = group, 
+                     fill = factor(group)), 
+                 color = "black",
+                 size = 1,
+                 alpha = .3) +
+    geom_segment(data = data_spread,
+                 aes(x = year_2005, xend = year_2015, 
+                     y = diff, yend = diff, 
+                   color = group),
+                 size = .5,
+                 alpha = .3) +
+    #geom_hline(yintercept = median(data_spread$diff)) +
+    #geom_vline(xintercept = median(data_spread$year_2015)) +
+    geom_point(data = data_spread,
+               aes(x = year_2015, 
+                   y = diff, 
+                   text = country, 
+                   color = group)) +
+    geom_text(data = data_spread %>% 
+                     filter(country == "United States"),
+           aes(x = year_2015 - 10,
+               y = diff + 1, label = country)) +
+    theme(legend.position="none",
+          panel.background = element_rect(fill = NA)) +
+    labs(x = "left = 2005, right = 2015 rate per 100 people",
+         y = "total difference between 2005 and 2015")
+)
+```
+
+
+###*The rate of internet users per 100 people in the United States didn't see much growth between 2005 - 2015*
+```{r plot_diag}
+ggplotly(  
+  data_spread %>% 
+  ggplot() +
+  geom_segment(aes(x = year_2005, xend = year_2015,
+                   y = year_2005, yend = year_2005, 
+                   group = country,
+                   color = group),
+               alpha = .2) +
+  geom_point(aes(x = year_2015,
+                 y = year_2005, 
+                 color = group),
+             size = 2) +
+  geom_text(data = . %>% filter(country == "United States"),
+             aes(x = year_2015 - 13,
+                 y = year_2005 + 1, label = country)) +
+  theme(panel.background = element_rect(fill = NA))+
+  geom_segment(aes(x = 0, y = 0,
+                   xend = 100, yend = 100)) +
+  coord_equal()+
+  xlab("year_2015")
+)  
+```
+
+
+.
