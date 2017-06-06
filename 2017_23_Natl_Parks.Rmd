@@ -1,0 +1,131 @@
+---
+title: "Internet Usage per 100 people 2005 - 2015"
+subtitle: "MakeoverMonday challenge for week 22 2017"
+date: "May 30, 2017"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, warning = F, message = F, 
+                      cache = T,
+                      fig.height = 3.5, fig.width = 4)
+```
+
+####Find more information here:
+
+* [MakeoverMonday](http://www.makeovermonday.co.uk/data/)
+* [Original Data](https://irma.nps.gov/Stats/Reports/National)
+* [Code on GitHub/rjake](https://github.com/rjake/makeoverMonday/blob/master/2017_23_Natl_Parks.Rmd)
+
+
+```{r setup_workspace}
+#library(devtools)
+#library(RCurl)
+#library(httr)
+#set_config(config(ssl_verifypeer = 0L))
+#devtools::install_github("RcppCore/Rcpp")
+#devtools::install_github("dgrtwo/gganimate")
+library(gganimate)
+library(googlesheets)
+library(ggmap)
+library(tidyverse)
+library(plotly)
+
+options(scipen = 999)
+
+challenge_week <- "23a"
+```
+
+```{r read_data}
+#google sheet to read in
+  google_key <- 
+    gs_key("1XpDdIfrHLaL5Iiu7x8eVAIlDuq83zwUNqJSUsYSAh18")
+
+#get names of worksheets
+#  gs_ws_ls(google_key)
+
+#get twitter links to scrape
+  data_raw <- 
+    gs_read(google_key, 
+            ws = as.character(challenge_week), 
+            lookup = T, check.names = F) %>% 
+    data.frame() %>% 
+    filter(Duplicate == F)
+  
+
+  data_raw_locations <-
+    gs_read(google_key, 
+            ws = "23b", 
+            lookup = T) %>% 
+    data.frame() #%>% 
+    #mutate(Address = paste(data_raw_locations$Park.Name,
+    #                       data_raw_locations$State, sep = ", "))
+
+#  park_locations <-
+#    data_raw_locations %>% 
+#    mutate_geocode(Address)
+#  write.csv(park_locations, "park_locations.csv", row.names = F)
+```
+
+```{r}
+data_clean <-
+  data_raw %>% 
+  left_join(data_raw_locations, by = c("Park" = "Park.Name")) %>% 
+  filter(lon < 0, lat > 0,
+         lon >-130, lat >25)
+  
+  map_usa <- map_data("state")
+  
+p <-
+  ggplot() +
+  geom_polygon(data = map_usa,
+               aes(long, lat, group = group),
+               fill = "white", color = "grey60") +
+  coord_map() +
+  #theme_nothing() +
+  geom_point(data = data_clean, 
+             aes(x = lon, y =lat, frame = Year,
+                 size = Recreation.Visitors))
+
+animation::ani.options(interval = 1)
+gganimate(p, title_frame = FALSE)
+```
+
+```{r}
+  a <- 
+    data_raw %>% 
+    group_by(Park) %>% 
+    summarise(n_years = n(),
+              min = min(Year),
+              max = max(Year),
+              mean = mean(Recreation.Visitors) %>% as.integer() ,
+              median = median(Recreation.Visitors) %>% as.integer())
+  
+    data_raw %>% 
+    filter(Duplicate == F) %>% 
+    group_by(Park) %>% 
+    arrange(Year) %>% 
+    mutate(Years_Operating = row_number(),
+           min_year = min(Year)) %>% 
+    filter(max(Years_Operating) >= 20) %>% 
+    filter(Years_Operating %in% c(1, 5, 20)) %>% 
+    ungroup() %>% 
+    select(-c(Duplicate, Year)) %>% 
+    mutate(Years_Operating = paste0("y", Years_Operating)) %>% 
+    spread(key = Years_Operating, value = Recreation.Visitors) %>% 
+    mutate(growth_5yr = y5 - y1,
+           growth_20yr = y20 - y1) %>% 
+    ggplot() +
+    geom_point(aes(x = growth_5yr, 
+                   y = growth_20yr, label = Park)) + 
+    geom_hline(yintercept = 0) +
+    geom_vline(xintercept = 0) +
+    geom_abline(slope = 1, intercept = 0) +
+    xlim(-2000000, 16000000)+
+    ylim(-2000000, 16000000)
+```
+
+
+    
+  
