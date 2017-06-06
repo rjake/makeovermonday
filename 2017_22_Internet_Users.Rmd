@@ -38,7 +38,7 @@ challenge_week <- 22
 #get names of worksheets
 #  gs_ws_ls(google_key)
 
-#get twitter links to scrape
+#get raw data
   data_raw <- 
     gs_read(google_key, 
             ws = as.character(challenge_week), 
