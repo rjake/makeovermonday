@@ -73,23 +73,48 @@ data_clean <-
   data_raw %>% 
   left_join(data_raw_locations, by = c("Park" = "Park.Name")) %>% 
   filter(lon < 0, lat > 0,
-         lon >-130, lat >25)
+         lon >-130, lat >25) %>% 
+  group_by(Park) %>% 
+  arrange(Year) %>% 
+  mutate(Years_Operating = row_number()) %>% 
+  ungroup() %>% 
+  mutate(alpha = 1-(Years_Operating/200),
+         first_year = ifelse(Years_Operating == 1, T, F)) %>% 
+  filter(Year > 2010)
   
   map_usa <- map_data("state")
   
 p <-
   ggplot() +
+#  facet_wrap(~Year)+
   geom_polygon(data = map_usa,
                aes(long, lat, group = group),
                fill = "white", color = "grey60") +
   coord_map() +
-  #theme_nothing() +
+  theme_nothing() +
   geom_point(data = data_clean, 
              aes(x = lon, y =lat, frame = Year,
-                 size = Recreation.Visitors))
+                 color = first_year,
+                 alpha = alpha,
+                 size = Recreation.Visitors)) +
+  scale_color_manual(values = c("grey30", "blue"), guide = F) +
+  scale_size(guide = F) 
+  
+p
 
 animation::ani.options(interval = 1)
-gganimate(p, title_frame = FALSE)
+
+And then check the path
+
+ani.options("convert") [1] "C:/Program Files/ImageMagick-6.8.7-Q16/convert.exe"
+
+ani.options(convert = 'C:/Program Files/ImageMagick-7.0.5-Q16/convert.exe') 
+
+ani.options("convert") [1] "C:/Program Files/ImageMagick-7.0.5-Q16/convert.exe"
+
+gganimate(p)
+
+gganimate(p, "natl_parks.gif")
 ```
 
 ```{r}
