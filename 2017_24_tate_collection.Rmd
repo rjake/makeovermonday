@@ -1,0 +1,268 @@
+---
+title: "The Tate Collection"
+subtitle: "MakeoverMonday challenge for week 24 2017"
+date: "June 11, 2017"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, warning = F, message = F
+                      cache = T,
+                      #fig.height = 3.5, fig.width = 4
+                      )
+```
+
+####Find more information here:
+
+* [MakeoverMonday](http://www.makeovermonday.co.uk/data/)
+* [Original Data](https://irma.nps.gov/Stats/Reports/National)
+* [Code on GitHub/rjake](https://github.com/rjake/makeoverMonday/blob/master/2017_23_Natl_Parks.Rmd)
+
+
+Making the .gif was no easy task. You will need ImageMagic (zip + installer) and ffmpeg. I recommend these two articles:
+
+* [https://rpubs.com/omicsdata/gganimate](https://rpubs.com/omicsdata/gganimate)
+* [https://github.com/dgrtwo/gganimate](https://github.com/dgrtwo/gganimate)
+
+```{r setup_workspace, echo = T}
+library(DT)
+library(data.table)
+library(forcats)
+library(gganimate) #may need: devtools::install_github("dgrtwo/gganimate")
+library(animation)
+library(googlesheets)
+library(ggmap)
+library(knitr)
+library(tidyverse)
+library(plotly)
+library(stringi)
+library(wordcloud)
+library(wordcloud2)
+
+options(scipen = 999)
+
+```
+
+```{r read_data}
+art_raw <-
+  "https://raw.githubusercontent.com/tategallery/collection/master/artwork_data.csv"  %>% 
+  fread(., select= c(1,5,8,10,11), 
+          na.strings = "", data.table = F, encoding = "UTF-8")
+
+artist_raw <-
+  "https://raw.githubusercontent.com/tategallery/collection/master/artist_data.csv" %>% 
+  fread(., select = c(1,2,3,5:7), na.strings = "", data.table = F, encoding = "UTF-8") %>% 
+  rename(artistId = id) %>% 
+  mutate(name = stri_trans_general(name, "latin-ascii"),
+         placeOfBirth = stri_trans_general(placeOfBirth, "latin-ascii"))
+
+rename_places <-
+  "https://raw.githubusercontent.com/rjake/makeoverMonday/master/2017_24_places_rename.csv" %>% 
+  fread(., data.table = F, encoding = "UTF-8")
+
+```
+
+Clean up art info
+```{r}
+count_na <-
+  function(x){
+    sum(is.na(x))
+  }
+
+sapply(left_join(art_raw,artist_raw), count_na) %>% sort()
+
+art_plot <-
+  art_raw %>% 
+  left_join(artist_raw) %>% 
+  filter(!is.na(year),
+         year != "no date",
+         !is.na(yearOfBirth),
+         !is.na(yearOfDeath),
+         !is.na(acquisitionYear),
+         !is.na(gender),
+         grepl("^[A-Za-z]", medium)) %>% 
+  mutate(year = as.integer(year)) %>% 
+  #filter(year > 1856) %>% 
+  mutate(artist_age_created = paste0(round(year - yearOfBirth, -1), "s"),
+         art_age_acquire = (acquisitionYear - year)%>%
+                           ifelse(. < 0, 0, .) %>% 
+                           cut(., breaks = seq(0, 425, 25),
+                               include.lowest = T),
+         post_humus = ifelse(acquisitionYear > yearOfDeath, 
+                             "post-humus", "while living"),
+         decade_born = round(yearOfBirth, -1),
+         decade_died = round(yearOfDeath, -1),
+         decade_created = paste0(round(year, -1), "s"),
+         acquisition_decade = paste0(round(acquisitionYear, -1), "s")) %>% 
+  select(-c(yearOfBirth, yearOfDeath, id, artistId)) %>% 
+  mutate(medium = str_extract(medium, '\\w*'),
+         name = gsub(", .*", "", name),
+         name = ifelse(nchar(name) > 20,
+                       gsub(" \\(.*", "", name), name)) %>%
+  mutate(placeOfBirth = gsub(".*, ", "", placeOfBirth)) %>% 
+  left_join(rename_places) %>% 
+  mutate(placeOfBirth = Rename) %>% 
+  select(-Rename)
+
+a <- 
+  count(art_plot, placeOfBirth, sort = T) %>%
+  rename(word = placeOfBirth,
+         freq = n) %>% 
+  filter(!is.na(word)) %>%
+  #top_n(50) %>% 
+  mutate(word = gsub("[[:punct:]]", "_", word),
+         freq = log(freq)) 
+
+  as.data.frame(a) %>% wordcloud2()
+
+
+  ggplot(art_plot) +
+    facet_grid(gender~.) +
+    geom_count(aes(y = year, 
+                   x = acquisitionYear,
+                   color = year <= 1900
+                   ),
+               alpha = .3) +
+    scale_color_manual(values = c("navyblue", "grey60")) +
+    geom_hline(yintercept = 1900) +
+    geom_vline(xintercept = 1900, linetype = "dotted") +
+    guides(size = F) +
+    labs(y = "Year Created", x = "Year Acquired") +
+    theme(panel.background = element_rect(fill = "white", color = "black"))
+
+  
+  a <- 
+    art_plot %>% 
+    #filter(acquisitionYear > 1860) %>% 
+    mutate(side = year > 1900) %>% 
+    count(gender, side, acquisitionYear) %>% 
+    mutate(n = ifelse(side == T, n, -n))
+  
+    ggplot(a, aes(y = n, x = acquisitionYear, fill = side)) +
+    facet_grid(.~gender)+#, scales = "free_y") +
+    geom_col(data = filter(a, side == T)) +
+    geom_col(data = filter(a, side == F)) +
+    scale_color_manual(values = c("grey60", "navyblue")) +
+    geom_hline(yintercept = 0) +
+    geom_vline(xintercept = 1900, linetype = "dotted") +
+    guides(size = F) +
+    coord_cartesian(ylim = c(-1000,2000))+
+    labs(y = "Year Created", x = "Year Acquired") +
+    theme(panel.background = element_rect(fill = "white", color = "black"))
+  
+  
+a <-
+  art_raw %>% 
+  mutate(word = str_extract(medium, '\\w*'),
+         cat = fct_lump(word, n = 10))
+
+table(a$cat)         
+```
+
+
+
+
+###Comparison clouds
+The following charts are comparison clouds. A max of 20 words are selected. The words chosen are those that exist in both groups. The size represents how frequent that word is in the collection and it is assigned a color based on the proportion of the collection assigned to each group. In an example of medium by gender. Oil is assigned to the "female" group. Both groups have oil paintings (men: 3620, women: 216) but by proportion of the collection, oil paintings are only 8% of paintings by men vs 20% of the paintings by women. Thus Oil is represented on the "female" side of the wordcloud.
+
+
+```{r}
+a <- 
+  art_plot %>% 
+  mutate(var = gender) %>% 
+  count(var, sort = T) %>% 
+  top_n(20) %>% 
+  mutate(log_n = log(n))
+
+wordcloud2(a)
+a$var,
+          a$n,
+          scale = c(4, .2),
+          max.words = 20,
+          #random.order = F,
+          #random.color = F,
+          colors = brewer.pal(8, "PuBuGn"))
+
+a <-
+  data_words %>% 
+  mutate(varColor = fct_lump(gender, 4),
+         varSize = medium_word) %>% 
+  count(varColor, varSize, sort = T) %>%
+  #mutate(n = log(n)) %>% 
+  group_by(varColor) %>% 
+  arrange(-n) %>%
+  mutate(pct = n/sum(n)) %>% 
+  #top_n(10) %>% 
+  ungroup() 
+  %>% 
+  spread(key = varColor, value = n, fill = 0)
+  
+View(a)
+  a %>% 
+  remove_rownames()%>% 
+  column_to_rownames("varSize") %>% 
+  comparison.cloud(#colors = c("#F8766D", "#00BFC4"),
+                   max.words = 60, random.order = F,
+                   title.size = 2,rot.per = 0)
+
+
+
+```
+
+```{r}
+range_new <- 
+  function(x, newMin, newMax){
+    (x - min(x))/(max(x)-min(x)) * (newMax - newMin) + newMin 
+  }
+
+get_columns <-   
+  art_plot %>% 
+  select(medium, name, placeOfBirth, decade_created) %>% 
+  colnames()
+
+  word_plot <-
+    art_plot %>% 
+    select(one_of(get_columns)) %>% 
+    gather(key="Var", value = "Response", na.rm = T) %>%
+    group_by(Var, Response) %>% 
+    summarise(N = n()) %>% 
+    ungroup() %>% 
+    arrange(Var) %>%
+    rowwise() %>% 
+    mutate(color = which(get_columns == Var) * .2) %>% 
+    ungroup() %>% 
+    rowwise() %>% 
+    mutate(color = hsv(color, .5, .5)) %>% 
+    filter(N > 1) %>% 
+    arrange(desc(N)) %>% 
+    mutate(logN = log(N),
+           N2 = ifelse(N > 10000, 7000, N),
+           logN2 = round(log(N2), 0)^2,
+           rangeN = range_new(N, 4, 30),
+           sqrt_rangeN = sqrt(rangeN))
+
+word_plot_prep <-
+  word_plot %>% 
+  filter(Var == "name") %>%
+  slice(1:100) %>% 
+  select(Response, sqrt_rangeN, color) %>%
+  as.data.frame()
+
+row.names(word_plot_prep) <- word_plot_prep$Response
+
+  wordcloud2(word_plot_prep,
+             maxRotation = 0, minRotation = 0, color = word_plot_prep$color)
+
+
+  word_plot %>%
+    select(Var, Response, sqrt_rangeN) %>% 
+    spread(key = Var, value = sqrt_rangeN, fill = 0) %>% 
+wordcloud()
+
+wordcloud2(demoFreq)
+
+  letterCloud(demoFreq, word = "TATE",
+            wordSize = 1)
+```
+
