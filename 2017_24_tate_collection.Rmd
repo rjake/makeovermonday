@@ -7,41 +7,24 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = F, warning = F, message = F
-                      cache = T,
-                      #fig.height = 3.5, fig.width = 4
-                      )
+knitr::opts_chunk$set(echo = F, warning = F, message = F, cache = T)
 ```
 
-####Find more information here:
+###This week I chose to look at the metadata for the Tate Collection. Read about the Tate Collection [here ](http://www.tate.org.uk/about/our-work/collection/about-the-collection).
 
+####Find more information about this project:
 * [MakeoverMonday](http://www.makeovermonday.co.uk/data/)
-* [Original Data](https://irma.nps.gov/Stats/Reports/National)
-* [Code on GitHub/rjake](https://github.com/rjake/makeoverMonday/blob/master/2017_23_Natl_Parks.Rmd)
-
-
-Making the .gif was no easy task. You will need ImageMagic (zip + installer) and ffmpeg. I recommend these two articles:
-
-* [https://rpubs.com/omicsdata/gganimate](https://rpubs.com/omicsdata/gganimate)
-* [https://github.com/dgrtwo/gganimate](https://github.com/dgrtwo/gganimate)
+* [Original Data](https://github.com/tategallery/collection)
+* [Code on GitHub/rjake](https://raw.githubusercontent.com/rjake/makeoverMonday/master/2017_24_tate_collection.Rmd)
 
 ```{r setup_workspace, echo = T}
-library(DT)
 library(data.table)
-library(forcats)
-library(gganimate) #may need: devtools::install_github("dgrtwo/gganimate")
-library(animation)
-library(googlesheets)
-library(ggmap)
 library(knitr)
-library(tidyverse)
-library(plotly)
 library(stringi)
-library(wordcloud)
+library(tidyverse)
 library(wordcloud2)
 
 options(scipen = 999)
-
 ```
 
 ```{r read_data}
@@ -63,15 +46,11 @@ rename_places <-
 
 ```
 
-Clean up art info
 ```{r}
-count_na <-
-  function(x){
-    sum(is.na(x))
-  }
-
-sapply(left_join(art_raw,artist_raw), count_na) %>% sort()
-
+#Get rid of missing data, remove medium values that don't start with letters
+#create new columns (not all are used)
+#isolate the 1st word from the medium column
+#place names use older titles (ex: Misr = Egypt), I use a reference file to update the names
 art_plot <-
   art_raw %>% 
   left_join(artist_raw) %>% 
@@ -83,7 +62,6 @@ art_plot <-
          !is.na(gender),
          grepl("^[A-Za-z]", medium)) %>% 
   mutate(year = as.integer(year)) %>% 
-  #filter(year > 1856) %>% 
   mutate(artist_age_created = paste0(round(year - yearOfBirth, -1), "s"),
          art_age_acquire = (acquisitionYear - year)%>%
                            ifelse(. < 0, 0, .) %>% 
@@ -96,42 +74,191 @@ art_plot <-
          decade_created = paste0(round(year, -1), "s"),
          acquisition_decade = paste0(round(acquisitionYear, -1), "s")) %>% 
   select(-c(yearOfBirth, yearOfDeath, id, artistId)) %>% 
-  mutate(medium = str_extract(medium, '\\w*'),
-         name = gsub(", .*", "", name),
-         name = ifelse(nchar(name) > 20,
-                       gsub(" \\(.*", "", name), name)) %>%
+  mutate(medium = stri_extract(medium, regex = '\\w*'),
+         last_name = gsub(", .*", "", name),
+         last_name = ifelse(nchar(last_name) > 20,
+                       gsub(" \\(.*", "", last_name), last_name)) %>%
   mutate(placeOfBirth = gsub(".*, ", "", placeOfBirth)) %>% 
   left_join(rename_places) %>% 
   mutate(placeOfBirth = Rename) %>% 
-  select(-Rename)
-
-a <- 
-  count(art_plot, placeOfBirth, sort = T) %>%
-  rename(word = placeOfBirth,
-         freq = n) %>% 
-  filter(!is.na(word)) %>%
-  #top_n(50) %>% 
-  mutate(word = gsub("[[:punct:]]", "_", word),
-         freq = log(freq)) 
-
-  as.data.frame(a) %>% wordcloud2()
+  select(-Rename, -name)
+```
 
 
+```{r}
+range_new <- 
+  function(x, newMin, newMax){
+    (x - min(x))/(max(x)-min(x)) * (newMax - newMin) + newMin 
+  }
+
+get_columns <-   
+  art_plot %>% 
+  select(medium, last_name, placeOfBirth, decade_created) %>% 
+  colnames()
+
+
+word_plot <-
+  art_plot %>% 
+  select(one_of(get_columns)) %>% 
+  gather(key="Var", value = "Response", na.rm = T) %>%
+  group_by(Var, Response) %>% 
+  summarise(N = n()) %>% 
+  group_by(Var) %>% 
+  arrange(-N) %>% 
+  mutate(color_V = row_number()*2) %>% 
+  filter(color_V < 100) %>% 
+  ungroup() %>% 
+  arrange(Var) %>%
+  rowwise() %>% 
+  mutate(color_H = which(get_columns == Var) * .22) %>% 
+  ungroup() %>% 
+  #rowwise() %>% 
+  mutate(color = hsv(color_H, .5, color_V/100)) %>% 
+  filter(N > 1) %>% 
+  arrange(desc(N)) %>% 
+  mutate(logN = log(N),
+         rangeN = range_new(N, 2, 30))
+```
+
+
+```{r eval = F}
+print_wordcloud <-
+  function(x){
+    #x = 1
+    var_to_use <- get_columns[x]
+    
+    word_plot_prep <-
+      word_plot %>% 
+      filter(Var == var_to_use) %>%
+      slice(1:100) %>% 
+      select(Response, N = rangeN, color) 
+  
+    row.names(word_plot_prep) <- word_plot_prep$Response
+    
+    colorVec = grey(seq(0.1, .7, length.out = nrow(word_plot_prep)))
+    
+    word_cloud_save <- 
+      wordcloud2(word_plot_prep[, 1:2],
+               maxRotation = 0, minRotation = 0, 
+               color = colorVec,
+               minSize = 12)
+
+    word_cloud_html <- paste0(i, ".html")
+    word_cloud_png <- paste0(i, ".png")  
+    
+    
+    my_path  <- htmltools::html_print(word_cloud_save) # saves html in temp directory
+    print(my_path)
+}
+```
+
+##```r get_columns[1]```
+```{r eval = F}
+print_wordcloud(1)
+```
+![](1.png)
+<br>
+
+##```r get_columns[2]```
+```{r eval = F}
+print_wordcloud(2)
+```
+![](2.png)
+<br>
+
+##```r get_columns[3]```
+```{r eval = F}
+print_wordcloud(3)
+```
+![](3.png)
+<br>
+
+##```r get_columns[4]```
+```{r eval = F}
+print_wordcloud(4)
+```
+![](4.png)
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+#Final Product
+After exporting each png through RStudio Viewer > Export, I combined the images together.
+
+##The Tate Collection
+![](1_4.png)
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+I was also interested in the number of works by women in the Tate Collection. It looks like the collection of female artists started to grow around the early 1900s and most of the work is from that point forward. 
+
+
+
+```{r fig.width = 6, fig.height = 8}
   ggplot(art_plot) +
     facet_grid(gender~.) +
     geom_count(aes(y = year, 
                    x = acquisitionYear,
-                   color = year <= 1900
+                   color = year >= 1900
                    ),
-               alpha = .3) +
-    scale_color_manual(values = c("navyblue", "grey60")) +
+               alpha = .25) +
+    scale_color_manual(values = c("grey60", "orange")) +
     geom_hline(yintercept = 1900) +
     geom_vline(xintercept = 1900, linetype = "dotted") +
     guides(size = F) +
     labs(y = "Year Created", x = "Year Acquired") +
-    theme(panel.background = element_rect(fill = "white", color = "black"))
+    theme(panel.background = element_rect(fill = "white", color = "black")) +
+    coord_fixed(.2) +
+  ggtitle("The effort to include more women has focused primarily \non artists from 1900 onwards ")
+```
 
-  
+
+```{r}
+a <-
+  art_plot %>% 
+  mutate(year1900 =
+           ifelse(year < 1900, "pre1900", "1900+")) %>% 
+  count(gender, year1900) %>% 
+  group_by(year1900) %>% 
+  mutate(pct = (n/sum(n)) %>% round(., 3) * 100) %>% 
+  ungroup() %>% 
+  arrange(desc(year1900))
+
+ggplot(a) +
+  geom_col(aes(x = year1900, y = n, fill = gender)) +
+  coord_flip() +
+  labs(x = "year created", y = "# of works") +
+  theme(aspect.ratio = .25) +
+  ggtitle("The 1127 works of art by women make up less than 3% of the Tate Collection")
+
+art_plot %>% 
+  count(gender)%>% 
+  mutate(pct = (n/sum(n)) %>% round(., 3) * 100) %>% 
+  kable(padding = 0)
+```
+
+
+
+```{r eval = F}
+#not using
   a <- 
     art_plot %>% 
     #filter(acquisitionYear > 1860) %>% 
@@ -139,7 +266,7 @@ a <-
     count(gender, side, acquisitionYear) %>% 
     mutate(n = ifelse(side == T, n, -n))
   
-    ggplot(a, aes(y = n, x = acquisitionYear, fill = side)) +
+  ggplot(a, aes(y = n, x = acquisitionYear, fill = side)) +
     facet_grid(.~gender)+#, scales = "free_y") +
     geom_col(data = filter(a, side == T)) +
     geom_col(data = filter(a, side == F)) +
@@ -150,119 +277,4 @@ a <-
     coord_cartesian(ylim = c(-1000,2000))+
     labs(y = "Year Created", x = "Year Acquired") +
     theme(panel.background = element_rect(fill = "white", color = "black"))
-  
-  
-a <-
-  art_raw %>% 
-  mutate(word = str_extract(medium, '\\w*'),
-         cat = fct_lump(word, n = 10))
-
-table(a$cat)         
 ```
-
-
-
-
-###Comparison clouds
-The following charts are comparison clouds. A max of 20 words are selected. The words chosen are those that exist in both groups. The size represents how frequent that word is in the collection and it is assigned a color based on the proportion of the collection assigned to each group. In an example of medium by gender. Oil is assigned to the "female" group. Both groups have oil paintings (men: 3620, women: 216) but by proportion of the collection, oil paintings are only 8% of paintings by men vs 20% of the paintings by women. Thus Oil is represented on the "female" side of the wordcloud.
-
-
-```{r}
-a <- 
-  art_plot %>% 
-  mutate(var = gender) %>% 
-  count(var, sort = T) %>% 
-  top_n(20) %>% 
-  mutate(log_n = log(n))
-
-wordcloud2(a)
-a$var,
-          a$n,
-          scale = c(4, .2),
-          max.words = 20,
-          #random.order = F,
-          #random.color = F,
-          colors = brewer.pal(8, "PuBuGn"))
-
-a <-
-  data_words %>% 
-  mutate(varColor = fct_lump(gender, 4),
-         varSize = medium_word) %>% 
-  count(varColor, varSize, sort = T) %>%
-  #mutate(n = log(n)) %>% 
-  group_by(varColor) %>% 
-  arrange(-n) %>%
-  mutate(pct = n/sum(n)) %>% 
-  #top_n(10) %>% 
-  ungroup() 
-  %>% 
-  spread(key = varColor, value = n, fill = 0)
-  
-View(a)
-  a %>% 
-  remove_rownames()%>% 
-  column_to_rownames("varSize") %>% 
-  comparison.cloud(#colors = c("#F8766D", "#00BFC4"),
-                   max.words = 60, random.order = F,
-                   title.size = 2,rot.per = 0)
-
-
-
-```
-
-```{r}
-range_new <- 
-  function(x, newMin, newMax){
-    (x - min(x))/(max(x)-min(x)) * (newMax - newMin) + newMin 
-  }
-
-get_columns <-   
-  art_plot %>% 
-  select(medium, name, placeOfBirth, decade_created) %>% 
-  colnames()
-
-  word_plot <-
-    art_plot %>% 
-    select(one_of(get_columns)) %>% 
-    gather(key="Var", value = "Response", na.rm = T) %>%
-    group_by(Var, Response) %>% 
-    summarise(N = n()) %>% 
-    ungroup() %>% 
-    arrange(Var) %>%
-    rowwise() %>% 
-    mutate(color = which(get_columns == Var) * .2) %>% 
-    ungroup() %>% 
-    rowwise() %>% 
-    mutate(color = hsv(color, .5, .5)) %>% 
-    filter(N > 1) %>% 
-    arrange(desc(N)) %>% 
-    mutate(logN = log(N),
-           N2 = ifelse(N > 10000, 7000, N),
-           logN2 = round(log(N2), 0)^2,
-           rangeN = range_new(N, 4, 30),
-           sqrt_rangeN = sqrt(rangeN))
-
-word_plot_prep <-
-  word_plot %>% 
-  filter(Var == "name") %>%
-  slice(1:100) %>% 
-  select(Response, sqrt_rangeN, color) %>%
-  as.data.frame()
-
-row.names(word_plot_prep) <- word_plot_prep$Response
-
-  wordcloud2(word_plot_prep,
-             maxRotation = 0, minRotation = 0, color = word_plot_prep$color)
-
-
-  word_plot %>%
-    select(Var, Response, sqrt_rangeN) %>% 
-    spread(key = Var, value = sqrt_rangeN, fill = 0) %>% 
-wordcloud()
-
-wordcloud2(demoFreq)
-
-  letterCloud(demoFreq, word = "TATE",
-            wordSize = 1)
-```
-
