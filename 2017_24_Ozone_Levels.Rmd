@@ -1,0 +1,158 @@
+---
+title: "Ozone Levels 1995 - 2016"
+subtitle: "MakeoverMonday challenge for week 24 2017"
+date: "June 19, 2017"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning = F, message = F, cache = T)
+```
+
+####Find more information here:
+
+* [MakeoverMonday](http://www.makeovermonday.co.uk/data/)
+* [Original Data](https://public.tableau.com/views/MakeoverMondayWeek25_0/Dashboard1?:embed=y&:display_count=yes&publish=yes) pulled from this workbook
+* [Code on GitHub/rjake](https://github.com/rjake/makeoverMonday/blob/master/2017_23_Natl_Parks.Rmd)
+
+```{r setup_workspace, echo = T}
+library(googlesheets)
+library(tidyverse)
+library(RColorBrewer)
+```
+
+```{r}
+options(scipen = 999)
+
+challenge_week <- "25"
+```
+
+```{r}
+#google sheet to read in for data
+  google_key <- 
+    gs_key("1XpDdIfrHLaL5Iiu7x8eVAIlDuq83zwUNqJSUsYSAh18")
+
+#get data from googlesheets
+  pollution_raw <- 
+    gs_read_listfeed(google_key, 
+                     ws = as.character(challenge_week), 
+                     lookup = T, check.names = F, encoding = "UTF-8") %>% 
+    data.frame()
+
+#google sheet to read in for base maps
+  google_key_maps <- 
+    gs_key("1tp7rcI5hrfIdf1BJ2QDTBt2SJn-TZsYX6jrfFwpErWY")
+
+#get new coordinates (Albers projection) for county level data
+  map_county_pts <-
+      gs_read_listfeed(google_key_maps, 
+                       ws = "County Codes", 
+                       lookup = T, encoding = "UTF-8") %>% 
+      data.frame() 
+
+#read in state coordinates (Albers projection)
+  map_poly <-
+     gs_read_listfeed(google_key_maps, 
+                      ws = "State - Polygons", 
+                      lookup = T, encoding = "UTF-8") %>% 
+     data.frame() 
+
+```
+
+
+```{r}
+#these are the standard ozone limits (ppm) from healthy to very unhealthy
+  ozone_limits <- c(0, .054, .07, .085,.105, Inf)
+
+#this is the data that will be used for our map
+  data_map <-
+    pollution_raw %>% 
+    filter(Year %in% c(1995, 2005, 2015)) %>%
+    mutate(OzoneMaxCat = cut(OzoneMax, 
+                             breaks = ozone_limits, 
+                             include.lowest = T,
+                             ordered_result = T),
+           OzoneMaxFact = as.numeric(OzoneMaxCat)) %>% 
+    left_join(select(map_county_pts, 5:7)) 
+```
+
+```{r}
+#this function will grab the max value for the hexbins
+  hex_which_max <-
+    function(x) {
+      tab <- table(x)
+      names(tab)[which.max(tab)]
+    }
+
+#these are the colors to use
+  hex_colors <-
+    brewer.pal(n = 8, name = "BrBG")[c(6, 4:1)]
+
+
+  hex_colors_labels <-
+    levels(data_map$OzoneMaxCat) %>% 
+    gsub(",", "  to  ", .)
+
+#theme for the plots
+  theme_maps <-
+    theme(panel.background = element_rect(fill = "grey35"),
+          panel.grid = element_blank(),
+          strip.background = element_blank(),
+          strip.text.x = element_blank(),
+          axis.title = element_blank(),
+          axis.text = element_blank(),
+          axis.ticks = element_blank(),
+          plot.title =  element_text(size = 20),
+          plot.subtitle =  element_text(color = "grey60", size = 14))
+```
+
+
+```{r fig.height = 6, fig.width = 8}
+#main ggplot: facetted maps
+  ggplot() +
+  theme_maps +
+  facet_wrap(~Year, ncol = 3)+
+  geom_polygon(data = map_poly,
+               aes(x = long, y = lat, group = group),
+               fill = "white", size = .1, color = "grey85"
+               )+
+  coord_fixed()+
+  stat_summary_hex(data = data_map,
+                   aes(x = long, y = lat, z = OzoneMaxFact),
+                   color = "white",
+                   fun = hex_which_max, bins = 25, alpha = .7) +
+  scale_fill_manual(values = hex_colors, labels = hex_colors_labels) +
+  geom_text(data = data_map, 
+            aes(x = 2303758, y = -2201137, label = Year),
+              color = "white", size = 3) +
+  labs(fill = "Ozone (ppm) \nhealthy to unhealthy",
+       title = "Ozone values have come down in the past 20 years",
+       subtitle = 
+          "Hexbins represent the max values of monitoring sites located within each bin for the years specified. \nIn general, these are county level measurements. Blank areas indicate no data is available.")
+```
+
+```{r fig.height = 3, fig.width = 8}
+#jitter plot
+  ggplot(data_map, aes(x = factor(Year), y = OzoneMax)) + 
+    geom_jitter(aes(color = factor(OzoneMaxFact)),
+                alpha = .5) +
+    stat_boxplot(geom ='errorbar', width = 0.25) + 
+    geom_boxplot(aes(group = factor(Year)), 
+                 alpha = .5, width = .5, outlier.shape = NA, ) +
+    coord_flip() +
+    scale_color_manual(values = hex_colors, labels = hex_colors_labels, guide = F) +
+    labs(subtitle = "Points represent the max value read from measurement sites in countries throughout the US",
+         x = "Year")
+```
+
+```{r fig.height = 3, fig.width = 8}
+#used for exploration
+  pollution_raw %>% 
+    select(FIPS_County:OzoneVar) %>% 
+    gather(key = Metric, value = Value, -c(FIPS_County, Year)) %>% 
+    ggplot() +
+    facet_grid(.~Metric, scales = "free_x") +
+    geom_boxplot(aes(Year, Value, group = Year), alpha = .5) +
+    coord_flip()
+```
