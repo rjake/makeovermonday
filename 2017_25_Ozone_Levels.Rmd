@@ -1,6 +1,6 @@
 ---
 title: "Ozone Levels 1995 - 2016"
-subtitle: "MakeoverMonday challenge for week 24 2017"
+subtitle: "MakeoverMonday challenge for week 25 2017"
 date: "June 19, 2017"
 author: "jake riley"
 output: html_document
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = T, warning = F, message = F, cache = T)
 
 * [MakeoverMonday](http://www.makeovermonday.co.uk/data/)
 * [Original Data](https://public.tableau.com/views/MakeoverMondayWeek25_0/Dashboard1?:embed=y&:display_count=yes&publish=yes) pulled from this workbook
-* [Code on GitHub/rjake](https://github.com/rjake/makeoverMonday/blob/master/2017_23_Natl_Parks.Rmd)
+* [Code on GitHub/rjake](https://github.com/rjake/makeoverMonday/blob/master/2017_25_Ozone_Levels.Rmd)
 
 ```{r setup_workspace, echo = T}
 library(googlesheets)
