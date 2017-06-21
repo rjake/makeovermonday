@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = T, warning = F, message = F, cache = T)
 ####Find more information here:
 
 * [MakeoverMonday](http://www.makeovermonday.co.uk/data/)
-* [Original Data](https://public.tableau.com/views/MakeoverMondayWeek25_0/Dashboard1?:embed=y&:display_count=yes&publish=yes) pulled from this workbook
+* Original Data pulled from [this](https://public.tableau.com/views/MakeoverMondayWeek25_0/Dashboard1?:embed=y&:display_count=yes&publish=yes) Tableau workbook
 * [Code on GitHub/rjake](https://github.com/rjake/makeoverMonday/blob/master/2017_25_Ozone_Levels.Rmd)
 
 ```{r setup_workspace, echo = T}
