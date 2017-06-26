@@ -362,3 +362,22 @@ map_area_clipped_hulls <-
 write.csv(map_area_clipped_hulls, "map_area_clipped_hulls", 
           row.names = F)
 ```
+
+#final CSVs
+```{r eval = F}
+map_states_df <- 
+  fortify(map_states, region="STATEFP") %>%
+  mutate(STATEFP = id)
+
+clipped_hulls_df <-
+  fortify(clipped_hulls, region="id") %>%
+  mutate(CD115FP = id)
+
+map_districts_df <-
+  fortify(clipped_hulls, region="id") %>%
+  mutate(CD115FP = id)
+
+write.csv(clipped_hulls_df, "clipped_hulls_df.csv", row.names = F)
+write.csv(map_districts_df, "map_districts_df.csv", row.names = F)
+write.csv(map_states_df, "map_states_df.csv", row.names = F)
+```
