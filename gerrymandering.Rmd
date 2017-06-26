@@ -375,9 +375,11 @@ clipped_hulls_df <-
 
 map_districts_df <-
   fortify(clipped_hulls, region="id") %>%
-  mutate(CD115FP = id)
+  mutate(CD115FP = id) %>% 
+  left_join(compare_list %>% select(-id))
 
 write.csv(clipped_hulls_df, "clipped_hulls_df.csv", row.names = F)
 write.csv(map_districts_df, "map_districts_df.csv", row.names = F)
 write.csv(map_states_df, "map_states_df.csv", row.names = F)
 ```
+
