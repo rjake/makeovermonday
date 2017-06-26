@@ -372,13 +372,14 @@ map_states_df <-
 
 clipped_hulls_df <-
   fortify(clipped_hulls, region="id") %>%
-  mutate(CD115FP = id) %>%
-  mutate(STATEFP = str_sub(id, 1, 2))
+  mutate(STATEFP = str_sub(id, 1, 2),
+         CD115FP = str_sub(id, 3, 4))
 
 map_districts_df <-
-  fortify(clipped_hulls, region="id") %>%
+  fortify(map_districts, region="id") %>%
   left_join(map_area_pct) %>% 
-  mutate(CD115FP = str_sub(id, 3, 4))
+  mutate(STATEFP = str_sub(id, 1, 2),
+         CD115FP = str_sub(id, 3, 4))
 
 write.csv(clipped_hulls_df, "clipped_hulls_df.csv", row.names = F)
 write.csv(map_districts_df, "map_districts_df.csv", row.names = F)
