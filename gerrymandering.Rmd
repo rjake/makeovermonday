@@ -70,13 +70,16 @@ knitr::opts_chunk$set(echo = TRUE)
   # remove old states and put new ones back in; note the different order
   # we're also removing puerto rico in this example but you can move it
   # between texas and florida via similar methods to the ones we just used
-    us_aea_remove <- 
-      us_aea[!us_aea$STATEFP %in% 
+    us_aea_remove <-  
+        us_aea[!us_aea$STATEFP %in% 
                c("02", "15", "60", "66", "69", "72", "78"), ]
 
-    us_aea_final <-
-      rbind(us_aea_remove, alaska, hawaii)
+    us_aea_final <- rbind(us_aea_remove, alaska, hawaii)
+    #rescale to fit WGS84
+      us_aea_final <- elide(us_aea_final, scale = 10) 
 
+      plot(us_aea_final)
+      
   # get ready for ggplot
   map_attr <-
     as.data.frame(us_aea_final) %>% 
@@ -101,6 +104,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r eval = F}
+map_polygons <- read.csv("map_polygons.csv", stringsAsFactors = F)
+
 #Generate polygon outlines
   dist_groups <-
     map_polygons %>% 
@@ -153,11 +158,6 @@ The function comes from [this thread](https://stackoverflow.com/questions/338419
 
 #test map of all districts in new projection
 ```{r}
-alaska_2 <- 
-  map_polygons %>% 
-  filter(STATEFP == 2) %>% 
-  mutate(group = paste0(group, "-", piece))
-
 # plot it
   ggplot() + 
   geom_polygon(data = map_polygons,
@@ -220,8 +220,7 @@ str_pad_0 <-
 
 #test
   convert_df2sp(df = filter(map_polygons, STATEFP == "15"),
-                group_field = "group")%>% 
-  plot()
+                group_field = "group")%>% plot()
 
 #hulls   
   map_hulls <- convert_df2sp(group_outline, "id")
@@ -236,11 +235,11 @@ str_pad_0 <-
           by = "group") %>% 
     #fix overlapping points
     gBuffer(byid=TRUE, width=0)
-  
+
   map_districts$id <- str_pad_0(map_districts$id, 4)
   map_districts$CD115FP <- str_pad_0(map_districts$CD115FP, 2)
   map_districts$STATEFP <- str_pad_0(map_districts$STATEFP, 2)
-  map_districts$area <- gArea(map_districts, byid=TRUE)/100000
+  map_districts$area <- gArea(map_districts, byid=TRUE)*100000
 
 #dissolve to states
   map_states <-
@@ -341,8 +340,10 @@ for(i in 2:nrow(compare_list)){
   plot(clipped_hulls[state_ex,], col = rgb(0, 0, 1, 0.2), asp = 1)
   plot(a, add = T)
 
-clipped_hulls$area <- gArea(clipped_hulls, byid=TRUE)/100000
-  
+clipped_hulls$area <- gArea(clipped_hulls, byid=TRUE)*100000
+#clipped_hulls$STATEFP <- str_sub(clipped_hulls$id, 1, 2)
+#clipped_hulls$CD115FP <- str_sub(clipped_hulls$id, 3, 4)
+
 save_as_shp("clipped_hulls")
 ```
 
@@ -364,6 +365,15 @@ write.csv(map_area_pct, "map_area_pct.csv",
           row.names = F)
 ```
 
+```{r}
+map_districts@data <- 
+  map_districts@data %>% 
+  left_join(map_area_pct)
+
+save_as_shp("map_districts")
+```
+
+
 #final CSVs
 ```{r eval = F}
 map_states_df <- 
@@ -384,5 +394,10 @@ map_districts_df <-
 write.csv(clipped_hulls_df, "clipped_hulls_df.csv", row.names = F)
 write.csv(map_districts_df, "map_districts_df.csv", row.names = F)
 write.csv(map_states_df, "map_states_df.csv", row.names = F)
+```
+
+```{r}
+clipped_hulls22 <- readOGR(dsn = ".", "clipped_hulls",
+                     stringsAsFactors=FALSE)
 ```
 
