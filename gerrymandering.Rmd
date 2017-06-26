@@ -352,7 +352,7 @@ map_area_dist <-
   group_by(id) %>% 
   summarise(area_dist = sum(area))
 
-map_area_clipped_hulls <-
+map_area_pct <-
   clipped_hulls@data %>% 
   group_by(id) %>% 
   summarise(area_hull = sum(area)) %>% 
@@ -360,7 +360,7 @@ map_area_clipped_hulls <-
   mutate(area_pct = round(area_dist/area_hull, 3)*100,
          STATEFP = str_sub(id, 1, 2))
 
-write.csv(map_area_clipped_hulls, "map_area_clipped_hulls.csv", 
+write.csv(map_area_pct, "map_area_pct.csv", 
           row.names = F)
 ```
 
@@ -376,10 +376,11 @@ clipped_hulls_df <-
 
 map_districts_df <-
   fortify(clipped_hulls, region="id") %>%
-  mutate(CD115FP = id) %>% 
-  left_join(compare_list %>% select(-id))
+  left_join(map_area_pct) %>% 
+  mutate(CD115FP = str_sub(id, 3, 4))
 
 write.csv(clipped_hulls_df, "clipped_hulls_df.csv", row.names = F)
 write.csv(map_districts_df, "map_districts_df.csv", row.names = F)
 write.csv(map_states_df, "map_states_df.csv", row.names = F)
 ```
+
