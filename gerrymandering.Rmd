@@ -372,7 +372,8 @@ map_states_df <-
 
 clipped_hulls_df <-
   fortify(clipped_hulls, region="id") %>%
-  mutate(CD115FP = id)
+  mutate(CD115FP = id) %>%
+  mutate(STATEFP = str_sub(id, 1, 2))
 
 map_districts_df <-
   fortify(clipped_hulls, region="id") %>%
