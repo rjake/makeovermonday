@@ -81,6 +81,6 @@ query_results_final %>% count(tweet_date, sort = T)
 query_results_final %>% count(user, sort = T)
 
 write.csv(query_results_final, 
-          paste0("query_results_", min_date, "_to_", max_date), 
+          paste0("query_results_", min_date, "_to_", max_date, ".csv"), 
           row.names = F)
 ```
