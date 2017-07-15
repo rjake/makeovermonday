@@ -1,0 +1,86 @@
+---
+title: '#makeovermonday submissions 2017'
+author: "jake riley,  @yake_84"
+date: "July 15, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r workspace eval=FALSE}
+library(rvest)
+library(tidyverse)
+library(lubridate)
+library(stringr)
+
+min_date <- "2017-01-01"
+max_date <- today()
+```
+
+
+```{r query_parts}
+url_start <-
+  "https://twitter.com/search?q=%40VizWizBI%20%23makeovermonday%20-filter%3Aretweets%20AND%20-filter%3Areplies%20%20AND%20filter%3Aimages%20since%3A"
+
+url_mid <- "%20until%3A"
+
+url_end <- "&src=typd" #&src=sprv
+```
+
+
+```{r dataframe}
+twitter_query <-
+  data.frame(date_start = seq(ymd("2017-01-01"), 
+                              ymd("2017-12-31"), "day")) %>% 
+  mutate(date_end = date_start + 1,
+         query = paste0(url_start, date_start, url_mid, date_end))
+```
+
+```{r for_loop}
+which_start <-
+  which(twitter_query$date_start == min_date)
+
+which_end <-
+  which(twitter_query$date_end == max_date)
+
+query_results <-
+  data.frame(tweet_date = as.Date(x = integer(0), origin = "1970-01-01"),
+             tweet_link = character(0), 
+             stringsAsFactors = F)
+
+for(i in which_start:which_end){
+    loop_query <- twitter_query$query[i]
+  
+    loop_results <-
+      read_html(loop_query) %>% 
+      html_nodes(".tweet") %>% 
+      xml_attr("data-permalink-path")
+    
+    if(length(loop_results) > 0){
+      loop_df <-
+        data.frame(tweet_date = twitter_query$date_start[i],
+                   tweet_link = loop_results, 
+                   stringsAsFactors = F)
+      
+      query_results <- rbind(query_results, loop_df)
+    }
+    
+  print(i)    
+}
+```
+
+```{r}
+query_results_final <-
+  query_results %>% 
+  mutate(user = gsub("(/)(.*)(/status/.*)", "\\2", tweet_link))
+
+query_results_final %>% count(tweet_date, sort = T)
+
+query_results_final %>% count(user, sort = T)
+
+write.csv(query_results_final, 
+          paste0("query_results_", min_date, "_to_", max_date), 
+          row.names = F)
+```
