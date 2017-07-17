@@ -21,8 +21,12 @@ max_date <- today()
 
 
 ```{r query_parts}
-url_start <-
+url_start <- #w/Andy
   "https://twitter.com/search?q=%40VizWizBI%20%23makeovermonday%20-filter%3Aretweets%20AND%20-filter%3Areplies%20%20AND%20filter%3Aimages%20since%3A"
+
+url_start <- #w/o Andy
+  "https://twitter.com/search?q=-%40VizWizBI%20%23makeovermonday%20-filter%3Aretweets%20AND%20-filter%3Areplies%20%20AND%20filter%3Aimages%20since%3A"
+
 
 url_mid <- "%20until%3A"
 
@@ -69,6 +73,7 @@ for(i in which_start:which_end){
     
   print(i)    
 }
+
 ```
 
 ```{r}
@@ -76,11 +81,11 @@ query_results_final <-
   query_results %>% 
   mutate(user = gsub("(/)(.*)(/status/.*)", "\\2", tweet_link))
 
-query_results_final %>% count(tweet_date, sort = T)
+x <- query_results_final %>% count(tweet_date, sort = T)
 
 query_results_final %>% count(user, sort = T)
 
 write.csv(query_results_final, 
-          paste0("query_results_", min_date, "_to_", max_date, ".csv"), 
+          paste0("query_results_", min_date, "_to_", max_date, "_no_andy.csv"), 
           row.names = F)
 ```
