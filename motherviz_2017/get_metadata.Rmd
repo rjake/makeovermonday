@@ -6,7 +6,7 @@ library(RCurl)
 library(stringr)
 library(httr)
 
-min_date <- ymd("2017-07-15")
+min_date <- ymd("2017-01-01")
 
 ```
 
@@ -18,12 +18,14 @@ ss <- gs_key("1lKXBQyy0ETXz5ne3MuZul6L0hcQgTjbSZrYidmvhfN4")
 gs_ws_ls(ss)
 
 #get twitter links to scrape
+raw_metadata <- 
+  gs_read(ss, ws = 'tweet_descriptions', lookup = T) %>% 
+  data.frame()
+
 raw_links <- 
   gs_read(ss, ws = 'tweet_links', lookup = T) %>% 
-  as.data.frame() %>% 
-  mutate(tweet_date = mdy(tweet_date)) %>% 
-  filter(tweet_date >= ymd(min_date)) %>% 
-  filter(query == "with Andy")
+  data.frame() %>%
+  filter(!tweet_link %in% raw_metadata$tweet_link)
 
 #unique ids: ID
 sapply(X = raw_links, FUN = n_distinct)
@@ -87,7 +89,7 @@ final_images <-
   filter(type == "image") %>% 
   spread(key = type, value = content)
 
-write.csv(final_descriptions, "Twitter_descriptions3.csv", row.names = F)
-write.csv(final_images, "Twitter_images3.csv", row.names = F)
+write.csv(final_descriptions, "Twitter_descriptions.csv", row.names = F)
+write.csv(final_images, "Twitter_images.csv", row.names = F)
 
 ```
