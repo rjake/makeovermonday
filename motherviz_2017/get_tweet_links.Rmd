@@ -15,17 +15,19 @@ library(tidyverse)
 library(lubridate)
 library(stringr)
 
-min_date <- "2017-01-01"
+min_date <- "2017-07-15"
 max_date <- today()
+
+with_andy <- T
 ```
 
 
 ```{r query_parts}
-url_start <- #w/Andy
-  "https://twitter.com/search?q=%40VizWizBI%20%23makeovermonday%20-filter%3Aretweets%20AND%20-filter%3Areplies%20%20AND%20filter%3Aimages%20since%3A"
-
-url_start <- #w/o Andy
-  "https://twitter.com/search?q=-%40VizWizBI%20%23makeovermonday%20-filter%3Aretweets%20AND%20-filter%3Areplies%20%20AND%20filter%3Aimages%20since%3A"
+url_start <- 
+  ifelse(with_andy == T, #w/Andy
+  "https://twitter.com/search?q=%40VizWizBI%20%23makeovermonday%20-filter%3Aretweets%20AND%20-filter%3Areplies%20%20AND%20filter%3Aimages%20since%3A",
+ #w/o Andy
+  "https://twitter.com/search?q=-%40VizWizBI%20%23makeovermonday%20-filter%3Aretweets%20AND%20-filter%3Areplies%20%20AND%20filter%3Aimages%20since%3A")
 
 
 url_mid <- "%20until%3A"
@@ -36,8 +38,8 @@ url_end <- "&src=typd" #&src=sprv
 
 ```{r dataframe}
 twitter_query <-
-  data.frame(date_start = seq(ymd("2017-01-01"), 
-                              ymd("2017-12-31"), "day")) %>% 
+  data.frame(date_start = seq(ymd(min_date), 
+                              ymd(max_date), "day")) %>% 
   mutate(date_end = date_start + 1,
          query = paste0(url_start, date_start, url_mid, date_end))
 ```
@@ -85,7 +87,9 @@ x <- query_results_final %>% count(tweet_date, sort = T)
 
 query_results_final %>% count(user, sort = T)
 
+end_csv <- ifelse(with_andy == T, "_with_andy.csv", "_no_andy.csv")
+
 write.csv(query_results_final, 
-          paste0("query_results_", min_date, "_to_", max_date, "_no_andy.csv"), 
+          paste0("query_results_", min_date, "_to_", max_date, end_csv), 
           row.names = F)
 ```
