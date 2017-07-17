@@ -1,0 +1,88 @@
+```{r}
+library(tidyverse)
+library(googlesheets)
+library(lubridate)
+library(RCurl)
+library(stringr)
+library(httr)
+```
+
+```{r}
+#google sheet to read in
+ss <- gs_key("1lKXBQyy0ETXz5ne3MuZul6L0hcQgTjbSZrYidmvhfN4")
+
+#get names of worksheets
+gs_ws_ls(ss)
+
+#get twitter links to scrape
+raw_links <- 
+  gs_read(ss, ws = 'tweet_links', lookup = T) %>% 
+  as.data.frame() %>% 
+  filter(query == "w/o Andy")
+
+#unique ids: ID
+sapply(X = raw_links, FUN = n_distinct)
+
+#for loop - take ~30 min
+build_table <-
+  data.frame(tweet_link = character(0),
+             urldata = character(0), stringsAsFactors = F)
+
+iLoop <- 1
+loopStart <- Sys.time()
+for(i in iLoop:nrow(raw_links)){
+  # i = 2
+  try(
+    {
+      urldata <- scan(raw_links$full_link[i], what="", sep="\n")
+      
+      find_metadata <-
+        as.data.frame(urldata, stringsAsFactors = F) %>%
+        filter(grepl("og:", urldata)) %>% 
+        mutate(tweet_link = raw_links$tweet_link[i])
+
+      build_table <- rbind(build_table, find_metadata)      
+  }
+  )
+  print(i)
+  print(Sys.time()-loopStart)
+  
+  iLoop <- iLoop + 1
+}
+
+
+```
+
+```{r format dates}
+build_table_final <-
+  build_table %>% 
+  mutate(type = gsub("(.*\"og:)(.*)\\\" content.*", "\\2", urldata),
+         type = gsub(":", "_", type),
+         content = gsub(".* content=\"(.*)\">", "\\1", urldata),
+         content = gsub("(&#10;|â€™|&#39;|â€|â€œ“)", "", content),
+         content = gsub("[œðŸŽ‰âš¡ï]", "", content)) %>% 
+  distinct() %>% 
+  group_by(tweet_link, type) %>% 
+  mutate(type_ord = row_number()) %>% 
+  ungroup() %>% 
+  select(tweet_link, everything())
+
+
+build_table_final$content[6]
+
+table(build_table_final$type_ord)
+
+final_descriptions <-
+  build_table_final %>% 
+  filter(type == "description") %>% 
+  select(-type_ord)
+
+final_images <-
+  build_table_final %>% 
+  filter(type == "image") %>% 
+  spread(key = type, value = content)
+
+write.csv(final_descriptions, "Twitter_descriptions2.csv", row.names = F)
+write.csv(final_images, "Twitter_images2.csv", row.names = F)
+
+```
