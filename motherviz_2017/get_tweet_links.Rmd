@@ -15,49 +15,68 @@ library(tidyverse)
 library(lubridate)
 library(stringr)
 
-min_date <- "2017-07-15"
+min_date <- "2017-01-01"
 max_date <- today()
-
-with_andy <- T
 ```
 
 
 ```{r query_parts}
 url_start <- 
-  ifelse(with_andy == T, #w/Andy
-  "https://twitter.com/search?q=%40VizWizBI%20%23makeovermonday%20-filter%3Aretweets%20AND%20-filter%3Areplies%20%20AND%20filter%3Aimages%20since%3A",
- #w/o Andy
-  "https://twitter.com/search?q=-%40VizWizBI%20%23makeovermonday%20-filter%3Aretweets%20AND%20-filter%3Areplies%20%20AND%20filter%3Aimages%20since%3A")
-
-
+  "https://twitter.com/search?q=%20%23makeovermonday%20-filter%3Aretweets%20AND%20-filter%3Areplies%20%20AND%20filter%3Aimages%20since%3A"
+  
 url_mid <- "%20until%3A"
 
 url_end <- "&src=typd" #&src=sprv
-```
 
+has_andy_not_eva <-
+  "%20%40VizWizBI%20-%40TriMyData"
+
+has_eva_not_andy <-
+  "%20%40TriMyData%20-%40VizWizBI"
+
+has_eva_and_andy <-
+  "%20%40TriMyData%20%40VizWizBI"
+
+has_neither <-
+  "%20-%40TriMyData%20-%40VizWizBI"
+```
 
 ```{r dataframe}
 twitter_query <-
   data.frame(date_start = seq(ymd(min_date), 
                               ymd(max_date), "day")) %>% 
   mutate(date_end = date_start + 1,
-         query = paste0(url_start, date_start, url_mid, date_end))
+         query = paste0(url_start, date_start, url_mid, date_end),
+         eva_not_andy = paste0(query, has_eva_not_andy),
+         andy_not_eva = paste0(query, has_andy_not_eva),
+         eva_and_andy = paste0(query, has_eva_and_andy),
+         neither = paste0(query, has_neither))
+
+
+paste0(twitter_query$query[1], has_eva_not_andy)
+paste0(twitter_query$query[1], has_andy_not_eva)
+paste0(twitter_query$query[1], has_eva_and_andy)
+paste0(twitter_query$query[1], has_neither)
 ```
 
 ```{r for_loop}
-which_start <-
-  which(twitter_query$date_start == min_date)
-
-which_end <-
-  which(twitter_query$date_end == max_date)
+which_start <- which(twitter_query$date_start == min_date)
+which_end <- which(twitter_query$date_end == max_date)
 
 query_results <-
-  data.frame(tweet_date = as.Date(x = integer(0), origin = "1970-01-01"),
+  data.frame(query = character(0),
+             tweet_date = as.Date(x = integer(0), origin = "1970-01-01"),
              tweet_link = character(0), 
              stringsAsFactors = F)
 
 for(i in which_start:which_end){
-    loop_query <- twitter_query$query[i]
+  for(j in 6){#4:7){  
+    #j = 4
+    #i = 10
+    
+    which_query <- colnames(twitter_query)[j]
+
+    loop_query <- twitter_query[[j]][i]
   
     loop_results <-
       read_html(loop_query) %>% 
@@ -66,14 +85,15 @@ for(i in which_start:which_end){
     
     if(length(loop_results) > 0){
       loop_df <-
-        data.frame(tweet_date = twitter_query$date_start[i],
+        data.frame(query = which_query,
+                   tweet_date = twitter_query$date_start[i],
                    tweet_link = loop_results, 
                    stringsAsFactors = F)
       
       query_results <- rbind(query_results, loop_df)
     }
-    
-  print(i)    
+  print(paste(which_query, i, sep = " - "))    
+  }
 }
 
 ```
@@ -83,13 +103,17 @@ query_results_final <-
   query_results %>% 
   mutate(user = gsub("(/)(.*)(/status/.*)", "\\2", tweet_link))
 
-x <- query_results_final %>% count(tweet_date, sort = T)
+x <- 
+  query_results_final %>%
+  group_by(query) %>% 
+  count(tweet_date, sort = T) %>% 
+  ungroup() %>% 
+  spread(key = query, value = n, fill = 0) %>% 
+  mutate(N = andy_not_eva + eva_not_andy + eva_and_andy + neither)
 
 query_results_final %>% count(user, sort = T)
 
-end_csv <- ifelse(with_andy == T, "_with_andy.csv", "_no_andy.csv")
-
 write.csv(query_results_final, 
-          paste0("query_results_", min_date, "_to_", max_date, end_csv), 
+          paste0("query_results_", min_date, "_to_", max_date, ".csv"), 
           row.names = F)
 ```
