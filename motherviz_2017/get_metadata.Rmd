@@ -1,16 +1,24 @@
-```{r}
+---
+title: '#makeovermonday 2017 - get metadata'
+author: "jake riley,  @yake_84"
+date: "July 15, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r workspace}
 library(tidyverse)
 library(googlesheets)
 library(lubridate)
 library(RCurl)
 library(stringr)
 library(httr)
-
-min_date <- ymd("2017-01-01")
-
 ```
 
-```{r}
+```{r get_data}
 #google sheet to read in
 ss <- gs_key("1lKXBQyy0ETXz5ne3MuZul6L0hcQgTjbSZrYidmvhfN4")
 
@@ -29,8 +37,10 @@ raw_links <-
 
 #unique ids: ID
 sapply(X = raw_links, FUN = n_distinct)
+```
 
-#for loop - take ~30 min
+```{r for_loop}
+# ~80 per minute
 build_table <-
   data.frame(tweet_link = character(0),
              urldata = character(0), stringsAsFactors = F)
@@ -73,8 +83,6 @@ build_table_final <-
   mutate(type_ord = row_number()) %>% 
   ungroup() %>% 
   select(tweet_link, everything())
-
-
 build_table_final$content[2]
 
 table(build_table_final$type_ord)
@@ -90,6 +98,9 @@ final_images <-
   spread(key = type, value = content)
 
 write.csv(final_descriptions, "Twitter_descriptions.csv", row.names = F)
+
 write.csv(final_images, "Twitter_images.csv", row.names = F)
+
+
 
 ```
