@@ -1,5 +1,5 @@
 ---
-title: '#makeovermonday submissions 2017'
+title: '#makeovermonday 2017 - get tweet links'
 author: "jake riley,  @yake_84"
 date: "July 15, 2017"
 output: html_document
@@ -15,7 +15,7 @@ library(tidyverse)
 library(lubridate)
 library(stringr)
 
-min_date <- "2017-07-21"
+min_date <- "2017-07-20"
 max_date <- today()
 ```
 
@@ -101,7 +101,8 @@ for(i in which_start:which_end){
 ```{r}
 query_results_final <-
   query_results %>% 
-  mutate(user = gsub("(/)(.*)(/status/.*)", "\\2", tweet_link))
+  mutate(user = gsub("(/)(.*)(/status/.*)", "\\2", tweet_link)) %>% 
+  select(query, tweet_link, user, tweet_date)
 
 x <- 
   query_results_final %>%
