@@ -113,6 +113,8 @@ points_final <-
   mutate(by_y = row_number()) %>% 
   arrange(vertex, layer, layer_hex_ord) %>% 
   mutate(by_vertex = row_number()) %>% 
+  arrange(mids, vertex) %>% 
+  mutate(by_mids = row_number()) %>% 
   select(by_star, x, y, contains("by_"), everything()) %>% 
   arrange(by_star)
 ```
@@ -138,7 +140,7 @@ plot_points <-
 }
 
 plot_points("layer", "by_layer")
-plot_points("mids", "mids")
+plot_points("mids", "by_mids")
 plot_points("vertex", "by_vertex")
 plot_points("layer", "by_star")
 plot_points("x", "by_x")
