@@ -107,13 +107,14 @@ points_final <-
   arrange(layer, hex_ord_offset, ord_offset) %>% 
   mutate(by_star = row_number()) %>% 
   select(-hex_ord_offset, -ord_offset) %>% 
-  arrange(x, y) %>% 
+  arrange(x+1000, y) %>% 
   mutate(by_x = row_number()) %>% 
   arrange(y+1000, x) %>% 
   mutate(by_y = row_number()) %>% 
   arrange(vertex, layer, layer_hex_ord) %>% 
   mutate(by_vertex = row_number()) %>% 
-  select(by_star, x, y, contains("by_"), everything())
+  select(by_star, x, y, contains("by_"), everything()) %>% 
+  arrange(by_star)
 ```
 
 ```{r charts}
