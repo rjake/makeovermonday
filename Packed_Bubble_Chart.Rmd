@@ -40,7 +40,7 @@ ggplot(points_start, aes(x1, y1, label = vertex)) +
 #base table for the for loop
   points_all <-
     tibble(layer = 0, 
-           hex_ord = 1, 
+           layer_hex_ord = 1, 
            vertex = 1, 
            mids = 0,
            x = 0, 
@@ -58,7 +58,7 @@ ggplot(points_start, aes(x1, y1, label = vertex)) +
           left_join(points_start) %>%
         #add layer level, order per layer and final coordinates
           mutate(layer = i,
-                 hex_ord = row_number(),
+                 layer_hex_ord = row_number(),
                  x = (x1 + mids/i * (x2 - x1))*i,
                  y = (y1 + mids/i * (y2 - y1)) * i) %>% 
           select(one_of(colnames(points_all)))
@@ -70,30 +70,28 @@ ggplot(points_start, aes(x1, y1, label = vertex)) +
 ```
 
 ```{r for_loop2}
-points_spiral_base <-
-    points_all %>% 
-    arrange(layer, hex_ord) %>% 
-    mutate(ord_spiral = row_number()) 
-
 points_spiral_table <-
-  points_spiral_base[1,] %>% 
-  mutate(ord2 = 0,
-         hex_ord2 = 0)
+  points_all[1,] %>% 
+  mutate(ord_offset = 0,
+         hex_ord_offset = 0)
 
 #generate spiral/star arangement
  for(i in 1:6){
     #i = 3
     points_base <-
-      points_spiral_base %>% 
+      points_all %>% 
       filter(layer == i)
     
     points_base1 <-
-      filter(points_base, hex_ord >= 2) %>% 
-      rbind(filter(points_base, hex_ord < 2)) %>% 
-      mutate(ord2 = row_number(),
-             hex_ord2 = ord2 %% (i), 
-             hex_ord2 = ifelse(hex_ord2 == 0, i, hex_ord2)) 
+      filter(points_base, layer_hex_ord >= 2) %>% 
+      rbind(filter(points_base, layer_hex_ord < 2)) %>% 
+      mutate(ord_offset = row_number(),
+             hex_ord_offset = ord_offset %% (i), 
+             hex_ord_offset = ifelse(hex_ord_offset == 0, i,
+                                     hex_ord_offset)) 
      
+    #ggplot(points_base1) +geom_text(aes(x = x, y = y, label = hex_ord_offset))
+    
     points_spiral_table <-
       rbind(points_spiral_table, points_base1)
  }
@@ -104,49 +102,51 @@ points_spiral_table <-
 #final dataset
 points_final <-
   points_spiral_table %>%
-  arrange(layer, hex_ord2, ord2) %>% 
-  mutate(ord_star = row_number()) %>% 
-  select(-hex_ord2, -ord2) %>% 
+  arrange(layer, layer_hex_ord) %>% 
+  mutate(by_layer = row_number()) %>% 
+  arrange(layer, hex_ord_offset, ord_offset) %>% 
+  mutate(by_star = row_number()) %>% 
+  select(-hex_ord_offset, -ord_offset) %>% 
   arrange(x, y) %>% 
   mutate(by_x = row_number()) %>% 
-  arrange(y, x) %>% 
+  arrange(y+1000, x) %>% 
   mutate(by_y = row_number()) %>% 
-  arrange(vertex, ord_spiral) %>% 
-  mutate(by_vertex = row_number())
+  arrange(vertex, layer, layer_hex_ord) %>% 
+  mutate(by_vertex = row_number()) %>% 
+  select(by_star, x, y, contains("by_"), everything())
 ```
 
 ```{r charts}
 plot_points <-
-  function(get_var){
+  function(var_color, var_label){
+    #var_color = "layer"; var_label = "by_layer"
     points_final %>% 
-    mutate_(var = get_var) %>% 
-    arrange(var, ord_spiral) %>% 
-    ggplot(aes(x, y, label = round(var, 0))) +
-      geom_path(aes(group = var, color = factor(var)), 
-                size = 2, alpha = .9) +
+    mutate_(col_color = var_color,
+            col_label = var_label) %>% 
+    arrange(col_color, col_label) %>% 
+    ggplot(aes(x, y, label = round(col_label, 0))) +
+      geom_path(aes(group = 1),#col_color, color = factor(col_color)), 
+                size = 2, alpha = .2) +
       geom_point(aes(0,0), size = 14) +
-      geom_point(aes(fill = factor(var)), size = 10, 
-                 alpha = .8, pch = 21) +
+      geom_point(aes(fill = factor(col_color)), size = 10, 
+                 alpha = .4, pch = 21) +
       geom_text(size = 3) +
       guides(color = F, fill = F) +
       coord_fixed() +
       theme_void()
 }
 
-plot_points("layer")
-###plot_points("hex_ord")
-plot_points("vertex")
-###plot_points("mids")
-plot_points("x")
-plot_points("y")
-plot_points("ord_spiral") + geom_path(group = 1, alpha = .4)
-#plot_points("ord2")
-plot_points("ord3") + geom_path(group = 1, alpha = .4)
-plot_points("by_vertex") + geom_path(group = 1, alpha = .4)
-plot_points("by_x") + geom_path(group = 1, alpha = .4)
-plot_points("by_y") + geom_path(group = 1, alpha = .4)
-# "layer" "hex_ord"   "vertex"  "mids"  "x" "y" "ord" 
-# "ord2"  "hex_ord2"  "ord3"  
+plot_points("layer", "by_layer")
+plot_points("mids", "mids")
+plot_points("vertex", "by_vertex")
+plot_points("layer", "by_star")
+plot_points("x", "by_x")
+plot_points("y", "by_y")
+
+#colnames
+  # "by_star"  "x"     "y"
+  # "by_layer" "by_x"  "by_y"  "by_vertex"     
+  # "layer"    "layer_hex_ord" "vertex"  "mids"
 
 write_csv(points_final, "packed_bubbles.csv")
 ```
