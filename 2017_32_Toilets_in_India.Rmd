@@ -341,8 +341,8 @@ frame_times <-
 animation::ani.options(interval = frame_times)
 
 gganimate(p = p, 
-          #filename = "india.gif", 
-          #saver = "gif",
+          filename = "india.gif", 
+          saver = "gif",
           ani.width = 600, 
           ani.height = 700,
           title_frame = F)
