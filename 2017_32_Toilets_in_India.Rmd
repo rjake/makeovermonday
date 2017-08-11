@@ -1,0 +1,356 @@
+---
+title: "Toilets in India"
+subtitle: "MakeoverMonday challenge for week 32 2017"
+date: "August 9, 2017"
+author: "jake riley"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, warning = F, message = F,
+                      cache = T#,
+                      #fig.height = 3.5, fig.width = 4
+)
+```
+
+####Find more information here:
+
+* [MakeoverMonday](http://www.makeovermonday.co.uk/data/)
+* [Original Data](http://www.asercentre.org/p/289.html)
+* [Code on GitHub/rjake](https://github.com/rjake/makeoverMonday/blob/master/2017_32_Toilets_in_India.Rmd)
+
+
+Making the .gif was no easy task. You will need ImageMagic (zip + installer) and ffmpeg. I recommend these two articles:
+  
+  * [https://rpubs.com/omicsdata/gganimate](https://rpubs.com/omicsdata/gganimate)
+* [https://github.com/dgrtwo/gganimate](https://github.com/dgrtwo/gganimate)
+
+```{r setup_workspace, echo = T}
+#library(DT)
+#library(forcats)
+library(gganimate) #may need: devtools::install_github("dgrtwo/gganimate")
+library(animation)
+library(googlesheets)
+library(ggmap)
+library(knitr)
+library(raster) #get India's boundary coordinates
+library(rgeos) #to simplify file
+library(tidyverse)
+library(plotly)
+library(stringr)
+library(tweenr)
+library(ggrepel)
+```
+
+```{r}
+#You may need this if R can't find the convert.exe file
+Sys.setenv(PATH = paste("C:/Program Files/ImageMagick/bin", Sys.getenv("PATH"), sep = ";"))
+
+options(scipen = 999)
+
+challenge_week <- "32"
+```
+
+```{r read_data}
+#google sheet to read in
+  google_key <- 
+    gs_key("1XpDdIfrHLaL5Iiu7x8eVAIlDuq83zwUNqJSUsYSAh18")
+
+#get data from googlesheets
+  data_raw <- 
+    gs_read(google_key, 
+            ws = as.character(challenge_week), 
+            lookup = T, check.names = F) %>% 
+    data.frame()
+```
+
+#Download and simplify shapefiles
+```{r}
+#get shapefile
+  india_get <- getData('GADM', country='IND', level=1)
+
+#simplify geometry
+  india <-
+    gSimplify(india_get, tol = .1) %>%
+    fortify() %>% 
+    filter(lat > 15 | long < 90) %>% 
+    mutate(type = "states")
+
+#india <-  map_data("world", region = "India")
+  
+#plot it out
+  ggplot(india) +
+    geom_polygon(aes(long, lat, group = group), 
+                 fill = "grey60", color = "white") +
+    coord_map() +
+    geom_point(aes(X, Y), data = data_raw, size = 3)
+```
+
+#chart for plot
+```{r}
+#function to set slope chart on top of map
+  range_new <- 
+    function(x, newMin, newMax){
+      (x - min(x))/(max(x)-min(x)) * (newMax - newMin) + newMin 
+    }
+
+#plot of state centroids
+  points_state <-
+    data_raw %>%
+    filter(Category != "Usable Girls Toilet",
+           Year != 2014) %>% 
+    rename(Pct_Usable_Toilets = X..Usable.Toilets) %>% 
+    mutate(State = gsub(" \\(New)", "", State),
+           Type = "original",
+           Label = "") %>% 
+    group_by(State) %>%
+    arrange(Year) %>% 
+    mutate(Improved = 
+             lead(Pct_Usable_Toilets) > Pct_Usable_Toilets,
+           Improved = 
+             ifelse(is.na(Improved), 
+                    lag(Improved, default = T), Improved)) %>% 
+    ungroup()
+
+#plot slope chart
+  points_slope <-
+    points_state %>% 
+    group_by(Year) %>% 
+    mutate(Extreme = 
+             (Pct_Usable_Toilets == max(Pct_Usable_Toilets)) | 
+             (Pct_Usable_Toilets == min(Pct_Usable_Toilets))) %>% 
+    ungroup() %>% 
+    mutate(Label = 
+             ifelse(Extreme == T,
+                    paste0(
+                      round(Pct_Usable_Toilets*100, 0), "%"),
+                    NA),
+           Y = range_new(Pct_Usable_Toilets, 10, 35),
+           X = ifelse(Year == 2010, 75, 90),
+           Type = "slope") %>% 
+    dplyr::select(one_of(colnames(points_state)))
+
+#bring together
+  points_final <-
+    rbind(points_slope, points_state)
+
+```
+
+```{r}
+#sample of overlay
+  ggplot(india) +
+    geom_polygon(aes(long, lat, group = group), 
+                 data = india, fill = "white", color = "white") +
+    coord_fixed() +
+    geom_point(aes(X, Y, color = Improved), data = points_slope, size = 3) +
+    geom_path(aes(X, Y, group = State, color = Improved), data = points_slope)
+```
+
+
+#Animation
+###Animate plot to state centroids
+```{r fig.show='animate'}  
+#to cutoff
+  points_LT_60 <-
+    points_slope %>% 
+    filter(Year == 2016 & Pct_Usable_Toilets < .6)
+
+#source for frames
+  points_sources <- 
+    points_final %>%
+    dplyr::select(X, Y, Pct_Usable_Toilets, Year,
+                  Type, Improved, State, Label) %>% 
+    mutate(Type = factor(Type),
+           State = factor(State),
+           Label = factor(Label),
+           Improved = factor(Improved)) %>% 
+    group_by(Type) %>%
+    nest()
+
+ # points_sources
+
+#create frames with tween_states (tweenr)  
+  points_data <- 
+    tween_states(points_sources$data, tweenlength = 1,
+                 statelength = 0.5, ease = "sine-out", 
+                 nframe = 10) %>%
+    as.tibble() %>% 
+    mutate(Improved = as.logical(Improved),
+           Improved = ifelse(.frame <= 3, Improved,
+                      !State %in% points_LT_60$State))
+  
+  #reverse order for animation
+    points_data <-
+      points_data %>% 
+      mutate(.frame = 12 - .frame + 11) %>% 
+      rbind(points_data)
+
+p <- 
+  ggplot() +
+  geom_point(aes(X, Y, color = Improved, frame = .frame), 
+             data = points_data, size = 3) +
+  geom_path(aes(X, Y, group = State, color = Improved, frame = .frame), 
+            data = points_data) +
+  geom_text(aes(X, Y, group = State, label = Label, frame = .frame), 
+            data = filter(points_data, !is.na(Label)))
+
+animation::ani.options(interval = c(1/2))
+gganimate(p, title_frame = FALSE)
+```
+
+
+###Text
+```{r fig.show='animate'}
+make_labels <-
+  function(frame, label, x, y, size){
+    tibble(.frame = frame) %>% 
+      mutate(label = label, X = x, Y = y, size = size)
+  }
+
+points_text <-
+  make_labels(c(1:4), "Growth by State", 65, 38, 8) %>% 
+  
+  rbind(make_labels(c(1:4), "2010", 72,   5, 8)) %>% 
+  rbind(make_labels(c(1:12), "2016", 87, 5, 8)) %>%
+  
+  rbind(make_labels(c(1:4), "24%", 73, 9, 5)) %>% 
+  rbind(make_labels(c(1:4), "68%", 73, 30, 5)) %>% 
+  rbind(make_labels(c(1:4), "86% Haryana", 91, 35, 5)) %>%
+  rbind(make_labels(c(2:4), "40% Mizoram", 91, 16, 5)) %>% 
+  
+  rbind(make_labels(3, "below 60%", 91, 24, 6))%>% 
+  mutate(X = as.numeric(X),
+         Y = as.numeric(Y),
+         .frame = as.integer(.frame),
+         color = !label %in% c("below 60%", "40% Mizoram")) %>% 
+  full_join(tibble(.frame = c(1:22)))
+  
+p <-
+  ggplot() +
+  geom_text(aes(X, Y, label = label, 
+                frame = .frame, size = size, 
+                color = color, alpha = size/8), 
+            filter(points_text, .frame < 8), 
+            hjust = 0) +
+  xlim(62, 100) +
+  ylim(0, 40) +
+  scale_alpha(range = c(.7, 1)) +
+  scale_radius(range = c(5, 8)) +
+  geom_point(aes(X, Y), points_slope) +
+  coord_map()
+
+animation::ani.options(interval = c(1/2))
+gganimate(p, title_frame = FALSE)
+```
+
+
+
+###Animate corners to map of India
+```{r}
+#final coordinates
+  india_outline <-
+    india %>%
+    mutate(lat = ifelse(lat > 25, max(lat) + 5, min(lat) - 5),
+           long = ifelse(long > 78, max(long) + 5, min(long) - 5),
+           type = "corner") %>% 
+    rbind(india)
+
+#plot of points
+  ggplot(india_outline, aes(frame = type)) +
+    geom_path(aes(long, lat, color = id, 
+                  group = paste0(group,00,order)), 
+              alpha = .05, data = india_outline) +
+    geom_polygon(aes(long, lat, group = group, fill = id), alpha = .2, 
+                 data = india)+#, fill = "white", color = "white") +
+    coord_map() +
+    guides(fill = F, color = F) +
+    geom_point(aes(long, lat, color = id), 
+               data = india_outline, size = .8) +
+    theme_void()
+
+```
+
+  
+#Animation
+### Animate India
+```{r fig.show='animate'}  
+polygon_sources <- 
+  india_outline %>%
+  #filter(type != "corner") %>% 
+  mutate(type = factor(type)) %>% 
+  group_by(type) %>%
+  nest()
+
+#polygon_sources
+
+polygon_data <- 
+  tween_states(polygon_sources$data, tweenlength = 1,
+               statelength = 0.5, ease = "sine-out", 
+               nframe = 10) %>%
+  as.tibble()
+
+polygon_data <-
+  polygon_data %>% 
+  mutate(.frame = 12 - .frame + 11) %>% 
+  rbind(polygon_data)
+
+p <- 
+  ggplot(polygon_data, aes(long, lat)) +
+  geom_polygon(aes(frame = .frame, group = group), 
+               fill = "white", color = "grey70") +
+  geom_point(aes(X, Y), data = data_raw, size = 3)
+
+
+animation::ani.options(interval = c(1/2))
+gganimate(p, title_frame = FALSE)
+```
+
+#All together
+```{r fig.show='animate', fig.height = 7, fig.width = 8}
+p <- 
+  ggplot(polygon_data, aes(long, lat)) +
+  geom_polygon(aes(frame = .frame, group = group), 
+               fill = "white", color = "grey80") +
+  geom_point(aes(X, Y, color = Improved, frame = .frame), size = 3, 
+             data = points_data) +
+  geom_path(aes(X, Y, group = State, color = Improved, frame = .frame), 
+            data = points_data) +
+  guides(color = F, size = F) +
+  geom_text(aes(X, Y, label = label, frame = .frame,
+                size = size, color = color), 
+            points_text, hjust = 0) +
+  scale_radius(range = c(5, 8)) +#  geom_text(aes(ifelse(Pct_Usable_Toilets > 2014, X+1, X-1), 
+#                ifelse(Pct_Usable_Toilets > .5, Y+1, Y-1), 
+#                group = State, label = Label, frame = .frame), 
+#                  data = filter(points_data, !is.na(Label))) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        plot.title = element_text(size = 16, face = "bold"),
+        plot.subtitle = element_text(size = 12),
+        plot.caption = element_text(size = 10)) +
+  coord_fixed() +
+  labs(title = "Access to working toilets still in need of improvement",
+       subtitle = str_wrap("Although access to working toilets in rural elementary schools has grown in most states of India (2010 - 2016), many states stuggle to have at least 60% of toilets available for students. Unfortunately, these stats are worse for girls than for boys.", width = 85), 
+        caption = "Jake Riley - #MakeoverMonday Week 32 \npersonal goal: create smooth animations with R")
+
+frame_times <-
+  c(rep(1, 2), 4, rep(1/2, 6), 2, rep(1/5, 12))
+
+animation::ani.options(interval = frame_times)
+
+gganimate(p = p, 
+          #filename = "india.gif", 
+          #saver = "gif",
+          ani.width = 600, 
+          ani.height = 700,
+          title_frame = F)
+
+```
+
+The ggmap library is provided by:
+  
+  D. Kahle and H. Wickham. ggmap: Spatial Visualization with
+ggplot2. The R Journal, 5(1), 144-161. URL
+http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf
