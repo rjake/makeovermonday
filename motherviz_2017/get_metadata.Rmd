@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r workspace}
+library(doParallel)
 library(tidyverse)
 library(googlesheets)
 library(lubridate)
@@ -40,33 +41,29 @@ sapply(X = raw_links, FUN = n_distinct)
 ```
 
 ```{r for_loop}
-# ~80 per minute
-build_table <-
-  data.frame(tweet_link = character(0),
-             urldata = character(0), stringsAsFactors = F)
-
+registerDoParallel(makeCluster(4))
 iLoop <- 1
-loopStart <- Sys.time()
-for(i in iLoop:nrow(raw_links)){
-  # i = 2
-  try(
-    {
-      urldata <- scan(raw_links$full_link[i], what="", sep="\n")
-      
-      find_metadata <-
-        as.data.frame(urldata, stringsAsFactors = F) %>%
-        filter(grepl("og:", urldata)) %>% 
-        mutate(tweet_link = raw_links$tweet_link[i])
 
-      build_table <- rbind(build_table, find_metadata)      
-  }
-  )
-  print(i)
-  print(Sys.time()-loopStart)
-  
-  iLoop <- iLoop + 1
-}
-
+system.time(
+  build_table <-
+      foreach(i = iLoop:nrow(raw_links), 
+              .combine = rbind, 
+              .multicombine = T,
+              .inorder = F,
+              .verbose = F,
+              .packages = "tidyverse") %dopar% {
+        try(
+            {
+              urldata <- scan(raw_links$full_link[i], what="", sep="\n")
+              
+              find_metadata <-
+                as.data.frame(urldata, stringsAsFactors = F) %>%
+                filter(grepl("og:", urldata)) %>% 
+                mutate(tweet_link = raw_links$tweet_link[i])
+          }
+        )
+      }
+)
 
 ```
 
@@ -83,6 +80,7 @@ build_table_final <-
   mutate(type_ord = row_number()) %>% 
   ungroup() %>% 
   select(tweet_link, everything())
+
 build_table_final$content[2]
 
 table(build_table_final$type_ord)
@@ -100,7 +98,4 @@ final_images <-
 write.csv(final_descriptions, "Twitter_descriptions.csv", row.names = F)
 
 write.csv(final_images, "Twitter_images.csv", row.names = F)
-
-
-
 ```
