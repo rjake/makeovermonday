@@ -1,0 +1,347 @@
+---
+title: "2018 - Week 46: Diversity in Tech"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(googlesheets)
+library(tidyverse)
+library(ggrepel)
+options(scipen = 999)
+```
+
+```{r read_data}
+# get oauth
+# options(httr_oob_default=TRUE) 
+# gs_auth(new_user = TRUE) 
+
+# google sheet to read in
+    google_key <- 
+        gs_key("1Tdc_eG9I981-I_CAqRhx0_SKfIlOmZcSdEoOV-C-I_g")
+  
+    challenge_week <- "46"
+
+# get data from googlesheets
+    get_gs <-
+        gs_read(google_key,
+                ws = as.character(challenge_week),
+                lookup = T,
+                check.names = F)
+    
+    get_data <-
+        get_gs %>% 
+        data.frame() %>%
+        set_names(tolower)
+```
+
+```{r}
+clean_data <-
+    get_data %>% 
+    group_by(company) %>% 
+    filter(max(row_number()) == 5) %>% 
+    ungroup() %>% 
+    mutate(pct_poc = 100-pct_white) %>% 
+    select(type, year, company, pct_female, pct_poc, pct_black, pct_asian)
+  
+us_only <-
+    clean_data %>% 
+    filter(str_detect(type, "Population")) %>% 
+    select(year, us_female = pct_female, us_poc = pct_poc, us_black = pct_black, pct_asian)
+
+companies <-
+    clean_data %>% 
+    filter(!str_detect(type, "Population")) %>% 
+    left_join(us_only) %>% 
+    mutate(diff_female = pct_female - us_female,
+           pct_diff_female = diff_female/us_female,
+           abs_female = abs(diff_female),
+           diff_poc = pct_poc - us_poc,
+           abs_poc = abs(diff_poc),
+           pct_diff_poc = diff_poc/us_poc,
+           diff_black = pct_black - us_black,
+           abs_black = abs(diff_black),
+           pct_diff_black = diff_black/us_black) %>% 
+    mutate(cat_gender = 
+           case_when(pct_diff_female < -0.5 ~ "below < 50% of expected",
+                     pct_diff_female < -0.25 ~ "between 50 - 75% of expected",
+                     pct_diff_female <= -0 ~ "between 75 - 100% of expected",
+                     pct_diff_female > 0 ~ "over % of expected",
+                     TRUE ~ "other"),
+            cat_poc =
+                case_when(pct_diff_poc < -0.5 ~ "below < 50% of expected",
+                          pct_diff_poc < -0.25 ~ "between 50 - 75% of expected",
+                          pct_diff_poc <= -0 ~ "between 75 - 100% of expected",
+                          pct_diff_poc > 0 ~ "over % of expected",
+                          TRUE ~ "other"),
+           cat_black =
+                case_when(pct_diff_black < -0.5 ~ "below < 50% of expected",
+                          pct_diff_black < -0.25 ~ "between 50 - 75% of expected",
+                          pct_diff_black <= -0 ~ "between 75 - 100% of expected",
+                          pct_diff_black > 0 ~ "over % of expected",
+                          TRUE ~ "other")
+           ) %>% 
+    group_by(company) %>% 
+    arrange(year) %>% 
+    mutate(increase_black = last(pct_black) > first(pct_black),
+           increase_asian = last(pct_asian) > first(pct_asian),
+           increase_poc = last(pct_poc) > first(pct_poc),
+           increase_women = last(pct_female > first(pct_female))
+           ) %>% 
+    ungroup() %>% 
+    replace_na(list(increase_black = F, increase_asian = F,
+                    increase_poc = F, increase_women = F))
+
+
+quantile(companies$pct_diff_female, 1:10/10) %>% round(2)
+quantile(companies$pct_diff_poc, 1:10/10) %>% round(2)
+quantile(companies$pct_diff_black, 1:10/10, na.rm = T) %>% round(2)
+table(companies$cat_poc)
+
+get_ss <- gs_gs(google_key)
+
+# create new worksheet
+# gs_ws_new(get_ss, ws_title = "46_clean")
+# 
+# gs_edit_cells(get_ss, ws = "46_clean", input = companies, trim = TRUE)
+# 
+
+poc_diff <-
+    companies %>% 
+    filter(year == 2014) %>% 
+    select(type, company, pct_poc, pct_black, pct_women = pct_female) %>% 
+    rename_at(vars(contains("pct")), ~ paste0(., '_old'))  %>% 
+    left_join(companies %>% 
+                  filter(year == 2018) %>% 
+                  select(type, company, pct_poc, pct_black, pct_women = pct_female) %>% 
+                  rename_at(vars(contains("pct")), ~ paste0(., '_new'))
+              ) %>% 
+    filter(complete.cases(.)) %>% 
+    mutate(d_poc = pct_poc_new - pct_poc_old,
+           d_black = pct_black_new - pct_black_old,
+           d_women = pct_women_new - pct_women_old) %>% 
+    mutate(dir_poc =
+               case_when(d_poc == 0 ~ "same POC",
+                         sign(d_poc) == -1 ~ "less POC",
+                         TRUE ~ "more POC"),
+           dir_black =
+               case_when(d_black == 0 ~ "same black rep.",
+                         sign(d_black) == -1 ~ "less black rep.",
+                         TRUE ~ "more black rep."),
+           dir_women =
+               case_when(d_women == 0 ~ "same women",
+                         sign(d_women) == -1 ~ "less women",
+                         TRUE ~ "more women"),
+           label_poc_black = paste(dir_poc, dir_black, sep = ", "),
+           label_poc_women = paste(dir_poc, dir_women, sep = ", "),
+           cat_poc_black = paste(dir_poc, dir_black, sep = ", ") %>% 
+                                str_replace_all("same|less", "same or less"),
+           cat_poc_women = paste(dir_poc, dir_women, sep = ", ") %>% 
+                                str_replace_all("same|less", "same or less"))
+
+poc_diff
+
+table(poc_diff$cat_poc_black)
+table(poc_diff$cat_poc_women)
+
+
+labels_black <-
+    companies %>% 
+    filter(year == 2018) %>% 
+    group_by(type) %>% 
+    arrange((abs(pct_black)+abs(pct_asian))/2) %>% 
+    slice(c(1, 2)) %>% 
+    ungroup()
+    
+
+ggplot(companies %>% filter(year %in% c(2014, 2018)), 
+       aes(x = pct_poc, y = pct_black)) +
+    facet_grid(~type) +
+    geom_hline(yintercept = max(us_only$us_black)) +
+    geom_vline(xintercept = max(us_only$us_poc)) +
+    geom_rect(data = companies %>% filter(str_detect(type, "Social")) %>% slice(1),
+              xmin = 37, xmax = 59,  ymin = 1, ymax = 5, alpha = 0.2) +
+    geom_line(aes(group = company), color = "grey60") +
+    geom_point(aes(size = year, color = increase_black)) +
+    geom_label_repel(data = labels_black,
+                     aes(x = pct_poc, y = pct_black,
+                         label = company, color = increase_black),
+                     point.padding = 0.2,
+                     direction = "y", show.legend = F
+    ) +
+    scale_size(range = c(1, 4)) +
+    guides(size = F) +
+    #scale_color_manual(values = c("grey60", "navyblue")) +
+    expand_limits(x = 0, y = 0) +
+    labs(title = "People of Color increasingly hired but Black folks still underrepresented",
+         subtitle = str_wrap("As of 2018, People of Color make up ~39% of the U.S. Population. While many companies surpass this value in the mix of their employee base, the percent of employees who are Black is still well under the US average (13%) for these major companies.", width = 150),
+         x = "% POC",
+         y = "% Black Representation",
+         color = "Growth 2014-2018")
+
+ggplot(companies %>% filter(year %in% c(2014, 2018)), 
+       aes(x = pct_poc, y = pct_women)) +
+    geom_hline(yintercept = max(us_only$us_female)) +
+    geom_vline(xintercept = max(us_only$us_poc)) +
+    geom_line(aes(group = company, color = type)) +
+    geom_point(aes(size = year, color = type)) +
+    scale_size(range = c(1, 4)) +
+    facet_grid(~type)
+
+ggplot(poc_diff, aes(x = d_poc, y = d_black)) +
+    geom_hline(yintercept = 0) +
+    geom_vline(xintercept = 0) +
+    geom_segment(aes(xend = 0, yend = 0)) +
+    geom_point(aes(x = 0, y = 0)) +
+    geom_point(aes(color = cat_poc_black, 
+                   size = abs(d_poc - d_black))) +
+    facet_grid(~type)
+
+ggplot(poc_diff, aes(x = d_poc, y = d_women)) +
+    geom_hline(yintercept = 0) +
+    geom_vline(xintercept = 0) +
+    geom_segment(aes(color = cat_poc_women), xend = 0, yend = 0) +
+    geom_point(aes(x = 0, y = 0)) +
+    geom_point(aes(color = cat_poc_women, 
+                   size = abs(d_poc - d_female))) +
+    facet_grid(~type)
+
+```
+
+```{r}
+make_plot <- function(x, y, subtitle = "",
+                      include_string, slope = 0) {
+    
+    label_var = str_replace(y, "d_", "label_poc_")
+    cat_var = str_replace(y, "d_", "cat_poc_")
+    name_x = str_replace(x, "d_", "")
+    name_y = str_replace(y, "d_", "")
+    text_x = 
+        case_when(str_detect(name_x, "poc") ~ "POC",
+                  str_detect(name_x, "black") ~ "Black Representation",
+                  TRUE ~ str_to_title(name_x))
+    text_y = 
+        case_when(str_detect(name_y, "poc") ~ "POC",
+                  str_detect(name_y, "black") ~ "Black Representation",
+                  TRUE ~ str_to_title(name_y))
+
+    df <-
+        poc_diff %>% 
+        mutate_(var_x = x,
+                var_y = y,
+                label = label_var,
+                cat = cat_var) %>% 
+        select(type, company, var_x:cat)
+    
+    
+    plot_labels <-
+        df %>% 
+        group_by(type) %>%
+        filter(str_detect(type, "Comp")|
+               str_detect(company, include_string)) %>% 
+        ungroup() %>% 
+        mutate(label = 
+                   ifelse(str_detect(type, "Comp"),
+                          paste0(company, "\n", 
+                                 str_replace(label, ", ", ", ")),
+                          company))
+    
+    plot_colors <- c("#018571", "#d8b365", "#a6611a", "#d8b365")
+    
+    ggplot(df, aes(x = var_x, y = var_y)) +
+        geom_hline(yintercept = 0, color = "grey50") +
+        geom_vline(xintercept = 0, color = "grey50") +
+        geom_abline(slope = slope, color = "grey50") +
+        geom_segment(aes(color = cat), xend = 0, yend = 0, size = 1) +
+        #geom_point(aes(x = 0, y = 0), size = 2) +
+        geom_point(aes(color = cat, size = (abs(var_x)+abs(var_y))/2)) +
+        geom_label_repel(data = plot_labels, 
+                         aes(label = label, color = cat),
+                         label.padding = 0.2,
+                         point.padding = 0.2,
+                         force = 5, direction = "y") +
+        facet_grid(~type) +
+        ylim(-15, 10) +
+        guides(size = F, fill = F) +
+        scale_size(range = c(2,6)) +
+        scale_color_manual(values = plot_colors) +
+        scale_fill_manual(values = plot_colors) +
+        theme(panel.background = element_rect(fill = "grey98", color = "grey80"),
+              legend.position = "none", 
+              legend.background = element_rect(fill = "white")) +
+        labs(title = paste0("Change in %", text_x,
+                            " and %", text_y, 
+                            " by Company and Type, 2014 - 2018"),
+             x = paste0("Difference in %", text_x),
+             y = paste0("Difference in %", text_y),
+             subtitle = subtitle,
+             color = "")
+}
+
+make_plot(x = "d_poc", y = "d_women", include_string = "Face|HP|Indie|Ingram|Intel|Pint|Twit",
+          subtitle = "Some notes: DiversityInc is employing more men and more white people than before. Ingram has increased their racial diversity but employs 10% less women than before. Twitter shows the most growth by hiring in both directions")
+
+
+
+make_plot(x = "d_poc", y = "d_black", include_string = "Face|HP|Indie|Ingram|Intel|Pint|Twit",
+          subtitle = "If all the growth in POC had been from Black folks, dots would fall along the diagonal line. Companies like Twitter, Facebook, Intel and other Fortune 500 companies seem to be increasing their racial diversity by hiring asian employees over black employees.",
+          slope = 1)
+
+
+```
+
+
+```{r}
+library(plotly)
+s <- read.csv("https://raw.githubusercontent.com/plotly/datasets/master/school_earnings.csv")
+# order factor levels by men's income (plot_ly() will pick up on this ordering)
+s$School <- factor(s$School, levels = s$School[order(s$Men)])
+
+library(plotly)
+p <- 
+    plot_ly(s, color = I("gray80")) %>%
+  add_segments(x = ~Women, xend = ~Men, 
+               y = ~School, yend = ~School, 
+               showlegend = FALSE) %>%
+  add_markers(x = ~Women, y = ~School, name = "Women", color = I("pink")) %>%
+  add_markers(x = ~Men, y = ~School, name = "Men", color = I("blue")) %>%
+  layout(
+    title = "Gender earnings disparity",
+    xaxis = list(title = "Annual Salary (in thousands)"),
+    margin = list(l = 65)
+  )
+
+p
+
+color_cat <-
+    list(
+        list(target = "more poc, more women", value = list(marker = list(color = 'lightgreen'))),
+        list(target = "more poc, same or less women", value = list(marker = list(color = 'black'))),
+        list(target = "same or less poc, more women", value = list(marker = list(color = 'blue'))),
+        list(target = "same or less poc, same or less women", value = list(marker = list(color = 'red')))
+      )
+
+plot_ly(poc_diff, color = I("grey80"), 
+        text = paste0("Company: ", poc_diff$company," (", poc_diff$type, ")",
+                      "<br>Gender: ", poc_diff$dir_female,
+                      " ", poc_diff$pct_female_old, " to ", poc_diff$pct_female_new, "%",
+                      "<br>POC: ", poc_diff$dir_poc,
+                      " ", poc_diff$pct_poc_old, " to ", poc_diff$pct_poc_new, "%"
+                      ),
+        hoverinfo = 'text'
+    ) %>% 
+    add_segments(x = 0, xend = ~d_poc, 
+                 y = 0, yend = ~d_female,
+                 showlegend = FALSE) %>% 
+    add_markers(x = ~d_poc,
+                y = ~d_female,
+                size = ~abs(d_female),
+                transforms = list(
+                    list(type = 'groupby', groups = ~cat_poc_women, styles = color_cat)
+                    )
+                ) 
+```
+
