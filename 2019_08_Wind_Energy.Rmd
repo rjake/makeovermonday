@@ -1,0 +1,86 @@
+---
+title: "US Wind Energy"
+subtitle: "2019 week 8"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w8)
+
+```{r}
+library(data.world)
+library(tidyverse)
+
+options(digits = 3)
+
+pct <- function(x) {
+  round(x, 3)*100
+}
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM us_state_wind_energy_facts_2018"),
+    "makeovermonday/2019w8"
+  ) %>% 
+  filter(complete.cases(.))
+
+names(raw_data) <-
+  c("ranking", "state", "capacity", "homes_powered", 
+    "investment", "projects_online", "n_turbines")
+
+wind_df <-
+  raw_data %>% 
+  mutate(
+    turbine_capacity = capacity/n_turbines,
+    turbine_homes = homes_powered/n_turbines,
+    turbine_investment = investment/n_turbines,
+    invest_capacity_ratio = turbine_investment/turbine_capacity,
+    color = str_detect(state, "HAMP|ISLAND|TEX|TENN|CALI|ALASK")
+  )
+
+gg_annotate <- function(state, hjust, vjust, text) {
+  geom_text(
+    data = filter(wind_df, state == !! state),
+    label = text,
+    hjust = hjust, vjust = vjust
+  )
+}
+
+ggplot(wind_df, aes(turbine_investment, turbine_capacity)) +
+  geom_smooth(
+    data = filter(wind_df, state != "RHODE ISLAND"), 
+    method = "lm", se = FALSE, color = "grey"
+  ) +
+  geom_point(data = wind_df %>% filter(!color),
+    aes(size = n_turbines), alpha = 0.8, color = "grey60"
+  ) +
+  geom_point(data = wind_df %>% filter(color),
+    aes(size = n_turbines), alpha = 0.8, color = "blue", 
+    show.legend = FALSE
+  ) +
+  scale_size(breaks = 10^(2:4)) +
+  gg_annotate("NEW HAMPSHIRE", -0.1, 0.5, "NH, highest cost, highest output") +
+  gg_annotate("TENNESSEE", -0.05, 0.5, "TN, best investment") +
+  gg_annotate("RHODE ISLAND", 0.9, -1, "RI, what's going on?") +
+  gg_annotate("TEXAS", 1.6, 0.3, "TX") +
+  gg_annotate("ALASKA", -0.3, 0.5, "AK") +
+  gg_annotate("CALIFORNIA", -0.4, 0.5, "CA") +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 14)
+  ) +
+  labs(
+    title = "With wind energy you get what you pay for",
+    subtitle = "In general, the more money a state invests per turbine, the higher the average capacity output.",
+    caption = "\nSource: American Wind Energy Association via ChooseEnergy.com (2018)",
+    x = "Avg. investment per turbine (millions)",
+    y = "Avg. capacty per turbine (megawatts)",
+    size = "# Turbines"
+  )
+
+```
