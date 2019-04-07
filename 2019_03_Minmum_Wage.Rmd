@@ -1,0 +1,135 @@
+---
+title: "US Minimum Wage"
+subtitle: "2019 week 3"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w3)
+
+```{r}
+library(data.world)
+library(tidyverse)
+
+options(digits = 3)
+
+pct <- function(x) {
+  round(x, 3)*100
+}
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM minimum_wage"),
+    "makeovermonday/2019w3"
+  )
+
+year_2017 <-
+  raw_data %>%
+  data.frame() %>%
+  filter(year == 2017) %>%
+  mutate_at(
+    vars(c("total", ends_with("wage"))), 
+    funs(pct)
+  ) %>% 
+  arrange(total) %>% 
+  mutate(
+    ord = row_number(),
+    pct = pct(ord/n()),
+    state = fct_reorder(state, total),
+    top_total = ceiling(total),
+    ratio = 100-pct(below_minimum_wage/total),
+    color = (state == "Total, 16 years and over"),
+    avg = max(ifelse(color, total, 0)),
+    cat = 
+      case_when(
+        color ~ "natl avg",
+        ratio >= 50 ~ "majority make minimum",
+        ratio < 50 ~ "majority below minimum",
+        TRUE ~ "other"
+    )
+  ) %>% 
+  group_by(top_total) %>% 
+  mutate(
+    n = n(),
+    label = ifelse(ord == max(ord), ord, "")
+  ) %>% 
+  ungroup()
+
+
+ggplot(year_2017, aes(total, ratio)) +
+  geom_point(aes(color = cat), size = 3) +
+  scale_color_manual(values = c("black", "blue", "red"))
+#  geom_smooth(method = "lm", se = FALSE)
++
+  xlim(0, 3.1) + ylim(0, 3.1)
+
+
+ggplot(year_2017, aes(x = state, y = total, fill = color)) +
+  facet_grid(~top_total, space = "free", scales = "free") +
+  geom_col()
+
+  
+min_wage <-
+  year_2017 %>% 
+  mutate(
+    state = fct_reorder(state, below_minimum_wage)
+  )
+
+
+
+ggplot(min_wage, aes(state)) +
+  geom_col(data = min_wage, aes(state, at_minimum_wage), fill = "blue") +
+  geom_col(data = min_wage, aes(state, -below_minimum_wage), fill = "red")
+
+geom_bar(data=subset(test,g=="F")) + 
+  geom_bar(data=subset(test,g=="M"),aes(y=..count..*(-1))) + 
+  scale_y_continuous(breaks=seq(-40,40,10),labels=abs(seq(-40,40,10))) + 
+  coord_flip()
+
+
+ggplot(year_over_year, aes(y = team, color = color)) +
+  facet_grid(
+    growth_cat ~ ., # switch = "y",
+    scales = "free_y", space = "free_y"
+  ) +
+  geom_segment(
+    aes(x = max, xend = 0, yend = team),
+    size = 1.5, alpha = 0.3
+  ) +
+  geom_text(aes(x = max + 2000, label = label), size = 4) +
+  geom_path(
+    data = smooth_lines,
+    aes(x = points, y = team, size = size),
+    alpha = 0.4
+  ) +
+  scale_size_identity(
+    #    guide = "geom",
+    breaks = c(1, 4), labels = c("2011", "2012")
+  ) +
+  geom_point(aes(x = season_2011), size = 1.5) +
+  geom_point(aes(x = season_2012), size = 4) +
+  theme(
+    panel.grid = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    axis.ticks.y = element_blank(),
+    legend.position = "none",
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 14),
+    axis.title.x = element_text(size = 10),
+    strip.text = element_text(size = 14, hjust = 0, color = "grey"),
+    strip.background = element_blank(),
+    strip.placement = "outside"
+  ) +
+  labs(
+    title = "Most NHL teams have seen increases \nin home gamge attendance",
+    subtitle = "year-over-year comparison, 2011 . & 2012 <U+25CF>",
+    x = "Average Home Game Attendance",
+    y = "",
+    caption = "Source: ESPN"
+  )
+
+```
