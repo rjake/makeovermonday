@@ -1,0 +1,103 @@
+---
+title: "NHL Attendance"
+subtitle: "2019 week 1"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w1)
+
+```{r}
+library(data.world)
+library(tidyverse)
+
+options(digits = 3)
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM nhl_attendance"),
+    "makeovermonday/2019w1"
+  )
+
+year_over_year <-
+  raw_data %>%
+  data.frame() %>%
+  filter(season %in% c("2011-12", "2012-13")) %>%
+  mutate(avg_attendance = floor(home_attendance / home_games)) %>%
+  select(season, team, avg_attendance) %>%
+  mutate(season = paste0("season_", substr(season, 1, 4))) %>%
+  spread(season, avg_attendance) %>%
+  mutate(
+    diff = season_2012 - season_2011,
+    pct_diff = round(diff / season_2011, 3) * 100,
+    team = fct_reorder(team, season_2012),
+    max = pmax(season_2011, season_2012),
+    color = pct_diff >= 0,
+    label = paste0(ifelse(color, "+", "-"), pct_diff),
+    label = paste0(label, ifelse(team == "Tampa Bay", "%", "")),
+    growth_cat =
+      case_when(
+        pct_diff < -3 ~ "loss",
+        pct_diff > 3 ~ "high growth",
+        TRUE ~ "in the middle"
+      ),
+    growth_cat = fct_relevel(growth_cat, "high growth", "loss")
+  )
+
+smooth_lines <-
+  year_over_year %>%
+  rowwise() %>%
+  mutate(
+    points = list(seq(season_2011, season_2012, length.out = 5)),
+    size = list(seq(1, 4, length.out = 5))
+  ) %>%
+  unnest(points, size) %>%
+  ungroup()
+
+
+ggplot(year_over_year, aes(y = team, color = color)) +
+  facet_grid(
+    growth_cat ~ ., # switch = "y",
+    scales = "free_y", space = "free_y"
+  ) +
+  geom_segment(
+    aes(x = max, xend = 0, yend = team),
+    size = 1.5, alpha = 0.3
+  ) +
+  geom_text(aes(x = max + 2000, label = label), size = 4) +
+  geom_path(
+    data = smooth_lines,
+    aes(x = points, y = team, size = size),
+    alpha = 0.4
+  ) +
+  scale_size_identity(
+    #    guide = "geom",
+    breaks = c(1, 4), labels = c("2011", "2012")
+  ) +
+  geom_point(aes(x = season_2011), size = 1.5) +
+  geom_point(aes(x = season_2012), size = 4) +
+  theme(
+    panel.grid = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    axis.ticks.y = element_blank(),
+    legend.position = "none",
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 14),
+    axis.title.x = element_text(size = 10),
+    strip.text = element_text(size = 14, hjust = 0, color = "grey"),
+    strip.background = element_blank(),
+    strip.placement = "outside"
+  ) +
+  labs(
+    title = "Most NHL teams have seen increases \nin home gamge attendance",
+    subtitle = "year-over-year comparison, 2011 . & 2012 <U+25CF>",
+    x = "Average Home Game Attendance",
+    y = "",
+    caption = "Source: ESPN"
+  )
+
+```
