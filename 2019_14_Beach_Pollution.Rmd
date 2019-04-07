@@ -1,0 +1,91 @@
+---
+title: "US Wind Energy"
+subtitle: "2019 week 8"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w14)
+
+```{r}
+library(data.world)
+library(tidyverse)
+library(ggicons)
+library(fontawesome)
+
+options(digits = 3)
+
+pct <- function(x) {
+  round(x, 3)*100
+}
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM waste_on_uk_beaches"),
+    "makeovermonday/2019w14"
+  ) %>% 
+  data.frame()
+
+
+set.seed(1234)
+
+beach_df <-
+  raw_data %>%
+  rename(n = 2) %>% 
+  arrange(desc(n)) %>% 
+  mutate(
+    n = floor(n),
+    pct = pct(n/sum(n)) %>% round()
+  ) %>% 
+  uncount(pct, .remove = FALSE) %>% 
+  cbind(
+    x = rep(1:20, each = 5),
+    y = c(1:5,5:1)
+  ) %>%
+  mutate(
+    icon =
+      case_when(
+        str_detect(item, "Plastic") ~ "bottle_color",
+        str_detect(item, "Packet") ~ "bag_color",
+        str_detect(item, "Glass") ~ "glass_color",
+        str_detect(item, "Cigar") ~ "cigarette_color",
+        str_detect(item, "Caps") ~ "bottle_cap_color",
+        str_detect(item, "String") ~ "string_2",
+        str_detect(item, "Wet") ~ "sheets_color",
+        str_detect(item, "Cotton") ~ "swabs_color",
+        str_detect(item, "Fishing") ~ "string_1",
+        str_detect(item, "Cutlery") ~ "fork_color",
+        TRUE ~ NA_character_
+      ),
+    file = paste0("icons/", icon, ".png")
+  )
+
+ggplot(beach_df, aes(x, y, file_path = file)) +
+  geom_tile(aes(fill = (icon == "bottle_color")), show.legend = FALSE) +
+  scale_fill_manual(values = c("khaki1", "gold")) +
+  geom_icon(width = 0.025, height = 0.15) +
+  scale_x_continuous(expand = expand_scale(add = 0.1)) +
+  scale_y_continuous(expand = expand_scale(add = 0.1)) +
+  coord_fixed(ratio = 0.9) +
+  theme(
+    panel.grid = element_blank(),
+    panel.background = element_rect(fill = "khaki1"),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 14),
+    plot.caption = element_text(size = 12)
+  ) +
+  labs(
+    title = "A lot of plastic on UK Beaches",
+    subtitle = ("Approximately 46% of the trash found on UK beaches are pieces of plastic. \nPackets, glass, cigaretes, bottle caps, string, wet wipes, cotton swabs, fishing line, and cutlery/straws make up the remaining 54%."),
+    caption = "Source: Marine Conservation Society survey of 339 beaches (2017)",
+    x = "",
+    y = ""
+  )
+
+```
