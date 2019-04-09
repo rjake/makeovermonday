@@ -1,0 +1,749 @@
+ord,type,category,subcategory_1,subcategory_2,indent,text,orig,all,gen_GI,gen_Trad,gen_Boom,gen_X,gen_Mil
+1,demographics,,,,0,Number of consumer units (in thousands),Number of consumer units (in thousands),130001,1439,16471,44694,34780,32618
+2,demographics,,,,0,,,,,,,,
+3,demographics,,,,0,Consumer unit characteristics:,Consumer unit characteristics:,,,,,,
+4,demographics,,,,0,,,,,,,,
+5,demographics,Income before taxes,,,2,Income before taxes,Income before taxes,,,,,,
+6,demographics,Income before taxes,,,2,Mean,Mean,73573,31992,41118,78907,95032,61608
+7,demographics,Income before taxes,,,2,SE,SE,1098.2,3755.55,1399.48,1842.71,1782.76,1241.58
+8,demographics,Income before taxes,,,2,CV(%),CV(%),1.49,11.74,3.4,2.34,1.88,2.02
+9,demographics,Income before taxes,,,2,Income after taxes,Income after taxes,,,,,,
+10,demographics,Income before taxes,,,2,Mean,Mean,63606,30653,38486,66697,81022,54939
+11,demographics,Income before taxes,,,2,SE,SE,767.93,3150.55,1150.75,1307.29,1303.6,964.98
+12,demographics,Income before taxes,,,2,CV(%),CV(%),1.21,10.28,2.99,1.96,1.61,1.76
+13,demographics,Income before taxes,,,0,,,,,,,,
+14,demographics,Income before taxes,,,0,Age of reference person,Age of reference person,50.9,91.9,78.1,61.1,44.3,28.5
+51,spending,,,,0,Average annual expenditures,Average annual expenditures,,,,,,
+52,spending,,,,0,Mean,Mean,60060,41874,44746,63050,72459,51306
+53,spending,,,,0,SE,SE,681.34,4156.35,1230.32,1107.27,1094.83,845.15
+54,spending,,,,0,CV(%),CV(%),1.13,9.93,2.75,1.76,1.51,1.65
+55,spending,,,,0,,,,,,,,
+56,spending,Food,,,2,Food,Food,,,,,,
+57,spending,Food,,,2,Mean,Mean,7729,4311,5946,7802,9407,6903
+58,spending,Food,,,2,Share,Share,12.9,10.3,13.3,12.4,13,13.5
+59,spending,Food,,,2,SE,SE,89.36,445.42,240.8,156.51,176.13,176.71
+60,spending,Food,,,2,CV(%),CV(%),1.16,10.33,4.05,2.01,1.87,2.56
+61,spending,Food,Food at home,,4,Food at home,Food at home,,,,,,
+62,spending,Food,Food at home,,4,Mean,Mean,4363,2500,3647,4557,5178,3680
+63,spending,Food,Food at home,,4,Share,Share,7.3,6,8.2,7.2,7.1,7.2
+64,spending,Food,Food at home,,4,SE,SE,50.1,291.52,130.4,91.89,126.9,109.87
+65,spending,Food,Food at home,,4,CV(%),CV(%),1.15,11.66,3.58,2.02,2.45,2.99
+66,spending,Food,Food at home,Cereals and bakery products,6,Cereals and bakery products,Cereals and bakery products,,,,,,
+67,spending,Food,Food at home,Cereals and bakery products,6,Mean,Mean,564,469,486,578,668,480
+68,spending,Food,Food at home,Cereals and bakery products,6,Share,Share,0.9,1.1,1.1,0.9,0.9,0.9
+69,spending,Food,Food at home,Cereals and bakery products,6,SE,SE,9.42,98.7,19.69,23.34,19.18,17.91
+70,spending,Food,Food at home,Cereals and bakery products,6,CV(%),CV(%),1.67,21.03,4.05,4.04,2.87,3.73
+71,spending,Food,Food at home,Cereals and bakery products,8,Cereals and cereal products,Cereals and cereal products,,,,,,
+72,spending,Food,Food at home,Cereals and bakery products,8,Mean,Mean,176,105,131,164,221,174
+73,spending,Food,Food at home,Cereals and bakery products,8,Share,Share,0.3,0.3,0.3,0.3,0.3,0.3
+74,spending,Food,Food at home,Cereals and bakery products,8,SE,SE,3.52,21.55,9.49,4.99,9.02,7.15
+75,spending,Food,Food at home,Cereals and bakery products,8,CV(%),CV(%),2,20.5,7.24,3.05,4.09,4.12
+76,spending,Food,Food at home,Cereals and bakery products,8,Bakery products,Bakery products,,,,,,
+77,spending,Food,Food at home,Cereals and bakery products,8,Mean,Mean,388,364,355,415,447,307
+78,spending,Food,Food at home,Cereals and bakery products,8,Share,Share,0.6,0.9,0.8,0.7,0.6,0.6
+79,spending,Food,Food at home,Cereals and bakery products,8,SE,SE,7.68,96.55,14.59,21.16,13.15,13.59
+80,spending,Food,Food at home,Cereals and bakery products,8,CV(%),CV(%),1.98,26.51,4.11,5.1,2.94,4.43
+81,spending,Food,Food at home,"Meats, poultry, fish, and eggs",6,"Meats, poultry, fish, and eggs","Meats, poultry, fish, and eggs",,,,,,
+82,spending,Food,Food at home,"Meats, poultry, fish, and eggs",6,Mean,Mean,944,396,762,1026,1120,759
+83,spending,Food,Food at home,"Meats, poultry, fish, and eggs",6,Share,Share,1.6,0.9,1.7,1.6,1.5,1.5
+84,spending,Food,Food at home,"Meats, poultry, fish, and eggs",6,SE,SE,12.89,84.17,41.14,27.55,33.85,27.99
+85,spending,Food,Food at home,"Meats, poultry, fish, and eggs",6,CV(%),CV(%),1.37,21.25,5.4,2.68,3.02,3.69
+86,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Beef,Beef,,,,,,
+87,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Mean,Mean,253,74,210,277,296,205
+88,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Share,Share,0.4,0.2,0.5,0.4,0.4,0.4
+89,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,SE,SE,4.86,21.75,17.27,10.18,15.19,13.07
+90,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,CV(%),CV(%),1.92,29.2,8.21,3.68,5.13,6.37
+91,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Pork,Pork,,,,,,
+92,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Mean,Mean,181,81,162,206,211,129
+93,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Share,Share,0.3,0.2,0.4,0.3,0.3,0.3
+94,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,SE,SE,4.59,19.54,13.19,9.29,12.46,7.5
+95,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,CV(%),CV(%),2.53,24.13,8.13,4.52,5.9,5.81
+96,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Other meats,Other meats,,,,,,
+97,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Mean,Mean,128,72,106,149,144,97
+98,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Share,Share,0.2,0.2,0.2,0.2,0.2,0.2
+99,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,SE,SE,5.32,28.9,5.96,11.04,7.62,6.67
+100,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,CV(%),CV(%),4.15,39.92,5.6,7.42,5.3,6.88
+101,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Poultry,Poultry,,,,,,
+102,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Mean,Mean,186,42,123,186,233,174
+103,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Share,Share,0.3,0.1,0.3,0.3,0.3,0.3
+104,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,SE,SE,4.85,11.03,11.96,7.36,11.4,7.28
+105,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,CV(%),CV(%),2.61,26.35,9.76,3.96,4.89,4.18
+106,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Fish and seafood,Fish and seafood,,,,,,
+107,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Mean,Mean,140,102,119,156,166,103
+108,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Share,Share,0.2,0.2,0.3,0.2,0.2,0.2
+109,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,SE,SE,5.05,38.83,13.17,9.49,9.75,6.97
+110,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,CV(%),CV(%),3.61,38.1,11.09,6.1,5.87,6.75
+111,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Eggs,Eggs,,,,,,
+112,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Mean,Mean,55,25,42,53,69,51
+113,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,Share,Share,0.1,0.1,0.1,0.1,0.1,0.1
+114,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,SE,SE,1.16,5.91,2.5,2.04,3.4,2.58
+115,spending,Food,Food at home,"Meats, poultry, fish, and eggs",8,CV(%),CV(%),2.1,24.12,5.99,3.83,4.9,5.1
+116,spending,Food,Food at home,Dairy products,6,Dairy products,Dairy products,,,,,,
+117,spending,Food,Food at home,Dairy products,6,Mean,Mean,450,278,403,456,543,375
+118,spending,Food,Food at home,Dairy products,6,Share,Share,0.7,0.7,0.9,0.7,0.8,0.7
+119,spending,Food,Food at home,Dairy products,6,SE,SE,8.05,36.64,16.93,12.18,17.72,13.7
+120,spending,Food,Food at home,Dairy products,6,CV(%),CV(%),1.79,13.18,4.2,2.67,3.26,3.65
+121,spending,Food,Food at home,Dairy products,8,Fresh milk and cream,Fresh milk and cream,,,,,,
+122,spending,Food,Food at home,Dairy products,8,Mean,Mean,147,77,122,142,182,132
+123,spending,Food,Food at home,Dairy products,8,Share,Share,0.2,0.2,0.3,0.2,0.3,0.3
+124,spending,Food,Food at home,Dairy products,8,SE,SE,3.06,13.52,5.66,4.56,6.83,5.5
+125,spending,Food,Food at home,Dairy products,8,CV(%),CV(%),2.09,17.59,4.63,3.21,3.75,4.17
+126,spending,Food,Food at home,Dairy products,8,Other dairy products,Other dairy products,,,,,,
+127,spending,Food,Food at home,Dairy products,8,Mean,Mean,303,201,281,314,362,243
+128,spending,Food,Food at home,Dairy products,8,Share,Share,0.5,0.5,0.6,0.5,0.5,0.5
+129,spending,Food,Food at home,Dairy products,8,SE,SE,6,32.83,14.56,8.94,12.52,10.35
+130,spending,Food,Food at home,Dairy products,8,CV(%),CV(%),1.98,16.32,5.19,2.85,3.46,4.25
+131,spending,Food,Food at home,Fruits and vegetables,6,Fruits and vegetables,Fruits and vegetables,,,,,,
+132,spending,Food,Food at home,Fruits and vegetables,6,Mean,Mean,837,526,719,855,975,739
+133,spending,Food,Food at home,Fruits and vegetables,6,Share,Share,1.4,1.3,1.6,1.4,1.3,1.4
+134,spending,Food,Food at home,Fruits and vegetables,6,SE,SE,14.3,60.56,37.71,21.25,28.75,29.74
+135,spending,Food,Food at home,Fruits and vegetables,6,CV(%),CV(%),1.71,11.52,5.24,2.49,2.95,4.03
+136,spending,Food,Food at home,Fruits and vegetables,8,Fresh fruits,Fresh fruits,,,,,,
+137,spending,Food,Food at home,Fruits and vegetables,8,Mean,Mean,314,191,267,324,371,270
+138,spending,Food,Food at home,Fruits and vegetables,8,Share,Share,0.5,0.5,0.6,0.5,0.5,0.5
+139,spending,Food,Food at home,Fruits and vegetables,8,SE,SE,6.23,32.09,18.65,10.25,12.39,11.96
+140,spending,Food,Food at home,Fruits and vegetables,8,CV(%),CV(%),1.98,16.76,6.98,3.17,3.34,4.43
+141,spending,Food,Food at home,Fruits and vegetables,8,Fresh vegetables,Fresh vegetables,,,,,,
+142,spending,Food,Food at home,Fruits and vegetables,8,Mean,Mean,274,170,241,280,319,241
+143,spending,Food,Food at home,Fruits and vegetables,8,Share,Share,0.5,0.4,0.5,0.4,0.4,0.5
+144,spending,Food,Food at home,Fruits and vegetables,8,SE,SE,5.67,41.58,15.26,8.69,11.69,11.95
+145,spending,Food,Food at home,Fruits and vegetables,8,CV(%),CV(%),2.07,24.42,6.33,3.1,3.66,4.96
+146,spending,Food,Food at home,Fruits and vegetables,8,Processed fruits,Processed fruits,,,,,,
+147,spending,Food,Food at home,Fruits and vegetables,8,Mean,Mean,112,100,97,111,131,102
+148,spending,Food,Food at home,Fruits and vegetables,8,Share,Share,0.2,0.2,0.2,0.2,0.2,0.2
+149,spending,Food,Food at home,Fruits and vegetables,8,SE,SE,3.14,24.06,5.65,4.46,7.4,6.11
+150,spending,Food,Food at home,Fruits and vegetables,8,CV(%),CV(%),2.8,23.95,5.85,4.02,5.64,6
+151,spending,Food,Food at home,Fruits and vegetables,8,Processed vegetables,Processed vegetables,,,,,,
+152,spending,Food,Food at home,Fruits and vegetables,8,Mean,Mean,136,64,115,140,154,126
+153,spending,Food,Food at home,Fruits and vegetables,8,Share,Share,0.2,0.2,0.3,0.2,0.2,0.2
+154,spending,Food,Food at home,Fruits and vegetables,8,SE,SE,3.06,17.42,5.51,5.25,5.77,6.8
+155,spending,Food,Food at home,Fruits and vegetables,8,CV(%),CV(%),2.25,27.39,4.81,3.76,3.76,5.38
+156,spending,Food,Food at home,Other food at home,6,Other food at home,Other food at home,,,,,,
+157,spending,Food,Food at home,Other food at home,6,Mean,Mean,1568,830,1277,1642,1872,1327
+158,spending,Food,Food at home,Other food at home,6,Share,Share,2.6,2,2.9,2.6,2.6,2.6
+159,spending,Food,Food at home,Other food at home,6,SE,SE,20.79,107.02,41.49,39.97,46.64,42.79
+160,spending,Food,Food at home,Other food at home,6,CV(%),CV(%),1.33,12.89,3.25,2.44,2.49,3.23
+161,spending,Food,Food at home,Other food at home,8,Sugar and other sweets,Sugar and other sweets,,,,,,
+162,spending,Food,Food at home,Other food at home,8,Mean,Mean,150,107,140,163,177,109
+163,spending,Food,Food at home,Other food at home,8,Share,Share,0.2,0.3,0.3,0.3,0.2,0.2
+164,spending,Food,Food at home,Other food at home,8,SE,SE,3.83,28.32,10.54,7.53,7.04,6.31
+165,spending,Food,Food at home,Other food at home,8,CV(%),CV(%),2.56,26.46,7.52,4.61,3.99,5.8
+166,spending,Food,Food at home,Other food at home,8,Fats and oils,Fats and oils,,,,,,
+167,spending,Food,Food at home,Other food at home,8,Mean,Mean,117,44,104,125,135,97
+168,spending,Food,Food at home,Other food at home,8,Share,Share,0.2,0.1,0.2,0.2,0.2,0.2
+169,spending,Food,Food at home,Other food at home,8,SE,SE,2.98,9.91,5.49,5,6.27,4.65
+170,spending,Food,Food at home,Other food at home,8,CV(%),CV(%),2.55,22.3,5.29,4.01,4.65,4.82
+171,spending,Food,Food at home,Other food at home,8,Miscellaneous foods,Miscellaneous foods,,,,,,
+172,spending,Food,Food at home,Other food at home,8,Mean,Mean,824,390,642,831,1000,738
+173,spending,Food,Food at home,Other food at home,8,Share,Share,1.4,0.9,1.4,1.3,1.4,1.4
+174,spending,Food,Food at home,Other food at home,8,SE,SE,13.11,73.41,24.14,24.28,29.5,24.42
+175,spending,Food,Food at home,Other food at home,8,CV(%),CV(%),1.59,18.84,3.76,2.92,2.95,3.31
+176,spending,Food,Food at home,Other food at home,8,Nonalcoholic beverages,Nonalcoholic beverages,,,,,,
+177,spending,Food,Food at home,Other food at home,8,Mean,Mean,423,284,339,457,492,350
+178,spending,Food,Food at home,Other food at home,8,Share,Share,0.7,0.7,0.8,0.7,0.7,0.7
+179,spending,Food,Food at home,Other food at home,8,SE,SE,7.49,57.34,14.33,14.04,14.53,15.33
+180,spending,Food,Food at home,Other food at home,8,CV(%),CV(%),1.77,20.19,4.23,3.07,2.95,4.38
+181,spending,Food,Food at home,Other food at home,8,Food prepared by consumer unit on out-of-town trips,Food prepared by consumer unit on out-of-town trips,,,,,,
+182,spending,Food,Food at home,Other food at home,8,Mean,Mean,56,5,51,66,69,33
+183,spending,Food,Food at home,Other food at home,8,Share,Share,0.1,b/,0.1,0.1,0.1,0.1
+184,spending,Food,Food at home,Other food at home,8,SE,SE,2.76,3.48,8.52,4.22,4.09,2.77
+185,spending,Food,Food at home,Other food at home,8,CV(%),CV(%),4.94,65.67,16.59,6.43,5.94,8.39
+186,spending,Food,Food away from home,,4,Food away from home,Food away from home,,,,,,
+187,spending,Food,Food away from home,,4,Mean,Mean,3365,1811,2299,3245,4229,3223
+188,spending,Food,Food away from home,,4,Share,Share,5.6,4.3,5.1,5.1,5.8,6.3
+189,spending,Food,Food away from home,,4,SE,SE,58.55,346.72,145.27,98.92,111.81,111.59
+190,spending,Food,Food away from home,,4,CV(%),CV(%),1.74,19.14,6.32,3.05,2.64,3.46
+191,spending,Food,,,0,,,,,,,,
+192,spending,Alcoholic beverages,,,2,Alcoholic beverages,Alcoholic beverages,,,,,,
+193,spending,Alcoholic beverages,,,2,Mean,Mean,558,271,397,595,633,521
+194,spending,Alcoholic beverages,,,2,Share,Share,0.9,0.6,0.9,0.9,0.9,1
+195,spending,Alcoholic beverages,,,2,SE,SE,19.83,133.05,42.1,30.72,36.15,29.9
+196,spending,Alcoholic beverages,,,2,CV(%),CV(%),3.55,49.17,10.61,5.16,5.71,5.73
+197,spending,Alcoholic beverages,,,0,,,,,,,,
+198,spending,Housing,,,2,Housing,Housing,,,,,,
+199,spending,Housing,,,2,Mean,Mean,19884,20205,14963,19856,23721,18309
+200,spending,Housing,,,2,Share,Share,33.1,48.3,33.4,31.5,32.7,35.7
+201,spending,Housing,,,2,SE,SE,231.74,2710.97,352.97,331.94,411.78,382.43
+202,spending,Housing,,,2,CV(%),CV(%),1.17,13.42,2.36,1.67,1.74,2.09
+203,spending,Housing,Shelter,,4,Shelter,Shelter,,,,,,
+204,spending,Housing,Shelter,,4,Mean,Mean,11895,13068,8108,11457,14512,11566
+205,spending,Housing,Shelter,,4,Share,Share,19.8,31.2,18.1,18.2,20,22.5
+206,spending,Housing,Shelter,,4,SE,SE,156.8,1420.34,276.06,210.56,274.86,318.82
+207,spending,Housing,Shelter,,4,CV(%),CV(%),1.32,10.87,3.4,1.84,1.89,2.76
+208,spending,Housing,Shelter,Owned dwellings,6,Owned dwellings,Owned dwellings,,,,,,
+209,spending,Housing,Shelter,Owned dwellings,6,Mean,Mean,6947,4106,5073,8115,8824,4415
+210,spending,Housing,Shelter,Owned dwellings,6,Share,Share,11.6,9.8,11.3,12.9,12.2,8.6
+211,spending,Housing,Shelter,Owned dwellings,6,SE,SE,133.28,797.43,207.52,197.56,270.95,240.17
+212,spending,Housing,Shelter,Owned dwellings,6,CV(%),CV(%),1.92,19.42,4.09,2.43,3.07,5.44
+213,spending,Housing,Shelter,Owned dwellings,8,Mortgage interest and charges,Mortgage interest and charges,,,,,,
+214,spending,Housing,Shelter,Owned dwellings,8,Mean,Mean,3265,251,1020,3294,5044,2595
+215,spending,Housing,Shelter,Owned dwellings,8,Share,Share,5.4,0.6,2.3,5.2,7,5.1
+216,spending,Housing,Shelter,Owned dwellings,8,SE,SE,73.29,137.05,79.31,101.33,173.78,100.08
+217,spending,Housing,Shelter,Owned dwellings,8,CV(%),CV(%),2.24,54.7,7.77,3.08,3.45,3.86
+218,spending,Housing,Shelter,Owned dwellings,8,Property taxes,Property taxes,,,,,,
+219,spending,Housing,Shelter,Owned dwellings,8,Mean,Mean,2065,1892,2142,2660,2292,978
+220,spending,Housing,Shelter,Owned dwellings,8,Share,Share,3.4,4.5,4.8,4.2,3.2,1.9
+221,spending,Housing,Shelter,Owned dwellings,8,SE,SE,46.07,216.83,77.18,71.08,72.87,41.99
+222,spending,Housing,Shelter,Owned dwellings,8,CV(%),CV(%),2.23,11.46,3.6,2.67,3.18,4.29
+223,spending,Housing,Shelter,Owned dwellings,8,"Maintenance, repairs, insurance, other expenses","Maintenance, repairs, insurance, other expenses",,,,,,
+224,spending,Housing,Shelter,Owned dwellings,8,Mean,Mean,1616,1964,1911,2160,1489,842
+225,spending,Housing,Shelter,Owned dwellings,8,Share,Share,2.7,4.7,4.3,3.4,2.1,1.6
+226,spending,Housing,Shelter,Owned dwellings,8,SE,SE,57.64,690.56,141.95,91.55,106.75,171.21
+227,spending,Housing,Shelter,Owned dwellings,8,CV(%),CV(%),3.57,35.16,7.43,4.24,7.17,20.33
+228,spending,Housing,Shelter,Rented dwellings,6,Rented dwellings,Rented dwellings,,,,,,
+229,spending,Housing,Shelter,Rented dwellings,6,Mean,Mean,4167,8319,2438,2280,4812,6754
+230,spending,Housing,Shelter,Rented dwellings,6,Share,Share,6.9,19.9,5.4,3.6,6.6,13.2
+231,spending,Housing,Shelter,Rented dwellings,6,SE,SE,66.09,1388.08,202.78,78.95,150.96,175.6
+232,spending,Housing,Shelter,Rented dwellings,6,CV(%),CV(%),1.59,16.69,8.32,3.46,3.14,2.6
+233,spending,Housing,Shelter,Rented dwellings,6,Other lodging,Other lodging,,,,,,
+234,spending,Housing,Shelter,Rented dwellings,6,Mean,Mean,782,643,597,1062,876,397
+235,spending,Housing,Shelter,Rented dwellings,6,Share,Share,1.3,1.5,1.3,1.7,1.2,0.8
+236,spending,Housing,Shelter,Rented dwellings,6,SE,SE,28.7,239.49,56.41,47.89,55.26,31.98
+237,spending,Housing,Shelter,Rented dwellings,6,CV(%),CV(%),3.67,37.24,9.45,4.51,6.31,8.05
+238,spending,Housing,"Utilities, fuels, and public services",,4,"Utilities, fuels, and public services","Utilities, fuels, and public services",,,,,,
+239,spending,Housing,"Utilities, fuels, and public services",,4,Mean,Mean,3836,2583,3393,4171,4455,2996
+240,spending,Housing,"Utilities, fuels, and public services",,4,Share,Share,6.4,6.2,7.6,6.6,6.1,5.8
+241,spending,Housing,"Utilities, fuels, and public services",,4,SE,SE,40.75,156.2,66.44,58.69,56.03,50.14
+242,spending,Housing,"Utilities, fuels, and public services",,4,CV(%),CV(%),1.06,6.05,1.96,1.41,1.26,1.67
+243,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Natural gas,Natural gas,,,,,,
+244,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Mean,Mean,381,361,383,432,427,261
+245,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Share,Share,0.6,0.9,0.9,0.7,0.6,0.5
+246,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,SE,SE,11.21,50.33,20.55,13.86,16.73,9.27
+247,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,CV(%),CV(%),2.94,13.93,5.37,3.21,3.92,3.55
+248,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Electricity,Electricity,,,,,,
+249,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Mean,Mean,1420,1018,1352,1548,1570,1136
+250,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Share,Share,2.4,2.4,3,2.5,2.2,2.2
+251,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,SE,SE,16.65,89.27,28.95,22.77,24.58,23.85
+252,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,CV(%),CV(%),1.17,8.77,2.14,1.47,1.57,2.1
+253,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Fuel oil and other fuels,Fuel oil and other fuels,,,,,,
+254,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Mean,Mean,97,121,138,129,86,43
+255,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Share,Share,0.2,0.3,0.3,0.2,0.1,0.1
+256,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,SE,SE,8.73,35.18,19.69,13.49,8.75,6.58
+257,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,CV(%),CV(%),9,29.14,14.23,10.44,10.17,15.39
+258,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Telephone services,Telephone services,,,,,,
+259,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Mean,Mean,1356,687,935,1424,1692,1145
+260,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,Share,Share,2.3,1.6,2.1,2.3,2.3,2.2
+261,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,SE,SE,17.36,49.6,18.24,25.76,28.23,23.95
+262,spending,Housing,"Utilities, fuels, and public services",Natural gas,6,CV(%),CV(%),1.28,7.22,1.95,1.81,1.67,2.09
+263,spending,Housing,"Utilities, fuels, and public services",Natural gas,8,"Residential phone service, VOIP, and phone cards","Residential phone service, VOIP, and phone cards",,,,,,
+264,spending,Housing,"Utilities, fuels, and public services",Natural gas,8,Mean,Mean,238,406,424,308,197,83
+265,spending,Housing,"Utilities, fuels, and public services",Natural gas,8,Share,Share,0.4,1,0.9,0.5,0.3,0.2
+266,spending,Housing,"Utilities, fuels, and public services",Natural gas,8,SE,SE,5.24,25.67,7.71,8.39,7.88,5.43
+267,spending,Housing,"Utilities, fuels, and public services",Natural gas,8,CV(%),CV(%),2.2,6.32,1.82,2.72,3.99,6.52
+268,spending,Housing,"Utilities, fuels, and public services",Natural gas,8,Cellular phone service,Cellular phone service,,,,,,
+269,spending,Housing,"Utilities, fuels, and public services",Natural gas,8,Mean,Mean,1118,280,511,1117,1494,1062
+270,spending,Housing,"Utilities, fuels, and public services",Natural gas,8,Share,Share,1.9,0.7,1.1,1.8,2.1,2.1
+271,spending,Housing,"Utilities, fuels, and public services",Natural gas,8,SE,SE,16.54,41.81,17.16,23.14,27.81,23.01
+272,spending,Housing,"Utilities, fuels, and public services",Natural gas,8,CV(%),CV(%),1.48,14.91,3.36,2.07,1.86,2.17
+273,spending,Housing,"Utilities, fuels, and public services",Water and other public services,6,Water and other public services,Water and other public services,,,,,,
+274,spending,Housing,"Utilities, fuels, and public services",Water and other public services,6,Mean,Mean,583,396,585,638,681,411
+275,spending,Housing,"Utilities, fuels, and public services",Water and other public services,6,Share,Share,1,0.9,1.3,1,0.9,0.8
+276,spending,Housing,"Utilities, fuels, and public services",Water and other public services,6,SE,SE,13.79,35.94,21.4,17.84,16.89,14.27
+277,spending,Housing,"Utilities, fuels, and public services",Water and other public services,6,CV(%),CV(%),2.37,9.08,3.66,2.8,2.48,3.47
+278,spending,Housing,Household operations,,4,Household operations,Household operations,,,,,,
+279,spending,Housing,Household operations,,4,Mean,Mean,1412,2184,1155,1192,1678,1523
+280,spending,Housing,Household operations,,4,Share,Share,2.4,5.2,2.6,1.9,2.3,3
+281,spending,Housing,Household operations,,4,SE,SE,38.05,599.94,58,46.37,81.86,71.02
+282,spending,Housing,Household operations,,4,CV(%),CV(%),2.7,27.46,5.02,3.89,4.88,4.66
+283,spending,Housing,Household operations,Personal services,6,Personal services,Personal services,,,,,,
+284,spending,Housing,Household operations,Personal services,6,Mean,Mean,439,1115,54,103,618,874
+285,spending,Housing,Household operations,Personal services,6,Share,Share,0.7,2.7,0.1,0.2,0.9,1.7
+286,spending,Housing,Household operations,Personal services,6,SE,SE,27.13,619.47,26.01,27.04,68.73,64.06
+287,spending,Housing,Household operations,Personal services,6,CV(%),CV(%),6.18,55.56,48.19,26.27,11.12,7.33
+288,spending,Housing,Household operations,Personal services,6,Other household expenses,Other household expenses,,,,,,
+289,spending,Housing,Household operations,Personal services,6,Mean,Mean,973,1069,1101,1090,1060,650
+290,spending,Housing,Household operations,Personal services,6,Share,Share,1.6,2.6,2.5,1.7,1.5,1.3
+291,spending,Housing,Household operations,Personal services,6,SE,SE,21.61,125.97,56.95,31.93,36.14,19.61
+292,spending,Housing,Household operations,Personal services,6,CV(%),CV(%),2.22,11.78,5.17,2.93,3.41,3.02
+293,spending,Housing,Housekeeping supplies,,4,Housekeeping supplies,Housekeeping supplies,,,,,,
+294,spending,Housing,Housekeeping supplies,,4,Mean,Mean,755,452,835,886,803,495
+295,spending,Housing,Housekeeping supplies,,4,Share,Share,1.3,1.1,1.9,1.4,1.1,1
+296,spending,Housing,Housekeeping supplies,,4,SE,SE,23.58,106.86,90.41,49.34,36.62,26.66
+297,spending,Housing,Housekeeping supplies,,4,CV(%),CV(%),3.12,23.66,10.83,5.57,4.56,5.39
+298,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,Laundry and cleaning supplies,Laundry and cleaning supplies,,,,,,
+299,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,Mean,Mean,177,94,163,184,218,136
+300,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,Share,Share,0.3,0.2,0.4,0.3,0.3,0.3
+301,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,SE,SE,5.08,32.58,17.7,9.96,14.8,8.17
+302,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,CV(%),CV(%),2.87,34.62,10.85,5.42,6.79,5.99
+303,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,Other household products,Other household products,,,,,,
+304,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,Mean,Mean,428,256,494,510,440,275
+305,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,Share,Share,0.7,0.6,1.1,0.8,0.6,0.5
+306,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,SE,SE,20.66,70.76,90.55,43.14,26.15,17.21
+307,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,CV(%),CV(%),4.83,27.64,18.34,8.46,5.94,6.27
+308,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,Postage and stationery,Postage and stationery,,,,,,
+309,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,Mean,Mean,150,101,178,193,145,83
+310,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,Share,Share,0.2,0.2,0.4,0.3,0.2,0.2
+311,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,SE,SE,7.83,42.55,14.03,17.87,10.41,7.79
+312,spending,Housing,Housekeeping supplies,Laundry and cleaning supplies,6,CV(%),CV(%),5.23,41.97,7.87,9.27,7.16,9.33
+313,spending,Housing,Household furnishings and equipment,,4,Household furnishings and equipment,Household furnishings and equipment,,,,,,
+314,spending,Housing,Household furnishings and equipment,,4,Mean,Mean,1987,1919,1473,2150,2272,1729
+315,spending,Housing,Household furnishings and equipment,,4,Share,Share,3.3,4.6,3.3,3.4,3.1,3.4
+316,spending,Housing,Household furnishings and equipment,,4,SE,SE,58.55,1849.77,111.26,98.55,131.79,77.71
+317,spending,Housing,Household furnishings and equipment,,4,CV(%),CV(%),2.95,96.4,7.56,4.58,5.8,4.49
+318,spending,Housing,Household furnishings and equipment,Household textiles,6,Household textiles,Household textiles,,,,,,
+319,spending,Housing,Household furnishings and equipment,Household textiles,6,Mean,Mean,114,30,110,123,113,109
+320,spending,Housing,Household furnishings and equipment,Household textiles,6,Share,Share,0.2,0.1,0.2,0.2,0.2,0.2
+321,spending,Housing,Household furnishings and equipment,Household textiles,6,SE,SE,8.78,12.37,20.44,18.43,12.35,17.93
+322,spending,Housing,Household furnishings and equipment,Household textiles,6,CV(%),CV(%),7.7,40.87,18.54,14.99,10.95,16.52
+323,spending,Housing,Household furnishings and equipment,Household textiles,6,Furniture,Furniture,,,,,,
+324,spending,Housing,Household furnishings and equipment,Household textiles,6,Mean,Mean,515,109,353,514,621,505
+325,spending,Housing,Household furnishings and equipment,Household textiles,6,Share,Share,0.9,0.3,0.8,0.8,0.9,1
+326,spending,Housing,Household furnishings and equipment,Household textiles,6,SE,SE,26.06,46.43,44.36,37.08,59.75,33.14
+327,spending,Housing,Household furnishings and equipment,Household textiles,6,CV(%),CV(%),5.06,42.46,12.56,7.21,9.62,6.57
+328,spending,Housing,Household furnishings and equipment,Household textiles,6,Floor coverings,Floor coverings,,,,,,
+329,spending,Housing,Household furnishings and equipment,Household textiles,6,Mean,Mean,30,65,8,28,26,48
+330,spending,Housing,Household furnishings and equipment,Household textiles,6,Share,Share,0.1,0.2,b/,b/,b/,0.1
+331,spending,Housing,Household furnishings and equipment,Household textiles,6,SE,SE,7.5,54.17,2.83,4.82,3.9,29.14
+332,spending,Housing,Household furnishings and equipment,Household textiles,6,CV(%),CV(%),24.65,83.92,34.04,17.27,14.9,60.59
+333,spending,Housing,Household furnishings and equipment,Household textiles,6,Major appliances,Major appliances,,,,,,
+334,spending,Housing,Household furnishings and equipment,Household textiles,6,Mean,Mean,280,69,242,297,334,228
+335,spending,Housing,Household furnishings and equipment,Household textiles,6,Share,Share,0.5,0.2,0.5,0.5,0.5,0.4
+336,spending,Housing,Household furnishings and equipment,Household textiles,6,SE,SE,11.93,34.38,24.62,22.21,31.23,20.89
+337,spending,Housing,Household furnishings and equipment,Household textiles,6,CV(%),CV(%),4.26,49.73,10.17,7.47,9.36,9.15
+338,spending,Housing,Household furnishings and equipment,Household textiles,6,"Small appliances, miscellaneous housewares","Small appliances, miscellaneous housewares",,,,,,
+339,spending,Housing,Household furnishings and equipment,Household textiles,6,Mean,Mean,131,10,93,161,133,110
+340,spending,Housing,Household furnishings and equipment,Household textiles,6,Share,Share,0.2,b/,0.2,0.3,0.2,0.2
+341,spending,Housing,Household furnishings and equipment,Household textiles,6,SE,SE,7.63,3.73,9.48,21.26,9.76,13.83
+342,spending,Housing,Household furnishings and equipment,Household textiles,6,CV(%),CV(%),5.84,36.74,10.16,13.21,7.33,12.59
+343,spending,Housing,Household furnishings and equipment,Household textiles,6,Miscellaneous household equipment,Miscellaneous household equipment,,,,,,
+344,spending,Housing,Household furnishings and equipment,Household textiles,6,Mean,Mean,916,1635,665,1026,1045,730
+345,spending,Housing,Household furnishings and equipment,Household textiles,6,Share,Share,1.5,3.9,1.5,1.6,1.4,1.4
+346,spending,Housing,Household furnishings and equipment,Household textiles,6,SE,SE,38.04,1827.27,86.92,66.83,99.59,51.73
+347,spending,Housing,Household furnishings and equipment,Household textiles,6,CV(%),CV(%),4.15,111.74,13.06,6.51,9.53,7.09
+348,spending,Housing,,,0,,,,,,,,
+349,spending,Apparel and services,,,2,Apparel and services,Apparel and services,,,,,,
+350,spending,Apparel and services,,,2,Mean,Mean,1833,778,995,1730,2336,1908
+351,spending,Apparel and services,,,2,Share,Share,3.1,1.9,2.2,2.7,3.2,3.7
+352,spending,Apparel and services,,,2,SE,SE,56.45,484.61,86.55,79.11,133.39,97.6
+353,spending,Apparel and services,,,2,CV(%),CV(%),3.08,62.3,8.7,4.57,5.71,5.11
+354,spending,Apparel and services,Men and boys,,4,Men and boys,Men and boys,,,,,,
+355,spending,Apparel and services,Men and boys,,4,Mean,Mean,442,215,168,414,618,443
+356,spending,Apparel and services,Men and boys,,4,Share,Share,0.7,0.5,0.4,0.7,0.9,0.9
+357,spending,Apparel and services,Men and boys,,4,SE,SE,16.38,127.31,28,27.54,48.18,34.74
+358,spending,Apparel and services,Men and boys,,4,CV(%),CV(%),3.7,59.32,16.71,6.65,7.8,7.83
+359,spending,Apparel and services,Men and boys,"Men, 16 and over",6,"Men, 16 and over","Men, 16 and over",,,,,,
+360,spending,Apparel and services,Men and boys,"Men, 16 and over",6,Mean,Mean,342,167,153,374,415,327
+361,spending,Apparel and services,Men and boys,"Men, 16 and over",6,Share,Share,0.6,0.4,0.3,0.6,0.6,0.6
+362,spending,Apparel and services,Men and boys,"Men, 16 and over",6,SE,SE,15.35,122.5,29.31,26.55,37.96,32.08
+363,spending,Apparel and services,Men and boys,"Men, 16 and over",6,CV(%),CV(%),4.48,73.36,19.21,7.11,9.15,9.82
+364,spending,Apparel and services,Men and boys,"Men, 16 and over",6,"Boys, 2 to 15","Boys, 2 to 15",,,,,,
+365,spending,Apparel and services,Men and boys,"Men, 16 and over",6,Mean,Mean,100,48,15,41,203,117
+366,spending,Apparel and services,Men and boys,"Men, 16 and over",6,Share,Share,0.2,0.1,b/,0.1,0.3,0.2
+367,spending,Apparel and services,Men and boys,"Men, 16 and over",6,SE,SE,5.31,42.93,4.17,5.43,19.92,11
+368,spending,Apparel and services,Men and boys,"Men, 16 and over",6,CV(%),CV(%),5.32,90.15,27.94,13.34,9.79,9.42
+369,spending,Apparel and services,Women and girls,,4,Women and girls,Women and girls,,,,,,
+370,spending,Apparel and services,Women and girls,,4,Mean,Mean,694,212,444,715,877,616
+371,spending,Apparel and services,Women and girls,,4,Share,Share,1.2,0.5,1,1.1,1.2,1.2
+372,spending,Apparel and services,Women and girls,,4,SE,SE,24.3,162.62,48.77,44.58,71.29,45.54
+373,spending,Apparel and services,Women and girls,,4,CV(%),CV(%),3.5,76.73,10.98,6.23,8.13,7.39
+374,spending,Apparel and services,Women and girls,"Women, 16 and over",6,"Women, 16 and over","Women, 16 and over",,,,,,
+375,spending,Apparel and services,Women and girls,"Women, 16 and over",6,Mean,Mean,580,209,419,661,647,493
+376,spending,Apparel and services,Women and girls,"Women, 16 and over",6,Share,Share,1,0.5,0.9,1,0.9,1
+377,spending,Apparel and services,Women and girls,"Women, 16 and over",6,SE,SE,23.07,162.65,47.79,45.04,64.25,38.62
+378,spending,Apparel and services,Women and girls,"Women, 16 and over",6,CV(%),CV(%),3.98,77.99,11.42,6.82,9.94,7.83
+379,spending,Apparel and services,Women and girls,"Women, 16 and over",6,"Girls, 2 to 15","Girls, 2 to 15",,,,,,
+380,spending,Apparel and services,Women and girls,"Women, 16 and over",6,Mean,Mean,114,3,25,54,230,123
+381,spending,Apparel and services,Women and girls,"Women, 16 and over",6,Share,Share,0.2,b/,0.1,0.1,0.3,0.2
+382,spending,Apparel and services,Women and girls,"Women, 16 and over",6,SE,SE,6.6,2.46,6.84,5.51,20.34,14.28
+383,spending,Apparel and services,Women and girls,"Women, 16 and over",6,CV(%),CV(%),5.78,72.79,26.89,10.15,8.83,11.61
+384,spending,Apparel and services,Children under 2,,4,Children under 2,Children under 2,,,,,,
+385,spending,Apparel and services,Children under 2,,4,Mean,Mean,77,c/,19,37,87,152
+386,spending,Apparel and services,Children under 2,,4,Share,Share,0.1,c/,b/,0.1,0.1,0.3
+387,spending,Apparel and services,Children under 2,,4,SE,SE,6.43,c/,7.27,7.4,11.49,15.61
+388,spending,Apparel and services,Children under 2,,4,CV(%),CV(%),8.39,c/,38.49,20.26,13.16,10.24
+389,spending,Apparel and services,Children under 2,,4,Footwear,Footwear,,,,,,
+390,spending,Apparel and services,Children under 2,,4,Mean,Mean,379,295,185,338,500,410
+391,spending,Apparel and services,Children under 2,,4,Share,Share,0.6,0.7,0.4,0.5,0.7,0.8
+392,spending,Apparel and services,Children under 2,,4,SE,SE,20.56,216.51,36.42,32.22,42.34,34.14
+393,spending,Apparel and services,Children under 2,,4,CV(%),CV(%),5.43,73.42,19.69,9.53,8.47,8.34
+394,spending,Apparel and services,Children under 2,,4,Other apparel products and services,Other apparel products and services,,,,,,
+395,spending,Apparel and services,Children under 2,,4,Mean,Mean,241,56,180,226,254,287
+396,spending,Apparel and services,Children under 2,,4,Share,Share,0.4,0.1,0.4,0.4,0.4,0.6
+397,spending,Apparel and services,Children under 2,,4,SE,SE,12.92,15.38,24.54,15.57,22.85,30.5
+398,spending,Apparel and services,Children under 2,,4,CV(%),CV(%),5.36,27.27,13.64,6.88,9,10.63
+399,spending,Apparel and services,,,0,,,,,,,,
+400,spending,Transportation,,,2,Transportation,Transportation,,,,,,
+401,spending,Transportation,,,2,Mean,Mean,9576,3222,6437,10020,11646,8629
+402,spending,Transportation,,,2,Share,Share,15.9,7.7,14.4,15.9,16.1,16.8
+403,spending,Transportation,,,2,SE,SE,198.51,1212.53,707.45,268.01,376.16,309.58
+404,spending,Transportation,,,2,CV(%),CV(%),2.07,37.64,10.99,2.67,3.23,3.59
+405,spending,Transportation,Vehicle purchases (net outlay),,4,Vehicle purchases (net outlay),Vehicle purchases (net outlay),,,,,,
+406,spending,Transportation,Vehicle purchases (net outlay),,4,Mean,Mean,4054,261,2241,4147,5165,3825
+407,spending,Transportation,Vehicle purchases (net outlay),,4,Share,Share,6.7,0.6,5,6.6,7.1,7.5
+408,spending,Transportation,Vehicle purchases (net outlay),,4,SE,SE,146.09,198.88,280.48,221.9,339.47,273.74
+409,spending,Transportation,Vehicle purchases (net outlay),,4,CV(%),CV(%),3.6,76.17,12.52,5.35,6.57,7.16
+410,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,"Cars and trucks, new","Cars and trucks, new",,,,,,
+411,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,Mean,Mean,1900,183,1223,2236,2327,1400
+412,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,Share,Share,3.2,0.4,2.7,3.5,3.2,2.7
+413,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,SE,SE,109.72,185.67,228.57,171.56,246.82,173.92
+414,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,CV(%),CV(%),5.78,101.39,18.68,7.67,10.61,12.42
+415,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,"Cars and trucks, used","Cars and trucks, used",,,,,,
+416,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,Mean,Mean,2101,78,963,1864,2793,2352
+417,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,Share,Share,3.5,0.2,2.2,3,3.9,4.6
+418,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,SE,SE,112.42,77.88,177.02,172.27,222.09,179.31
+419,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,CV(%),CV(%),5.35,99.88,18.38,9.24,7.95,7.62
+420,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,Other vehicles,Other vehicles,,,,,,
+421,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,Mean,Mean,53,c/,55,46,45,73
+422,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,Share,Share,0.1,c/,0.1,0.1,0.1,0.1
+423,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,SE,SE,9.62,c/,42.35,17.51,19.77,24.84
+424,spending,Transportation,Vehicle purchases (net outlay),"Cars and trucks, new",6,CV(%),CV(%),18.09,c/,77.59,37.75,43.83,34.2
+425,spending,Transportation,"Gasoline, other fuels, and motor oil",,4,"Gasoline, other fuels, and motor oil","Gasoline, other fuels, and motor oil",,,,,,
+426,spending,Transportation,"Gasoline, other fuels, and motor oil",,4,Mean,Mean,1968,467,1080,1966,2500,1919
+427,spending,Transportation,"Gasoline, other fuels, and motor oil",,4,Share,Share,3.3,1.1,2.4,3.1,3.4,3.7
+428,spending,Transportation,"Gasoline, other fuels, and motor oil",,4,SE,SE,25.67,61.09,26.71,30.55,39.19,42.35
+429,spending,Transportation,"Gasoline, other fuels, and motor oil",,4,CV(%),CV(%),1.3,13.07,2.47,1.55,1.57,2.21
+430,spending,Transportation,"Gasoline, other fuels, and motor oil",,4,Other vehicle expenses,Other vehicle expenses,,,,,,
+431,spending,Transportation,"Gasoline, other fuels, and motor oil",,4,Mean,Mean,2842,2095,2603,3145,3130,2275
+432,spending,Transportation,"Gasoline, other fuels, and motor oil",,4,Share,Share,4.7,5,5.8,5,4.3,4.4
+433,spending,Transportation,"Gasoline, other fuels, and motor oil",,4,SE,SE,90.56,1154.89,634.11,118.69,126.45,96.95
+434,spending,Transportation,"Gasoline, other fuels, and motor oil",,4,CV(%),CV(%),3.19,55.13,24.36,3.77,4.04,4.26
+435,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,Vehicle finance charges,Vehicle finance charges,,,,,,
+436,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,Mean,Mean,220,8,68,210,301,235
+437,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,Share,Share,0.4,b/,0.2,0.3,0.4,0.5
+438,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,SE,SE,5.64,5.93,5.84,7.91,11.47,12.06
+439,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,CV(%),CV(%),2.56,72.72,8.65,3.77,3.81,5.13
+440,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,Maintenance and repairs,Maintenance and repairs,,,,,,
+441,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,Mean,Mean,954,319,1246,1038,1017,654
+442,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,Share,Share,1.6,0.8,2.8,1.6,1.4,1.3
+443,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,SE,SE,82.24,82.9,625.24,34.13,44.99,22.72
+444,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,CV(%),CV(%),8.62,25.96,50.18,3.29,4.42,3.47
+445,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,Vehicle insurance,Vehicle insurance,,,,,,
+446,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,Mean,Mean,967,1489,752,1129,1016,781
+447,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,Share,Share,1.6,3.6,1.7,1.8,1.4,1.5
+448,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,SE,SE,51.16,1150.63,106.14,100.11,93.84,82.26
+449,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,CV(%),CV(%),5.29,77.26,14.11,8.87,9.23,10.53
+450,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,"Vehicle rental, leases, licenses, and other charges","Vehicle rental, leases, licenses, and other charges",,,,,,
+451,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,Mean,Mean,700,278,537,769,797,605
+452,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,Share,Share,1.2,0.7,1.2,1.2,1.1,1.2
+453,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,SE,SE,19.71,65.25,57.66,44.04,44.49,29.79
+454,spending,Transportation,"Gasoline, other fuels, and motor oil",Vehicle finance charges,6,CV(%),CV(%),2.81,23.45,10.73,5.73,5.59,4.93
+455,spending,Transportation,Public and other transportation,,4,Public and other transportation,Public and other transportation,,,,,,
+456,spending,Transportation,Public and other transportation,,4,Mean,Mean,712,398,512,762,851,610
+457,spending,Transportation,Public and other transportation,,4,Share,Share,1.2,1,1.1,1.2,1.2,1.2
+458,spending,Transportation,Public and other transportation,,4,SE,SE,21.82,172.57,56.66,39.54,40.34,32.01
+459,spending,Transportation,Public and other transportation,,4,CV(%),CV(%),3.06,43.33,11.06,5.19,4.74,5.25
+460,spending,Transportation,,,0,,,,,,,,
+461,spending,Healthcare,,,2,Healthcare,Healthcare,,,,,,
+462,spending,Healthcare,,,2,Mean,Mean,4928,6011,6619,5921,4714,2894
+463,spending,Healthcare,,,2,Share,Share,8.2,14.4,14.8,9.4,6.5,5.6
+464,spending,Healthcare,,,2,SE,SE,72.31,496.54,143.02,129.66,100.73,91.51
+465,spending,Healthcare,,,2,CV(%),CV(%),1.47,8.26,2.16,2.19,2.14,3.16
+466,spending,Healthcare,Health insurance,,4,Health insurance,Health insurance,,,,,,
+467,spending,Healthcare,Health insurance,,4,Mean,Mean,3414,4228,4688,4052,3243,2043
+468,spending,Healthcare,Health insurance,,4,Share,Share,5.7,10.1,10.5,6.4,4.5,4
+469,spending,Healthcare,Health insurance,,4,SE,SE,42.57,291.17,90.71,77.96,65.74,68.59
+470,spending,Healthcare,Health insurance,,4,CV(%),CV(%),1.25,6.89,1.93,1.92,2.03,3.36
+471,spending,Healthcare,Health insurance,,4,Medical services,Medical services,,,,,,
+472,spending,Healthcare,Health insurance,,4,Mean,Mean,872,985,882,1059,910,565
+473,spending,Healthcare,Health insurance,,4,Share,Share,1.5,2.4,2,1.7,1.3,1.1
+474,spending,Healthcare,Health insurance,,4,SE,SE,32.45,467.21,61.77,57.77,44.22,53.61
+475,spending,Healthcare,Health insurance,,4,CV(%),CV(%),3.72,47.44,7,5.46,4.86,9.48
+476,spending,Healthcare,Health insurance,,4,Drugs,Drugs,,,,,,
+477,spending,Healthcare,Health insurance,,4,Mean,Mean,486,649,819,622,413,201
+478,spending,Healthcare,Health insurance,,4,Share,Share,0.8,1.6,1.8,1,0.6,0.4
+479,spending,Healthcare,Health insurance,,4,SE,SE,12.47,84.14,53.92,22.76,17.05,15.3
+480,spending,Healthcare,Health insurance,,4,CV(%),CV(%),2.57,12.96,6.58,3.66,4.13,7.61
+481,spending,Healthcare,Health insurance,,4,Medical supplies,Medical supplies,,,,,,
+482,spending,Healthcare,Health insurance,,4,Mean,Mean,156,149,229,188,149,85
+483,spending,Healthcare,Health insurance,,4,Share,Share,0.3,0.4,0.5,0.3,0.2,0.2
+484,spending,Healthcare,Health insurance,,4,SE,SE,7.69,46.01,36.2,11.32,9.16,7.7
+485,spending,Healthcare,Health insurance,,4,CV(%),CV(%),4.92,30.82,15.77,6.03,6.15,9.07
+486,spending,Healthcare,,,0,,,,,,,,
+487,spending,Entertainment,,,2,Entertainment,Entertainment,,,,,,
+488,spending,Entertainment,,,2,Mean,Mean,3203,893,2110,3425,4194,2496
+489,spending,Entertainment,,,2,Share,Share,5.3,2.1,4.7,5.4,5.8,4.9
+490,spending,Entertainment,,,2,SE,SE,108.24,87.87,141.7,160.95,280,110.98
+491,spending,Entertainment,,,2,CV(%),CV(%),3.38,9.84,6.72,4.7,6.68,4.45
+492,spending,Entertainment,Fees and admissions,,4,Fees and admissions,Fees and admissions,,,,,,
+493,spending,Entertainment,Fees and admissions,,4,Mean,Mean,750,190,496,680,1144,579
+494,spending,Entertainment,Fees and admissions,,4,Share,Share,1.2,0.5,1.1,1.1,1.6,1.1
+495,spending,Entertainment,Fees and admissions,,4,SE,SE,32.66,51.61,62.44,42.86,66.13,26.06
+496,spending,Entertainment,Fees and admissions,,4,CV(%),CV(%),4.35,27.12,12.59,6.3,5.78,4.5
+497,spending,Entertainment,Fees and admissions,,4,Audio and visual equipment and services,Audio and visual equipment and services,,,,,,
+498,spending,Entertainment,Fees and admissions,,4,Mean,Mean,985,593,875,1088,1112,782
+499,spending,Entertainment,Fees and admissions,,4,Share,Share,1.6,1.4,2,1.7,1.5,1.5
+500,spending,Entertainment,Fees and admissions,,4,SE,SE,20.54,48.34,32.56,31.46,32.99,26.54
+501,spending,Entertainment,Fees and admissions,,4,CV(%),CV(%),2.08,8.15,3.72,2.89,2.97,3.39
+502,spending,Entertainment,Fees and admissions,,4,"Pets, toys, hobbies, and playground equipment","Pets, toys, hobbies, and playground equipment",,,,,,
+503,spending,Entertainment,Fees and admissions,,4,Mean,Mean,869,89,558,979,1131,629
+504,spending,Entertainment,Fees and admissions,,4,Share,Share,1.4,0.2,1.2,1.6,1.6,1.2
+505,spending,Entertainment,Fees and admissions,,4,SE,SE,66.18,32.29,80.85,80.85,201.8,40.72
+506,spending,Entertainment,Fees and admissions,,4,CV(%),CV(%),7.62,36.15,14.5,8.26,17.85,6.47
+507,spending,Entertainment,Fees and admissions,Pets,6,Pets,Pets,,,,,,
+508,spending,Entertainment,Fees and admissions,Pets,6,Mean,Mean,710,70,486,837,923,449
+509,spending,Entertainment,Fees and admissions,Pets,6,Share,Share,1.2,0.2,1.1,1.3,1.3,0.9
+510,spending,Entertainment,Fees and admissions,Pets,6,SE,SE,64.97,28.01,85.5,80.17,192.91,40.96
+511,spending,Entertainment,Fees and admissions,Pets,6,CV(%),CV(%),9.15,39.95,17.6,9.58,20.9,9.12
+512,spending,Entertainment,Fees and admissions,Pets,6,"Toys, hobbies, and playground equipment","Toys, hobbies, and playground equipment",,,,,,
+513,spending,Entertainment,Fees and admissions,Pets,6,Mean,Mean,159,19,72,142,208,180
+514,spending,Entertainment,Fees and admissions,Pets,6,Share,Share,0.3,b/,0.2,0.2,0.3,0.4
+515,spending,Entertainment,Fees and admissions,Pets,6,SE,SE,10.28,11.88,14.94,12.88,21.14,23.24
+516,spending,Entertainment,Fees and admissions,Pets,6,CV(%),CV(%),6.47,61.89,20.79,9.07,10.18,12.9
+517,spending,Entertainment,"Other entertainment supplies, equipment, and services",,4,"Other entertainment supplies, equipment, and services","Other entertainment supplies, equipment, and services",,,,,,
+518,spending,Entertainment,"Other entertainment supplies, equipment, and services",,4,Mean,Mean,599,20,181,677,807,506
+519,spending,Entertainment,"Other entertainment supplies, equipment, and services",,4,Share,Share,1,b/,0.4,1.1,1.1,1
+520,spending,Entertainment,"Other entertainment supplies, equipment, and services",,4,SE,SE,62.75,13.58,47.52,136.02,120.03,81.08
+521,spending,Entertainment,"Other entertainment supplies, equipment, and services",,4,CV(%),CV(%),10.48,67.79,26.22,20.08,14.88,16.04
+522,spending,Entertainment,,,0,,,,,,,,
+523,spending,Personal care products and services,,,2,Personal care products and services,Personal care products and services,,,,,,
+524,spending,Personal care products and services,,,2,Mean,Mean,762,436,630,767,970,616
+525,spending,Personal care products and services,,,2,Share,Share,1.3,1,1.4,1.2,1.3,1.2
+526,spending,Personal care products and services,,,2,SE,SE,15.24,50.05,30.77,25.83,36.71,26.62
+527,spending,Personal care products and services,,,2,CV(%),CV(%),2,11.47,4.89,3.37,3.78,4.32
+528,spending,Personal care products and services,,,0,,,,,,,,
+529,spending,Reading,,,2,Reading,Reading,,,,,,
+530,spending,Reading,,,2,Mean,Mean,110,119,164,125,108,63
+531,spending,Reading,,,2,Share,Share,0.2,0.3,0.4,0.2,0.1,0.1
+532,spending,Reading,,,2,SE,SE,5.45,56.65,19.3,10.29,10.59,6.45
+533,spending,Reading,,,2,CV(%),CV(%),4.95,47.44,11.77,8.21,9.77,10.24
+534,spending,Reading,,,0,,,,,,,,
+535,spending,Education,,,2,Education,Education,,,,,,
+536,spending,Education,,,2,Mean,Mean,1491,44,397,1454,2149,1457
+537,spending,Education,,,2,Share,Share,2.5,0.1,0.9,2.3,3,2.8
+538,spending,Education,,,2,SE,SE,92.85,15.08,91.54,177.41,192.26,134.47
+539,spending,Education,,,2,CV(%),CV(%),6.23,34.52,23.05,12.2,8.95,9.23
+540,spending,Education,,,0,,,,,,,,
+541,spending,Tobacco products and smoking supplies,,,2,Tobacco products and smoking supplies,Tobacco products and smoking supplies,,,,,,
+542,spending,Tobacco products and smoking supplies,,,2,Mean,Mean,332,68,147,395,377,303
+543,spending,Tobacco products and smoking supplies,,,2,Share,Share,0.6,0.2,0.3,0.6,0.5,0.6
+544,spending,Tobacco products and smoking supplies,,,2,SE,SE,10.61,34.67,12.17,17.12,19.99,18.17
+545,spending,Tobacco products and smoking supplies,,,2,CV(%),CV(%),3.19,50.72,8.29,4.33,5.3,6
+546,spending,Tobacco products and smoking supplies,,,0,,,,,,,,
+547,spending,Miscellaneous,,,2,Miscellaneous,Miscellaneous,,,,,,
+548,spending,Miscellaneous,,,2,Mean,Mean,1010,706,882,1253,1113,645
+549,spending,Miscellaneous,,,2,Share,Share,1.7,1.7,2,2,1.5,1.3
+550,spending,Miscellaneous,,,2,SE,SE,67.75,266.13,119.09,153.29,120.25,82.64
+551,spending,Miscellaneous,,,2,CV(%),CV(%),6.71,37.67,13.5,12.23,10.81,12.82
+552,spending,Miscellaneous,,,0,,,,,,,,
+553,spending,Cash contributions,,,2,Cash contributions,Cash contributions,,,,,,
+554,spending,Cash contributions,,,2,Mean,Mean,1873,4054,2470,2267,1960,842
+555,spending,Cash contributions,,,2,Share,Share,3.1,9.7,5.5,3.6,2.7,1.6
+556,spending,Cash contributions,,,2,SE,SE,95.94,1543.56,166.25,151.65,147.26,74.89
+557,spending,Cash contributions,,,2,CV(%),CV(%),5.12,38.08,6.73,6.69,7.51,8.9
+558,spending,Cash contributions,,,0,,,,,,,,
+559,spending,Personal insurance and pensions,,,2,Personal insurance and pensions,Personal insurance and pensions,,,,,,
+560,spending,Personal insurance and pensions,,,2,Mean,Mean,6771,755,2589,7438,9129,5720
+561,spending,Personal insurance and pensions,,,2,Share,Share,11.3,1.8,5.8,11.8,12.6,11.1
+562,spending,Personal insurance and pensions,,,2,SE,SE,144.47,264.79,497.33,256.26,208.44,145.49
+563,spending,Personal insurance and pensions,,,2,CV(%),CV(%),2.13,35.08,19.21,3.45,2.28,2.54
+564,spending,Personal insurance and pensions,Life and other personal insurance,,4,Life and other personal insurance,Life and other personal insurance,,,,,,
+565,spending,Personal insurance and pensions,Life and other personal insurance,,4,Mean,Mean,418,343,408,580,447,172
+566,spending,Personal insurance and pensions,Life and other personal insurance,,4,Share,Share,0.7,0.8,0.9,0.9,0.6,0.3
+567,spending,Personal insurance and pensions,Life and other personal insurance,,4,SE,SE,11.72,116.09,29.83,29.41,20.05,11.82
+568,spending,Personal insurance and pensions,Life and other personal insurance,,4,CV(%),CV(%),2.81,33.83,7.32,5.07,4.48,6.89
+569,spending,Personal insurance and pensions,Life and other personal insurance,,4,Pensions and Social Security,Pensions and Social Security,,,,,,
+570,spending,Personal insurance and pensions,Life and other personal insurance,,4,Mean,Mean,6353,412,2182,6858,8682,5548
+571,spending,Personal insurance and pensions,Life and other personal insurance,,4,Share,Share,10.6,1,4.9,10.9,12,10.8
+572,spending,Personal insurance and pensions,Life and other personal insurance,,4,SE,SE,139.67,200.55,488.57,246.05,203.13,141.69
+573,spending,Personal insurance and pensions,Life and other personal insurance,,4,CV(%),CV(%),2.2,48.73,22.4,3.59,2.34,2.55
+574,spending,,,,0,,,,,,,,
+575,Sources of income and personal taxes:,,,,0,Sources of income and personal taxes:,Sources of income and personal taxes:,,,,,,
+576,Sources of income and personal taxes:,,,,0,,,,,,,,
+577,Sources of income and personal taxes:,Money income before taxes,,,2,Money income before taxes,Money income before taxes,,,,,,
+578,Sources of income and personal taxes:,Money income before taxes,,,2,Mean,Mean,73573,31992,41118,78907,95032,61608
+579,Sources of income and personal taxes:,Money income before taxes,,,2,SE,SE,1098.2,3755.55,1399.48,1842.71,1782.76,1241.58
+580,Sources of income and personal taxes:,Money income before taxes,,,2,CV(%),CV(%),1.49,11.74,3.4,2.34,1.88,2.02
+581,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Wages and salaries,Wages and salaries,,,,,,
+582,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Mean,Mean,57590,1998,9077,57026,84119,57024
+583,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Share,Share,78.3,6.2,22.1,72.3,88.5,92.6
+584,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,SE,SE,980.51,983.69,722.02,1555.98,1778.29,1254.59
+585,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,CV(%),CV(%),1.7,49.25,7.95,2.73,2.11,2.2
+586,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Self-employment income,Self-employment income,,,,,,
+587,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Mean,Mean,4506,1488,2398,5207,6657,2450
+588,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Share,Share,6.1,4.7,5.8,6.6,7,4
+589,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,SE,SE,245.12,918.05,528.81,383.52,615.89,332.58
+590,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,CV(%),CV(%),5.44,61.69,22.05,7.37,9.25,13.57
+591,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,"Social Security, private and government retirement","Social Security, private and government retirement",,,,,,
+592,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Mean,Mean,8300,23110,26029,12121,1730,463
+593,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Share,Share,11.3,72.2,63.3,15.4,1.8,0.8
+594,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,SE,SE,179.2,1421.86,667.62,422.23,164.67,66.38
+595,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,CV(%),CV(%),2.16,6.15,2.56,3.48,9.52,14.32
+596,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,"Interest, dividends, rental income, other property income","Interest, dividends, rental income, other property income",,,,,,
+597,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Mean,Mean,1910,4832,2725,3379,1096,223
+598,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Share,Share,2.6,15.1,6.6,4.3,1.2,0.4
+599,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,SE,SE,258.29,1686.34,300.2,724.52,134.1,48.29
+600,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,CV(%),CV(%),13.53,34.9,11.02,21.44,12.24,21.67
+601,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,"Public assistance, Supplemental Security Income, Supplementary Nutrition Assistance Program (SNAP)","Public assistance, Supplemental Security Income, Supplementary Nutrition Assistance Program (SNAP)",,,,,,
+602,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Mean,Mean,460,146,208,439,563,521
+603,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Share,Share,0.6,0.5,0.5,0.6,0.6,0.8
+604,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,SE,SE,23.13,82.13,27.97,33.33,44.3,37.8
+605,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,CV(%),CV(%),5.03,56.21,13.46,7.59,7.87,7.26
+606,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,"Unemployment and workers' compensation, veterans' benefits, and regular contributions for support","Unemployment and workers' compensation, veterans' benefits, and regular contributions for support",,,,,,
+607,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Mean,Mean,457,305,567,479,514,318
+608,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Share,Share,0.6,1,1.4,0.6,0.5,0.5
+609,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,SE,SE,38.03,158.91,123.02,56.45,69.24,42.02
+610,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,CV(%),CV(%),8.32,52.1,21.69,11.78,13.47,13.22
+611,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Other income,Other income,,,,,,
+612,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Mean,Mean,351,113,114,256,353,609
+613,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,Share,Share,0.5,0.4,0.3,0.3,0.4,1
+614,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,SE,SE,37.46,59.04,21.74,33.53,102.7,86.07
+615,Sources of income and personal taxes:,Money income before taxes,Wages and salaries,,4,CV(%),CV(%),10.68,52.46,19.12,13.11,29.06,14.14
+616,Sources of income and personal taxes:,Money income before taxes,,,0,,,,,,,,
+617,Sources of income and personal taxes:,Personal taxes (contains some imputed values),,,2,Personal taxes (contains some imputed values),Personal taxes (contains some imputed values),,,,,,
+618,Sources of income and personal taxes:,Personal taxes (contains some imputed values),,,2,Mean,Mean,9967,1338,2632,12210,14010,6669
+619,Sources of income and personal taxes:,Personal taxes (contains some imputed values),,,2,Share,Share,13.5,4.2,6.4,15.5,14.7,10.8
+620,Sources of income and personal taxes:,Personal taxes (contains some imputed values),,,2,SE,SE,483.84,678.47,361.77,1093.77,555.15,326.43
+621,Sources of income and personal taxes:,Personal taxes (contains some imputed values),,,2,CV(%),CV(%),4.85,50.7,13.74,8.96,3.96,4.89
+622,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,Federal income taxes,Federal income taxes,,,,,,
+623,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,Mean,Mean,7819,1238,2195,9748,10960,4957
+624,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,Share,Share,10.6,3.9,5.3,12.4,11.5,8
+625,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,SE,SE,370.92,643.26,289.76,886.41,464.36,250.06
+626,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,CV(%),CV(%),4.74,51.96,13.2,9.09,4.24,5.04
+627,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,State and local income taxes,State and local income taxes,,,,,,
+628,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,Mean,Mean,2098,94,402,2396,2994,1679
+629,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,Share,Share,2.9,0.3,1,3,3.2,2.7
+630,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,SE,SE,126.95,89.56,85.45,217.06,149.95,97.7
+631,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,CV(%),CV(%),6.05,95.7,21.24,9.06,5.01,5.82
+632,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,Other taxes,Other taxes,,,,,,
+633,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,Mean,Mean,51,7,35,66,56,33
+634,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,Share,Share,0.1,b/,0.1,0.1,0.1,0.1
+635,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,SE,SE,7.4,4.1,8.82,12.83,10.45,5.28
+636,Sources of income and personal taxes:,Personal taxes (contains some imputed values),Federal income taxes,,4,CV(%),CV(%),14.61,61,25.29,19.39,18.62,15.79
+637,Sources of income and personal taxes:,Personal taxes (contains some imputed values),,,0,,,,,,,,
+638,Sources of income and personal taxes:,Income after taxes,,,2,Income after taxes,Income after taxes,,,,,,
+639,Sources of income and personal taxes:,Income after taxes,,,2,Mean,Mean,63606,30653,38486,66697,81022,54939
+640,Sources of income and personal taxes:,Income after taxes,,,2,Share,Share,86.5,95.8,93.6,84.5,85.3,89.2
+641,Sources of income and personal taxes:,Income after taxes,,,2,SE,SE,767.93,3150.55,1150.75,1307.29,1303.6,964.98
+642,Sources of income and personal taxes:,Income after taxes,,,2,CV(%),CV(%),1.21,10.28,2.99,1.96,1.61,1.76
+643,Sources of income and personal taxes:,Income after taxes,,,0,,,,,,,,
+644,Addenda:,,,,0,Addenda:,Addenda:,,,,,,
+645,Addenda:,,,,0,,,,,,,,
+646,Addenda:,Net change in total assets and liabilities,,,2,Net change in total assets and liabilities,Net change in total assets and liabilities,,,,,,
+647,Addenda:,Net change in total assets and liabilities,,,2,Mean,Mean,14049,7090,15048,21774,11645,5828
+648,Addenda:,Net change in total assets and liabilities,,,2,SE,SE,1593.57,5326.66,4386.09,3388.58,3292.12,1750.35
+649,Addenda:,Net change in total assets and liabilities,,,2,CV(%),CV(%),11.34,75.12,29.15,15.56,28.27,30.03
+650,Addenda:,Net change in total assets and liabilities,Net change in total assets,,4,Net change in total assets,Net change in total assets,,,,,,
+651,Addenda:,Net change in total assets and liabilities,Net change in total assets,,4,Mean,Mean,23805,7275,16467,28876,26342,18585
+652,Addenda:,Net change in total assets and liabilities,Net change in total assets,,4,SE,SE,1586.57,5188.29,4448.96,3244.83,3293.29,2322.1
+653,Addenda:,Net change in total assets and liabilities,Net change in total assets,,4,CV(%),CV(%),6.66,71.31,27.02,11.24,12.5,12.49
+654,Addenda:,Net change in total assets and liabilities,Net change in total assets,,4,Net change in total liabilities,Net change in total liabilities,,,,,,
+655,Addenda:,Net change in total assets and liabilities,Net change in total assets,,4,Mean,Mean,9756,185,1419,7102,14696,12757
+656,Addenda:,Net change in total assets and liabilities,Net change in total assets,,4,SE,SE,960.64,1037.44,956.14,1284.25,2338.8,1667.74
+657,Addenda:,Net change in total assets and liabilities,Net change in total assets,,4,CV(%),CV(%),9.85,560.86,67.36,18.08,15.91,13.07
+658,Addenda:,Net change in total assets and liabilities,,,0,,,,,,,,
+659,Addenda:,Other financial information:,,,2,Other financial information:,Other financial information:,,,,,,
+660,Addenda:,Other financial information:,Other money receipts,,4,Other money receipts,Other money receipts,,,,,,
+661,Addenda:,Other financial information:,Other money receipts,,4,Mean,Mean,1156,293,909,2458,463,273
+662,Addenda:,Other financial information:,Other money receipts,,4,SE,SE,463.53,210,352.88,1342.47,129.83,56.06
+663,Addenda:,Other financial information:,Other money receipts,,4,CV(%),CV(%),40.1,71.62,38.83,54.62,28.02,20.55
+664,Addenda:,Other financial information:,Other money receipts,,4,Mortgage principal paid on owned property,Mortgage principal paid on owned property,,,,,,
+665,Addenda:,Other financial information:,Other money receipts,,4,Mean,Mean,-1839,-272,-877,-2418,-2465,-935
+666,Addenda:,Other financial information:,Other money receipts,,4,SE,SE,42.83,148.4,69.1,90.07,118.51,85.67
+667,Addenda:,Other financial information:,Other money receipts,,4,CV(%),CV(%),-2.33,-54.64,-7.88,-3.73,-4.81,-9.16
+668,Addenda:,Other financial information:,Other money receipts,,4,Estimated market value of owned home,Estimated market value of owned home,,,,,,
+669,Addenda:,Other financial information:,Other money receipts,,4,Mean,Mean,186064,209623,225110,234703,203875,79668
+670,Addenda:,Other financial information:,Other money receipts,,4,SE,SE,3585.18,37622.56,8867.18,5786.65,6904.04,2240.65
+671,Addenda:,Other financial information:,Other money receipts,,4,CV(%),CV(%),1.93,17.95,3.94,2.47,3.39,2.81
+672,Addenda:,Other financial information:,Other money receipts,,4,Estimated monthly rental value of owned home,Estimated monthly rental value of owned home,,,,,,
+673,Addenda:,Other financial information:,Other money receipts,,4,Mean,Mean,1017,1028,1195,1263,1092,508
+674,Addenda:,Other financial information:,Other money receipts,,4,SE,SE,11.48,115.25,26.06,21.1,26.84,13.62
+675,Addenda:,Other financial information:,Other money receipts,,4,CV(%),CV(%),1.13,11.22,2.18,1.67,2.46,2.68
+676,Addenda:,Other financial information:,,,0,,,,,,,,
+677,Addenda:,"Gifts of goods and services, total",,,2,"Gifts of goods and services, total","Gifts of goods and services, total",,,,,,
+678,Addenda:,"Gifts of goods and services, total",,,2,Mean,Mean,1229,859,967,1713,1350,582
+679,Addenda:,"Gifts of goods and services, total",,,2,SE,SE,49.08,318.36,121.19,116.3,110.22,49.56
+680,Addenda:,"Gifts of goods and services, total",,,2,CV(%),CV(%),3.99,37.08,12.53,6.79,8.17,8.51
+681,Addenda:,"Gifts of goods and services, total",Food,,4,Food,Food,,,,,,
+682,Addenda:,"Gifts of goods and services, total",Food,,4,Mean,Mean,88,59,57,131,83,50
+683,Addenda:,"Gifts of goods and services, total",Food,,4,SE,SE,8.39,49.19,11.52,21.69,10.57,15.61
+684,Addenda:,"Gifts of goods and services, total",Food,,4,CV(%),CV(%),9.57,83.37,20.33,16.56,12.72,31.37
+685,Addenda:,"Gifts of goods and services, total",Food,,4,Alcoholic beverages,Alcoholic beverages,,,,,,
+686,Addenda:,"Gifts of goods and services, total",Food,,4,Mean,Mean,14,2,5,14,16,17
+687,Addenda:,"Gifts of goods and services, total",Food,,4,SE,SE,1.64,1.48,2.29,2.98,4.1,3.89
+688,Addenda:,"Gifts of goods and services, total",Food,,4,CV(%),CV(%),11.54,95.66,43.6,20.81,26.03,22.44
+689,Addenda:,"Gifts of goods and services, total",Food,,4,Housing,Housing,,,,,,
+690,Addenda:,"Gifts of goods and services, total",Food,,4,Mean,Mean,233,219,220,311,237,129
+691,Addenda:,"Gifts of goods and services, total",Food,,4,SE,SE,13.92,152.2,32.49,29.38,38.42,9.9
+692,Addenda:,"Gifts of goods and services, total",Food,,4,CV(%),CV(%),5.97,69.52,14.79,9.44,16.21,7.66
+693,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,Housekeeping supplies,Housekeeping supplies,,,,,,
+694,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,Mean,Mean,33,10,18,51,26,26
+695,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,SE,SE,4.74,7.81,4.37,11.29,3.7,5.28
+696,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,CV(%),CV(%),14.2,76.81,24.89,22.12,14.17,20.62
+697,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,Household textiles,Household textiles,,,,,,
+698,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,Mean,Mean,7,c/,2,12,5,3
+699,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,SE,SE,1.26,c/,0.88,3.23,1.81,0.86
+700,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,CV(%),CV(%),19.16,c/,48.91,26.1,35.51,29.28
+701,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,Appliances and miscellaneous housewares,Appliances and miscellaneous housewares,,,,,,
+702,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,Mean,Mean,20,c/,18,28,18,14
+703,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,SE,SE,2.65,c/,5.8,3.55,5.3,4.26
+704,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,6,CV(%),CV(%),13.13,c/,31.45,12.9,28.97,30.6
+705,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,8,Major appliances,Major appliances,,,,,,
+706,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,8,Mean,Mean,7,c/,13,10,5,3
+707,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,8,SE,SE,1.14,c/,4.97,1.95,1.6,1.71
+708,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,8,CV(%),CV(%),15.55,c/,39.6,18.7,32.9,51.45
+709,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,8,Small appliances and miscellaneous housewares,Small appliances and miscellaneous housewares,,,,,,
+710,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,8,Mean,Mean,13,c/,6,17,13,11
+711,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,8,SE,SE,2.2,c/,3.03,3.07,4.97,3.9
+712,Addenda:,"Gifts of goods and services, total",Food,Housekeeping supplies,8,CV(%),CV(%),17.08,c/,51.51,17.94,37.04,36.78
+713,Addenda:,"Gifts of goods and services, total",Food,Miscellaneous household equipment,6,Miscellaneous household equipment,Miscellaneous household equipment,,,,,,
+714,Addenda:,"Gifts of goods and services, total",Food,Miscellaneous household equipment,6,Mean,Mean,53,39,45,78,49,30
+715,Addenda:,"Gifts of goods and services, total",Food,Miscellaneous household equipment,6,SE,SE,5.26,35.6,14.27,12.3,6.91,5.04
+716,Addenda:,"Gifts of goods and services, total",Food,Miscellaneous household equipment,6,CV(%),CV(%),9.87,91.85,31.98,15.82,14.18,17.08
+717,Addenda:,"Gifts of goods and services, total",Food,Miscellaneous household equipment,6,Other housing,Other housing,,,,,,
+718,Addenda:,"Gifts of goods and services, total",Food,Miscellaneous household equipment,6,Mean,Mean,120,170,137,142,139,57
+719,Addenda:,"Gifts of goods and services, total",Food,Miscellaneous household equipment,6,SE,SE,11.53,144.6,31.15,17.17,35.66,8.6
+720,Addenda:,"Gifts of goods and services, total",Food,Miscellaneous household equipment,6,CV(%),CV(%),9.63,85.06,22.69,12.06,25.68,15.05
+721,Addenda:,"Gifts of goods and services, total",Apparel and services,,4,Apparel and services,Apparel and services,,,,,,
+722,Addenda:,"Gifts of goods and services, total",Apparel and services,,4,Mean,Mean,203,72,109,267,194,177
+723,Addenda:,"Gifts of goods and services, total",Apparel and services,,4,SE,SE,11.87,47.08,16.96,20.23,21.04,23.71
+724,Addenda:,"Gifts of goods and services, total",Apparel and services,,4,CV(%),CV(%),5.85,65.1,15.51,7.56,10.86,13.42
+725,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,"Males, 2 and over","Males, 2 and over",,,,,,
+726,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,Mean,Mean,56,69,30,74,53,45
+727,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,SE,SE,5.07,46.75,7.98,10.42,9.78,11.74
+728,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,CV(%),CV(%),9.14,67.43,26.49,14.11,18.3,26.23
+729,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,"Females, 2 and over","Females, 2 and over",,,,,,
+730,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,Mean,Mean,73,2,39,102,67,60
+731,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,SE,SE,5.82,2.36,10.04,13.3,9.63,12.15
+732,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,CV(%),CV(%),7.94,102.72,25.71,12.99,14.41,20.22
+733,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,Children under 2,Children under 2,,,,,,
+734,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,Mean,Mean,32,c/,17,33,41,27
+735,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,SE,SE,3.42,c/,7.14,7.27,6.91,4.37
+736,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,CV(%),CV(%),10.83,c/,42.36,21.89,16.67,15.88
+737,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,Other apparel products and services,Other apparel products and services,,,,,,
+738,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,Mean,Mean,43,1,23,58,32,44
+739,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,SE,SE,4.96,0.67,8.24,8.56,5.43,11.45
+740,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",6,CV(%),CV(%),11.63,99.68,35.35,14.77,17.04,25.83
+741,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",8,Jewelry and watches,Jewelry and watches,,,,,,
+742,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",8,Mean,Mean,9,1,8,10,6,9
+743,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",8,SE,SE,1.74,0.67,4.47,3.62,1.62,3.84
+744,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",8,CV(%),CV(%),20.44,99.68,57.75,34.85,26.5,41.4
+745,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",8,All other apparel products and services,All other apparel products and services,,,,,,
+746,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",8,Mean,Mean,34,c/,16,48,26,35
+747,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",8,SE,SE,4.19,c/,5.02,6.8,5.09,10.77
+748,Addenda:,"Gifts of goods and services, total",Apparel and services,"Males, 2 and over",8,CV(%),CV(%),12.26,c/,32.23,14.29,19.75,30.73
+749,Addenda:,"Gifts of goods and services, total",Transportation,,4,Transportation,Transportation,,,,,,
+750,Addenda:,"Gifts of goods and services, total",Transportation,,4,Mean,Mean,141,70,80,167,194,84
+751,Addenda:,"Gifts of goods and services, total",Transportation,,4,SE,SE,19.82,34.15,26.47,35.31,50.68,34.53
+752,Addenda:,"Gifts of goods and services, total",Transportation,,4,CV(%),CV(%),14.02,48.49,33,21.2,26.07,41
+753,Addenda:,"Gifts of goods and services, total",Transportation,,4,Healthcare,Healthcare,,,,,,
+754,Addenda:,"Gifts of goods and services, total",Transportation,,4,Mean,Mean,21,261,26,25,19,3
+755,Addenda:,"Gifts of goods and services, total",Transportation,,4,SE,SE,3.29,234,9.08,4.72,2.96,0.96
+756,Addenda:,"Gifts of goods and services, total",Transportation,,4,CV(%),CV(%),15.85,89.53,34.67,18.67,15.8,28.8
+757,Addenda:,"Gifts of goods and services, total",Transportation,,4,Entertainment,Entertainment,,,,,,
+758,Addenda:,"Gifts of goods and services, total",Transportation,,4,Mean,Mean,98,34,79,138,94,61
+759,Addenda:,"Gifts of goods and services, total",Transportation,,4,SE,SE,8.18,24.72,20.07,17.33,14.12,8.19
+760,Addenda:,"Gifts of goods and services, total",Transportation,,4,CV(%),CV(%),8.32,72.91,25.47,12.57,14.99,13.43
+761,Addenda:,"Gifts of goods and services, total",Transportation,"Toys, games, arts and crafts, and tricycles",6,"Toys, games, arts and crafts, and tricycles","Toys, games, arts and crafts, and tricycles",,,,,,
+762,Addenda:,"Gifts of goods and services, total",Transportation,"Toys, games, arts and crafts, and tricycles",6,Mean,Mean,39,8,17,56,37,30
+763,Addenda:,"Gifts of goods and services, total",Transportation,"Toys, games, arts and crafts, and tricycles",6,SE,SE,5.11,8.72,7.03,9.48,10.38,5.34
+764,Addenda:,"Gifts of goods and services, total",Transportation,"Toys, games, arts and crafts, and tricycles",6,CV(%),CV(%),13.01,108.02,40.29,16.81,28.18,17.56
+765,Addenda:,"Gifts of goods and services, total",Transportation,"Toys, games, arts and crafts, and tricycles",6,Other entertainment,Other entertainment,,,,,,
+766,Addenda:,"Gifts of goods and services, total",Transportation,"Toys, games, arts and crafts, and tricycles",6,Mean,Mean,59,26,61,82,57,31
+767,Addenda:,"Gifts of goods and services, total",Transportation,"Toys, games, arts and crafts, and tricycles",6,SE,SE,6.06,17.05,18.04,13.98,9.13,5.57
+768,Addenda:,"Gifts of goods and services, total",Transportation,"Toys, games, arts and crafts, and tricycles",6,CV(%),CV(%),10.24,66,29.41,17.15,15.92,18.24
+769,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,Personal care products and services,Personal care products and services,,,,,,
+770,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,Mean,Mean,12,c/,11,13,14,9
+771,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,SE,SE,2.15,c/,5.34,2.98,5.5,2.65
+772,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,CV(%),CV(%),17.97,c/,48.85,22.34,40.4,27.97
+773,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,Reading,Reading,,,,,,
+774,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,Mean,Mean,3,1,1,4,3,2
+775,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,SE,SE,0.44,1.28,0.44,0.89,0.87,0.74
+776,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,CV(%),CV(%),16.48,101.23,45.82,25.08,28.44,37.26
+777,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,Education,Education,,,,,,
+778,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,Mean,Mean,314,12,293,479,411,8
+779,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,SE,SE,34.37,9.67,85.75,84.44,76.12,2.02
+780,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,CV(%),CV(%),10.95,81.56,29.23,17.64,18.52,25.71
+781,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,All other gifts,All other gifts,,,,,,
+782,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,Mean,Mean,102,128,85,164,85,41
+783,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,SE,SE,12.31,95.51,23.72,33.34,13.53,9.88
+784,Addenda:,"Gifts of goods and services, total",Personal care products and services,,4,CV(%),CV(%),12.12,74.61,27.79,20.39,15.93,23.85

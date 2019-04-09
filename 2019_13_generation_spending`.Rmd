@@ -1,0 +1,84 @@
+---
+title: "US Generation Spending"
+subtitle: "2019 week 13"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w14)
+BLS: https://www.bls.gov/cex/csxcombined.htm
+
+```{r}
+library(data.world)
+library(tidyverse)
+
+consumer_data <-
+  read_csv("2019_13_generation_spending.csv") %>% 
+  data.frame() %>% 
+  filter(!is.na(all)) %>% 
+  select(-orig) %>% 
+  filter(
+    type == "spending",
+    !is.na(category),
+    indent <= 6,
+    text == "Mean"
+  )
+
+
+high_level <-
+  consumer_data %>%
+  mutate(
+    group =
+      case_when(
+        (category %in% c("Food", "Housing") & indent == 4) ~ subcategory_1,
+        (!category %in% c("Food", "Housing") & indent == 2) ~ category,
+        TRUE ~ NA_character_
+      ),
+    group = str_replace(group, "and", "&"),
+    category = str_replace(category, "and", "&")
+  ) %>% 
+  filter(!is.na(group)) %>% 
+  select(category, group, starts_with("gen")) 
+
+
+long_df <-
+  high_level %>% 
+  gather(gen, amt, starts_with("gen")) %>% 
+  mutate(
+    amt = as.numeric(amt),
+    gen = str_sub(gen, 5)
+  ) %>% 
+  group_by(gen) %>% 
+  mutate(pct = round(amt/sum(amt), 3)*100) %>% 
+  ungroup() %>% 
+  mutate(
+    gen = fct_relevel(gen, "GI", "Trad", "Boom", "X"),
+    category = fct_lump(category, n = 8, w = amt),
+    category = fct_reorder(category, -amt, min),
+    group = ifelse(category == "Other" | category == group, "", group),
+    group = fct_lump(group, n = 5, w = amt),
+    group = fct_reorder(group, -amt, sum)
+  )
+
+
+ggplot(long_df, aes(gen, pct, fill = category)) +
+  geom_col() +
+  facet_wrap(~category+group, nrow = 2) +
+  guides(fill = FALSE) +
+  labs(
+    title = "Housing costs are most expensive for the youngest and the oldest",
+    subtitle = "Data comes from the 2017 Consumer Expenditure Surveys",
+    caption = "Source: U.S. Bureau of Labor Statistics",
+    x = "U.S. Generation",
+    y = "% Consumer Spending"
+  ) +
+  theme(
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 14),
+    plot.caption = element_text(size = 10)
+  )
+```
