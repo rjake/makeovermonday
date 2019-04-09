@@ -1,0 +1,154 @@
+---
+title: "Trump's Executive Time"
+subtitle: "2019 week 7"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w17)
+
+```{r}
+library(data.world)
+library(tidyverse)
+library(lubridate)
+
+options(digits = 3)
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM data"),
+    "makeovermonday/2019w7"
+  ) %>% 
+  data.frame() %>% 
+  select(
+    date, time_start, time_end, duration, 
+    cat = top_category, 
+    title = listed_title
+  ) %>% 
+  filter(complete.cases(.), duration != "-0.9097222222222222") %>% 
+  arrange(date, time_start) %>% 
+  mutate(ord = row_number()) %>% 
+  mutate(
+    cat = str_replace(cat, "_.*", "") %>% str_to_title(), 
+    hours = as.integer(str_sub(duration, 1, 2)),
+    mins = as.integer(str_sub(duration, 4, 5))/60,
+    time = hours + mins
+  ) 
+  
+
+n_days <- n_distinct(raw_data$date)
+
+longest_days <-
+  raw_data %>% 
+  filter(cat != "Lunch") %>% 
+  mutate(cat = str_replace(cat, "_", "") %>% str_to_title()) %>% 
+  group_by(date, longest = cat) %>% 
+  summarise(length = sum(time)) %>% 
+  group_by(longest) %>% 
+  arrange(desc(length), date) %>% 
+  slice(1) %>% 
+  ungroup() %>% 
+  left_join(raw_data) %>% 
+  mutate(longest = fct_reorder(longest, date, max) %>% fct_rev()) 
+
+events <-
+  longest_days %>% 
+  filter(cat == longest) %>%
+  mutate(title = ifelse(longest == "Event", str_extract(title, "\\w+ \\w+"), title)) %>% 
+  group_by(date, longest) %>% 
+  arrange(time_start) %>% 
+  summarise(
+    time_start = first(time_start),
+    text_prep = paste(unique(title), collapse = " • ")
+  ) %>% 
+  ungroup() %>% 
+  mutate(text = ifelse(longest == "Event", str_wrap(text_prep, 150), text_prep))
+
+
+ggplot(longest_days) +
+  geom_segment(
+    aes(
+      x = time_start, xend = time_end, y = longest, yend = longest,
+      color = (cat == longest)
+    ), size = 6
+  ) +
+  geom_text(
+    data = events %>% filter(longest != "Event"),
+    aes(time_start, longest, label = text), 
+    vjust = 2, hjust = 0, color = "navyblue", size = 4
+  ) +
+  geom_text(
+    data = events %>% filter(longest == "Event"),
+    aes(time_start, longest, label = text), 
+    vjust = 1.5, hjust = 0, color = "navyblue", size = 4
+  ) +
+  scale_color_manual(values = c("grey", "navyblue")) +
+  scale_x_continuous(breaks = (2:11)*7200, labels = paste0((2:11)*2, ":00")) +
+  scale_y_discrete(
+    breaks = events$longest, 
+    labels = paste("Highest", events$longest, "Time\n", events$date)
+  ) +
+  guides(color = FALSE) +
+  labs(
+    title = "How Trump spends his time can vary widely",
+    subtitle = "Two days are rarely alike for the president. Below are 4 days that had the highest duration for each of the listed categories. \n11/30 had the longest duration of events and was preceeded by a long day of travel.",
+    caption = "Source: Axios, President Trump's Private Schedules.\nTimeframe Nov. 7, 2018 to Feb. 1, 2019.",
+    y = "",
+    x = ""
+  ) +
+  theme(
+    plot.title = element_text(size = 19, face = "bold"),
+    plot.subtitle = element_text(size = 14),
+    plot.caption = element_text(size = 11),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12, color = "navyblue")
+  )
+```
+
+```{r}
+one_day <-
+  raw_data %>% 
+  group_by(top_category) %>% 
+  summarise(
+    n = n(),
+    time = sum(time)
+  ) %>% 
+  ungroup() %>%
+  bind_rows(
+    tibble(
+      top_category = "Sleep", 
+      n = n_days,
+      time = 8*n_days
+    )
+  ) %>% 
+  mutate(
+    pct = time/sum(time),
+    of_24hr = pct*24,
+    half_day = of_24hr/2,
+    avg_time = time/n,
+    cat = 
+      fct_relevel(
+        top_category, 
+        "Sleep", "Meeting", "Executive", 
+        "Travel", "Event", "Lunch"
+      )
+  )  
+
+ggplot(one_day) +
+  geom_col(aes(1, (half_day), fill = cat)) +
+  geom_col(aes(1, (-half_day), fill = cat)) +
+  scale_y_continuous(breaks = c(-12, 12), labels = c(0, 24)) +
+  coord_flip() +
+  theme(
+    aspect.ratio = .10
+  ) +
+  labs(
+    x = "",
+    y = "hour"
+  )
+  
+```
