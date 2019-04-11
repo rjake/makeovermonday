@@ -1,0 +1,95 @@
+---
+title: "Digital Economy"
+subtitle: "2019 week 5"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w17)
+
+```{r}
+library(data.world)
+library(tidyverse)
+
+options(digits = 3)
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM chart_data"),
+    "makeovermonday/2019w5"
+  ) %>% 
+  data.frame() 
+
+df <-
+  raw_data %>% 
+  filter(year == 2018) %>% 
+  mutate(indicator = str_sub(indicator, 3) %>% str_wrap(12)) %>% 
+  group_by(country) %>% 
+  mutate(
+    index = sum(weighted_score),
+    metric = ifelse(indicator == "Connectivity", weighted_score, 0) 
+  ) %>% 
+  group_by(indicator) %>%
+  mutate(rank = dense_rank(-weighted_score)) %>% 
+  ungroup() %>% 
+  mutate(
+    country = fct_reorder(country, weighted_score, sum),
+    group = !str_detect(country_code, "DK|SE|FI|NL|LU"),
+    color = rank <= 5,
+    indicator = ifelse(indicator == "Connectivity", "Connectivity & Total Score", indicator),
+    indicator = fct_reorder(indicator, -weighted_score, sum)
+  ) 
+  
+line_max <-
+  df %>% 
+  group_by(indicator) %>% 
+  summarise(y = max(weighted_score)) %>% 
+  ungroup()
+
+ggplot(df) +
+  geom_col(
+    data = filter(df, str_detect(indicator, "Connect")),
+    aes(country, index), fill = "grey90", width = 0.7
+  ) +
+  geom_hline(data = line_max, aes(yintercept = y*1.5), alpha = 0) + # ivisible buffer
+  geom_col(aes(country, weighted_score, fill = color), width = 0.7) +
+  facet_grid(group~indicator, scales = "free", space = "free") +
+  scale_fill_manual(values = c("grey60", "turquoise")) +
+  coord_flip() +
+  theme(
+    legend.position = "none",
+    panel.background = element_rect(fill = "white", color = "grey"),
+    panel.border = element_rect(color = "black", fill = NA, size = 0.1),
+    panel.spacing = unit(.0, "lines"),
+    plot.title = element_text(size = 19, face = "bold"),
+    plot.subtitle = element_text(size = 14),
+    plot.caption = element_text(size = 11),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    strip.background.x = element_rect(color = "black", size = 0.1),
+    strip.background.y = element_blank(),
+    strip.text.y = element_blank(),
+    strip.text.x = element_text(size = 12)
+  ) +
+  labs(
+    title = "It takes more than high connectivity to make it into the DESI top 5",
+    subtitle = str_wrap("Denmark leads the way in 2018 Digital Economy and Society Index but it's high standing is due to good access to digital public services and higher integration of digital technology", 120),
+    caption = "Source: European Comission",
+    x = "", y = "Weighted Score"
+  )
+
+ggplot(df) +
+  geom_col(aes(indicator, weighted_score, fill = indicator)) +
+  facet_wrap(~country) +
+  coord_polar() +
+  theme(
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_blank()
+  )
+
+```
