@@ -1,0 +1,531 @@
+---
+title: "US Fiscal Conditions"
+subtitle: "2019 week 15"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w15)
+
+```{r}
+library(data.world)
+library(tidyverse)
+library(ggrepel)
+
+options(digits = 3)
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM data where year = 2016"),
+    "makeovermonday/2019w15"
+  ) %>% 
+  data.frame()
+```
+
+```{r data_sources}
+df <- 
+  raw_data %>% 
+  filter(state != "Average") %>% 
+  select(-starts_with("X"), -ends_with("rank"))
+
+set_dv <- "overallrank"
+set_ignore <- 
+  c("budgetrank", "cashrank", "lrrank", "servicelvlrank", "trustrank", "noncurrent_liabilities")
+
+is_binary <-
+    max(df[[set_dv]]) == 1
+
+```
+
+```{r functions_base_data}
+
+change_range <- function(x, new_min, new_max){
+    (x - min(x))/(max(x)-min(x)) * (new_max - new_min) + new_min 
+}
+
+check_cut <- function(x) {
+  (is.numeric(x) | is.integer(x)) & n_distinct(x) > 15
+}
+
+check_n_cat <- function(x) {
+  n <- n_distinct(x)
+  
+  n != 1 &
+  (!(is.character(x) | is.factor(x)) |
+      n < min(100, length(x))
+  )
+}
+
+column_summary <-
+  tibble(
+    names = names(df),
+    class = sapply(df, class),
+    cut = sapply(df, check_cut),
+    n_cat = sapply(df, check_n_cat)
+  ) %>%
+  filter(
+    !names %in% set_ignore,
+    n_cat == TRUE
+  )
+
+cut_custom <- function(x) {
+  n <- 10
+  cut(
+    x,
+    breaks = unique(quantile(x, probs = 0:n/n, na.rm = TRUE)),
+    include.lowest = TRUE,
+    dig.lab = 10
+  )
+}
+
+vars_cut <-
+    column_summary %>% 
+    filter(names != set_dv, cut == TRUE) %>% 
+    pull(names)
+
+vars_keep <-
+    column_summary %>% 
+    filter(names %in% vars_cut) %>% 
+    pull(names)
+    
+base_data <-
+    df %>%
+    mutate(outcome = get(set_dv)) %>% 
+    filter(!is.na(outcome)) %>% 
+    select(-one_of(c(set_ignore, set_dv))) %>%
+    mutate_at(vars_cut, cut_custom) %>% 
+    select(one_of(vars_keep), outcome) %>% 
+    mutate(outcome = ifelse(rep(is_binary, n()), outcome*100, outcome)) %>% 
+    mutate(id = row_number())
+
+grand_mean <- mean(base_data$outcome) 
+min_outcome <- min(base_data$outcome)
+max_outcome <- max(base_data$outcome)
+middle_outcome <- mean(c(min_outcome, max_outcome))
+```
+
+```{r aggregate_all_fields}
+get_vars <- 
+    names(base_data %>% select(-c(id, outcome)))
+
+agg_fields <-
+    function(i){
+        #i = 1 
+    #a <-
+        base_data %>% 
+        select(value = i, outcome) %>%
+        mutate(field = names(base_data)[i],
+               value = as.character(value)) %>%
+        group_by(field, value) %>% 
+        mutate(group_mean = mean(outcome),
+               group_var = var(outcome),
+               group_sd = sd(outcome)) %>%   
+        group_by(field, value, outcome, group_mean, group_var, group_sd) %>% 
+        summarise(n = n()) %>%
+        ungroup() %>%
+        mutate(sum_outcome = n * outcome) %>% 
+        group_by(field, value, group_mean, group_var, group_sd) %>% 
+        summarise(n = sum(n),
+                  sum_outcome = sum(sum_outcome)) %>% 
+                  #prediction = sum_outcome/n) %>% head(10)
+        ungroup() %>% 
+        filter(n > 1)
+    }
+
+get_fields <- 
+    agg_fields(1)
+
+#get_fields
+
+for(i in 2:length(get_vars)){
+    get_fields <-
+        bind_rows(get_fields,
+                  agg_fields(i))
+    
+    #print(i)
+}
+```
+
+```{r compare_within_test}
+get_values <-
+    get_fields %>% 
+    filter(!is.na(value)) %>% 
+    mutate(grand_mean = grand_mean,
+           value_diff = group_mean - grand_mean,
+           abs_value_diff = abs(value_diff)) %>% 
+    group_by(field) %>% 
+    filter(max(row_number()) > 1) %>% 
+    mutate(field_variance = var(group_mean),
+           extreme_group = max(abs(group_mean)), 
+           field_range = max(group_mean) - min(group_mean)) %>% 
+    ungroup() %>% 
+    mutate(field = fct_reorder(field, value_diff, .fun = max, .desc = T),
+           field_wt = field_range/max(field_range))
+
+compare_values <-
+    base_data %>% 
+    gather(field, value, -c(id, outcome)) %>%
+    mutate(value = as.character(value)) %>% 
+    left_join(get_values) %>% 
+    filter(complete.cases(.)) 
+
+max_variance <- max(get_values$field_variance)
+mean_variance <- mean(get_values$field_variance)
+
+field_ranks <-
+    compare_values %>% 
+    distinct(field, field_variance, field_range, field_wt, extreme_group) %>% 
+    arrange(desc(field_variance)) %>% 
+    mutate(rank_var = factor(row_number())) %>% 
+    arrange(desc(field_range)) %>% 
+    mutate(rank_range = factor(row_number())) %>% 
+    arrange(desc(extreme_group)) %>% 
+    mutate(rank_extreme = factor(row_number()))
+
+```
+
+```{r initial_estimate}
+initial_estimates <-
+    compare_values %>% 
+    group_by(id, outcome) %>% 
+    summarise(estimate = mean(group_mean+value_diff)) %>% 
+    ungroup() %>% 
+    mutate(rescale_estimate = change_range(estimate, min_outcome, max_outcome),
+           #rescale_binary = as.integer(rescale_estimate > middle_outcome)*100,
+           error = rescale_estimate - outcome,
+           abs_error = abs(error)) %>% 
+    arrange(abs_error)
+
+
+```
+
+```{r plot_elements}
+plot_grand_mean <- 
+    geom_vline(xintercept = grand_mean, color = "grey60", size = 1, linetype = "dotted")
+
+plot_theme <-    
+    theme(panel.background = element_rect(fill = "white", color = "grey60"), 
+          legend.position = "none")
+
+```
+
+```{r plots}
+group_value_ranks <-
+    get_values %>% 
+    left_join(field_ranks) %>% 
+    mutate(field = fct_reorder(field, group_mean, min))#field_range, max))
+
+# base chart ----
+plot_base <-
+    ggplot(group_value_ranks, 
+       aes(x = group_mean, 
+           y = field_range,
+           color = rank_range, 
+           label = paste(field, "\n",value),
+           size = n)) +
+    plot_grand_mean +  
+    plot_theme +
+    labs(x = paste0("Group Averages vs Grand Mean (", floor(grand_mean), ")"),
+         y = "Range of Variable (x)",
+         color = "variable") +
+    geom_line(aes(group = field), alpha = .2, size = 3) +
+    geom_point(alpha = 0.5) #+
+    #geom_point(data = one_obs_profile,
+    #           shape = 21, stroke = 1, color = "black") 
+
+plot_base
+
+# in-line ----
+plot_inline <-
+ggplot(group_value_ranks, 
+       aes(x = group_mean, 
+           y = field, 
+           color = field)) +
+    plot_theme + plot_grand_mean + #plot_one_obs_mean +
+    geom_line(size = 2, alpha = 0.2) +
+    geom_point(size = 3) + #aes(size = n)) +
+    theme(axis.title.x = element_blank()) +
+    #geom_point(data = one_obs_profile, aes(size = n), color = "black") +
+    #plot_one_obs_mean_wt +
+    labs(y = "Field")
+
+plot_inline
+
+# lollipop----
+ggplot(get_values, 
+       aes(group_mean, n, label = value, color = field)) +
+    facet_wrap(~field, ncol = 4) +
+    plot_theme + plot_grand_mean +
+    geom_hline(yintercept = 0) +
+    geom_segment(yend = 0, aes(xend = group_mean)) +
+    geom_point(aes(size = n)) +
+    labs(title = "Distribution by field by value",
+         subtitle = "The size of the point represents the # of obs.\nContinuous variables are shown as deciles, 1-10")
+
+# variance curves ----
+plot_by_variance <-
+    ggplot(group_value_ranks, 
+       aes(x = group_mean, 
+           y = group_var,
+           label = paste(field, "\n",value),
+           color = rank_range, 
+           size = n)) +
+    plot_theme + plot_grand_mean + #plot_one_obs_mean + plot_one_obs_mean_wt +
+    geom_point(alpha = .9) +
+    # geom_segment(data = one_obs_profile,
+    #              aes(xend = one_mean_wt,
+    #                  yend = group_var),
+    #              color = "black",
+    #              size = 1, alpha = 0.9) +
+    # geom_point(data = one_obs_profile, color = "black") +
+    labs(title = "Field by Variance and Group Average",
+         x = paste0("Group Averages vs Grand Mean (", floor(grand_mean), ")"),
+         y = "Variance of Group (x)",
+         color = "variable")
+
+plot_by_variance #+geom_vline(xintercept = (15+69)/2)
+
+plot_by_variance +
+    facet_wrap(~field, nrow = 4)
+
+
+
+```
+
+```{r initial_estimates_plots}
+use_measures <- c("outcome", "estimate", "rescale_estimate")
+
+initial_estimates %>% 
+    select(use_measures) %>% 
+    gather() %>% 
+    mutate(key = factor(key, 
+                        levels = use_measures, 
+                        labels = use_measures)) %>%     
+    ggplot(aes(value, fill = key, color = key)) +
+    facet_grid(key~., scales = "free") +
+    geom_histogram(color = "white", bins = 50) +
+    plot_grand_mean + plot_theme +
+    scale_fill_manual(values = c("grey40", "darkblue", "darkred")) +
+    labs(title = "can we shift everything at the 50% line?")
+
+
+knitr::knit_exit()
+```
+
+```{r single_observation}
+get_id <- 
+  initial_estimates %>% 
+  arrange(outcome) %>% 
+  slice(1) %>% 
+  pull(id)
+  
+one_obs_profile <- 
+    compare_values %>% 
+    filter(id == get_id) %>% 
+    select(outcome:group_mean, n, field_range, field_wt, value_diff, group_var) %>% 
+    mutate(obs_mean = mean(group_mean),
+           group_dist = group_mean - obs_mean,
+           group_dist_wt = group_dist * field_wt,
+           obs_wt = obs_mean + group_dist_wt,
+           obs_estimate = mean(obs_wt)) %>% 
+    select(id, field, value, n, group_mean, obs_mean,
+           group_dist, field_wt, group_dist_wt, obs_wt, obs_estimate, 
+           group_var) %>% 
+    left_join(field_ranks)
+
+one_mean <- mean(one_obs_profile$obs_mean)
+one_mean_wt <- mean(one_obs_profile$obs_estimate)
+
+plot_one_obs_mean <- geom_vline(xintercept = one_mean, size = 1, alpha = .5)
+plot_one_obs_mean_wt <- geom_vline(xintercept = one_mean_wt, color = "black", size = 2)
+
+plot_orig <-
+    plot_inline + 
+    plot_one_obs_mean +
+    geom_point(data = one_obs_profile, 
+               color = "black", size = 5, shape = 21, stroke = 2) +
+    geom_segment(data = one_obs_profile, xend = one_mean,
+                 aes(yend = field),
+                 color = "black", 
+                 size = 2, alpha = 0.5)
+
+plot_orig +
+    labs(title = "A single observation")
+
+plot_orig + 
+    geom_label_repel(data = one_obs_profile, size = 4, 
+                     aes(label = paste(field, "",value)),
+                     hjust = -0.15) +
+    labs(title = "With Detail")
+
+plot_orig +
+    plot_one_obs_mean_wt +
+    geom_segment(data = one_obs_profile, 
+                 aes(x = obs_wt, 
+                     xend = obs_estimate,
+                     yend = field_range),
+                 color = "black", size = 2) +
+    geom_point(data = one_obs_profile, 
+               aes(x = group_dist_wt+obs_mean), 
+               color = "black", fill = "white", shape = 21, stroke = 2) +
+    labs(title = "Adjusted based on field wt",
+         subtitle = "Fields with higher ranges have more weight")
+
+```
+
+
+
+```{r all_observations, eval = T}
+all_obs <-
+    compare_values %>% 
+    #filter(id %in% c(get_id)) %>% 
+    mutate(x_n = value_diff * n) %>% 
+    group_by(id, outcome) %>%
+    mutate(obs_mean = mean(group_mean),
+           group_dist = group_mean - obs_mean,
+           group_dist_wt = group_dist * field_wt,
+           obs_wt = obs_mean + group_dist_wt,
+           obs_estimate = mean(obs_wt)) %>% 
+    ungroup() %>% 
+    select(id, field, value, n, group_mean, obs_mean,
+           group_dist, field_wt, group_dist_wt, obs_wt, obs_estimate, outcome)
+
+all_obs_estimates <-
+    all_obs %>% 
+    group_by(id, outcome, obs_estimate) %>% 
+    summarise(total_n = mean(n)) %>% 
+    ungroup() %>% 
+    mutate(predict_side = obs_estimate > grand_mean,
+           actual_side = outcome > grand_mean,
+           same_side = sign(obs_estimate - grand_mean) == sign(outcome - grand_mean))
+    
+    
+    
+hist(all_obs_estimates$obs_estimate, breaks = 100)
+
+ggplot(all_obs_estimates, aes(obs_estimate, total_n, color = same_side)) +
+    facet_grid("actual"+actual_side~"predict") +
+    plot_theme + plot_grand_mean +
+    geom_count(alpha = 0.5) +
+    labs(x = "estimate",
+         y = "avg group size",
+         title = "Confusion Matrix")
+
+spec_sens <-
+    all_obs_estimates %>% 
+    count(actual_side, predict_side) %>% 
+    mutate(actual_side = glue::glue("is_{actual_side}"),
+           predict_side = glue::glue("guess_{predict_side}"))
+
+#ctable <- as.table(matrix(spec_sens$n, nrow = 2, byrow = TRUE))
+#fourfoldplot(ctable, 
+#             color = c("#CC6666", "#99CC99"),
+#             conf.level = 0, margin = 1, 
+#             main = "Confusion Matrix")
+
+spec <-
+    spec_sens %>%
+    spread(predict_side, n) %>% 
+    mutate(pct_neg = guess_FALSE/(guess_TRUE + guess_FALSE),
+           pct_pos = guess_TRUE/(guess_TRUE + guess_FALSE)) %>% 
+    mutate(measure = c("Spec", "Sens"),
+           score = c(first(pct_neg), last(pct_pos))) %>% 
+    select(1:3, measure, score, everything())
+
+
+ppv <-
+    spec_sens %>%
+    spread(actual_side, n) %>% 
+    mutate(pct_neg = is_FALSE/(is_TRUE + is_FALSE),
+           pct_pos = is_TRUE/(is_TRUE + is_FALSE)) %>% 
+    mutate(measure = c("NNV", "PPV"),
+           score = c(first(pct_neg), last(pct_pos))) %>% 
+    select(1:3, measure, score, everything())
+
+rbind(spec %>% select(measure, score),
+      ppv %>% select(measure, score)) %>% 
+    arrange(desc(score))
+
+spec
+ppv
+
+```
+
+```{r not_using, eval = F}
+
+#relative difference: takes value into account 
+    #15 would be 50% below 30 (15/30) 
+    #65 would be 50% above than 30 (30 + (100-30)/2)
+rel_diff <- 
+    function(val, ref){
+        ifelse(val < ref, 
+               (val-ref)/ref,
+               (val-ref)/(100-ref))
+    }
+
+slope <-
+    function(y2, y1, x2, x1){
+        (y2-y1)/(x2-x1)
+    }
+
+distance <-
+    function(x2, x1, y2, y1){
+        sqrt((x2 - x1)^2 + (y2 - y1)^2)
+    }
+
+round_down <-
+    function (x, accuracy, integer = F) {
+        x_sign <- sign(x)
+        x_int <- abs(as.integer(x))
+        x_dec <- abs(x) - x_int
+
+        if (integer == F) {
+            get_round <-(x_dec%/%accuracy) * accuracy
+            final <- (x_int + get_round) * x_sign
+        } else {
+            get_round <-(x_int%/%accuracy) * accuracy
+            final <- (get_round) * x_sign
+        }
+        
+        return(final)
+    }
+
+
+
+one_obs_weight <-
+    one_obs_profile %>% 
+    mutate(mean_predict = mean(group_mean),
+           mean_field_var = mean(field_variance),
+           keep =
+               case_when(
+                   group_mean == min(group_mean) ~ "min_x",
+                   group_mean == max(group_mean) ~ "max_x",
+                   field_variance == min(field_variance) ~ "min_y",
+                   field_variance == max(field_variance) ~ "max_y",
+                   TRUE ~ "remove"
+               )) %>% 
+    filter(keep != "remove") %>% 
+    #mutate(weight = field_variance/max_variance,
+    #       est_x = prediction * weight)
+    mutate(mean_x = grand_mean,
+           mean_y = mean(field_variance)) %>% 
+    mutate(diff_prediction = group_mean - mean_x,
+           diff_field_variance = field_variance - mean_y,
+           pull_x = field_variance/max(field_variance),
+           pull_y = group_mean/max(group_mean)) %>%
+    # mutate(adj_x = pull_x*diff_prediction,
+    #        adj_y = pull_y*diff_field_variance) %>% 
+    
+    mutate(adj_x = grand_mean + (pull_x*diff_prediction),
+           adj_y = mean(field_variance) + (pull_y*diff_field_variance)) %>% 
+    group_by(id) %>% 
+    summarise(est_x = mean(ifelse(str_detect(keep, "_x"), adj_x, NA_real_), na.rm = T),
+              est_y = mean(ifelse(str_detect(keep, "_y"), adj_y, NA_real_), na.rm = T)) %>% 
+               #est_x = mean_x + mean(adj_x),est_y = mean_y + mean(adj_y)) %>% 
+    mutate_if(is.numeric, function(x)round(x, 2))
+
+```
