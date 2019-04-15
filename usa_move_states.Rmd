@@ -1,0 +1,62 @@
+---
+title: "GIS - AlbersUSA"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T, message = F, warning = F, 
+                      comment = F, results = 'hide')
+```
+
+```{r}
+library(USAboundaries)
+library(tidyverse)
+library(sf)
+library(maptools) # elide
+
+
+states <- 
+  USAboundaries::us_states() %>% 
+  st_transform(crs = 5071) # 4326
+
+#nc <- st_read(system.file("shape/nc.shp", package="sf"))
+
+# extract, then rotate, shrink & move alaska (and reset projection)
+# need to use state IDs via # https://www.census.gov/geo/reference/ansi_statetables.html
+alaska <- {
+  states %>%
+  filter(state_abbr == "AK") %>% 
+  as_Spatial() %>% 
+  elide(rotate = -30) %>% 
+  elide(scale = 2e6) %>% #max(apply(bbox(.), 1, diff)) / 2.3) %>% 
+  elide(shift = c(-3.3e6, 2e5)) %>% # x, y: left and up
+  st_as_sf() %>% 
+  st_set_crs(5071)
+}
+
+hawaii <- {
+  states %>%
+  filter(state_abbr == "HI") %>% 
+  as_Spatial() %>% 
+  elide(rotate = -35) %>% 
+  elide(shift = c(5.2e6, -1.3e6)) %>% # x, y: right and down
+  st_as_sf() %>% 
+  st_set_crs(5071)
+}
+
+puerto_rico <- {
+  states %>%
+  filter(state_abbr == "PR") %>% 
+  as_Spatial() %>% 
+  #elide(rotate = -35) %>% 
+  elide(shift = c(-1e6, 4e5)) %>% # x, y: left and up
+  st_as_sf() %>% 
+  st_set_crs(5071)
+}
+
+ggplot() +
+  geom_sf(data = states %>% filter(!state_abbr %in% c("AK", "HI", "PR"))) +
+  geom_sf(data = hawaii, fill = "red") +
+  geom_sf(data = puerto_rico, fill = "red") +
+  geom_sf(data = alaska, fill = "red")
+```
