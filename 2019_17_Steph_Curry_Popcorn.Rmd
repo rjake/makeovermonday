@@ -1,0 +1,199 @@
+---
+title: "Steph Curry Popcorn"
+subtitle: "2019 week 17"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w5)
+
+```{r}
+library(data.world)
+library(tidyverse)
+
+options(digits = 3)
+
+x_ord <- c(-0.15, 0.15, 0, 0.3, -0.3)
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM steph_curry_stadium_popcorn_rankings"),
+    "makeovermonday/2019w17"
+  ) %>% 
+  data.frame() %>% 
+  mutate(
+    arena = fct_reorder(arena, -total_score),
+    rank = as.numeric(arena),
+    facet = rank >= 15
+  )
+
+
+df <-
+  raw_data %>% 
+  gather(metric, score, c(freshness:presentation)) %>% 
+  mutate(
+    metric = fct_reorder(metric, score, .desc = TRUE),
+    n = 1,
+    letter = toupper(substr(metric, 1, 1))
+  ) %>% 
+  arrange(factor(metric)) %>% 
+  group_by(arena, score) %>% 
+  mutate(
+    order = cumsum(n),
+    n = n()
+  ) %>% 
+  ungroup() %>%
+  mutate(
+    x_add = ifelse(n == 1, 0, x_ord[order]),
+    y_add = ifelse(n < 3,  0, y_ord[order]),
+    x = score + x_add
+  )
+
+
+df_line <-
+  df %>%
+  group_by(arena, rank, facet) %>% 
+  summarise(
+    min_x = min(x) - 0.25,
+    max_x = max(x) + 0.25
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    color_line = 
+      case_when(
+        str_detect(arena, "American|Barcl") ~ "turquoise4",
+        str_detect(arena, "AT&T") ~ "orange",
+        str_detect(arena, "Spectrum|Staples") ~ "maroon",
+        TRUE ~ "grey85"
+      )
+  )
+
+
+custom_label <- function(nudge, ...) {
+  geom_label(
+    ...,
+    aes(x = score+x_add, y = fct_rev(arena), label = letter, fill = metric),  
+    position = position_nudge(y = nudge),
+    label.size = 0.2,
+    color = "white",
+    fontface = "bold",
+    size = 4,
+    label.r = unit(0.5, "lines")
+  )
+}
+
+
+ggplot() +
+  geom_segment(
+    data = df_line,
+    aes(x = min_x, xend = max_x, y = fct_rev(arena), yend = arena, 
+        group = arena, color = color_line),
+    size = 10, alpha = 0.5
+  ) +
+  facet_wrap(~facet, scales = "free_y") +
+  custom_label(data = df %>% filter(y_add == 0), nudge = 0) +
+  custom_label(data = df %>% filter(y_add > 0), nudge = -0.2) +
+  custom_label(data = df %>% filter(y_add < 0), nudge = 0.2) +
+  scale_color_identity() +
+  # scale_color_gradient2(
+  #   midpoint = 16, 
+  #   high = "turquoise4",
+  #   mid = "grey90",
+  #   low = "orangered3"
+  # ) +
+  scale_fill_manual(
+    values = c("dodgerblue", "goldenrod3", "grey50", "turquoise3", "purple")
+  ) +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    panel.background = element_rect(fill = "white", color = "grey"),
+    panel.spacing = unit(2, "cm"),
+    plot.margin = margin(r = 1, l = 2, unit = "cm"),
+    plot.title = element_text(size = 17, face = "bold"),
+    plot.subtitle = element_text(size = 14),
+    plot.caption = element_text(size = 11),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12)
+  ) +
+  labs(
+    title = "Basketball arenas sponsored by American Airlines have the best popcorn (according to Steph Curry)",
+    subtitle = str_wrap("In collaboration with the NY Times, Steph Curry has shared his ranking of each arena's offering of popcorn. American Airlines Center, Barclays, and AA Arena make the top three. AT&T Center has popcorn that's mediocre across the board, and money for popcorn at the Spectrum and Staples centers would best be spent elsewhere.", 120),
+    caption = "Source: New York Times",
+    x = "Score from worst (1) to best (5)", 
+    y = "",
+    fill = ""
+  )
+``` 
+  
+```{r}
+library(emojifont)
+
+mpg %>% 
+  mutate(fa_class = paste(emoji("car"), class)) %>%
+  ggplot(aes(x = year, y = displ)) +
+  geom_point() +
+  facet_wrap(~ fa_class) +
+  theme(strip.text = element_text(family = "EmojiOne"))
+
+
+use_emoji <- function(x) {
+  recode(
+    x,
+    "saltiness" = "sparkle",
+    "butter" = "butterfly",
+    "crunchiness" = "mountain",
+    "freshness" = "seedling",
+    "presentation" = "camera"
+  ) %>% emoji()
+}
+
+```
+
+  
+  
+```{r}
+df %>% 
+  group_by(arena, total_score) %>% 
+  summarise(mean = mean(score)) %>%
+  ungroup() %>% 
+  mutate(order = total_score + (mean/5))
+
+df %>% 
+count(metric, score)
+  
+ggplot(df, aes(x = metric, y = score, fill = factor(score))) +
+  geom_dotplot(
+    binaxis = "y", 
+    stackdir = "center"
+  ) +
+  facet_grid(~metric, space = "free", scales = "free")
+  
+
+
+
+```{r}
+library(corrplot)
+
+raw_data %>% 
+  select_if(is.numeric) %>% 
+  cor() %>% 
+  corrplot(
+    method = "square",
+    order = "AOE", 
+    type = "lower"
+  )
+
+library(GGally)
+raw_data %>% 
+  select_if(is.numeric) %>% 
+  mutate_all(as.factor) %>% 
+  ggpairs()
+
+
+```
+
