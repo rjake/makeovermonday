@@ -1,0 +1,273 @@
+---
+title: "MLB Stats"
+subtitle: "2019 week 19"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w5)
+
+```{r}
+library(data.world)
+library(tidyverse)
+
+setwd("../datascanr")
+
+options(
+  digits = 3,
+  scipen = 999
+)
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM mlb_stats"),
+    "makeovermonday/2019w19"
+  ) %>% 
+  data.frame() 
+
+per_metric <- function(x, metric) {
+  ifelse(metric == 0, 0, x/metric)
+}
+
+big_number <- function(x) {
+  case_when(
+    x >= 1e6 ~ paste0(floor(x/1e6), "M"),
+    x >= 1e3 ~ paste0(floor(x/1e3), "K"),
+    TRUE ~ as.character(x)
+  )
+}
+
+df <- 
+  raw_data %>% 
+  filter(season == 2013) %>% 
+  filter(ab > 100) %>%
+  select(playerid:team, salary, pa, h, r, hr, rbi) %>% 
+  arrange(salary, pa) %>% 
+  mutate(
+    salary_ord = row_number(),
+    salary_ntile = ntile(salary, 10)) %>% 
+  group_by(salary_ntile) %>% 
+  mutate(
+    in_salary_rank = row_number(),
+    salary_cat = 
+      paste0(
+        big_number(min(salary)), " to ", 
+        big_number(max(salary))
+      )
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    salary_cat = fct_reorder(salary_cat, salary_ntile),
+    slg = h/pa,
+    per_hit = per_metric(salary, h),
+    per_run = per_metric(salary, r),
+    per_hr = per_metric(salary, hr),
+    per_rbi = per_metric(salary, rbi),
+    per_slg = per_metric(salary, (slg)*100)
+  )
+
+
+df_long <-
+  df %>% 
+  select(salary_ord, salary_cat, in_salary_rank, c(h,r,hr,rbi)) %>% 
+  gather(metric, value, -c(salary_ord, salary_cat, in_salary_rank)) %>% 
+  mutate(eval = ifelse(salary_ord > 300, value, NA)) %>% 
+  group_by(metric) %>% 
+  arrange(value) %>% 
+  mutate(rank = row_number()) %>% 
+  ungroup() %>% 
+  mutate(metric = fct_relevel(metric, "r", "h", "rbi", "hr"))
+
+df_long %>% 
+  filter(salary_ord > 300) %>% 
+  group_by(metric) %>% 
+  summarise(val = median(rank))
+```
+
+```{r}
+ggplot(df_long) +
+  geom_tile(
+    aes(
+      x = toupper(metric), 
+      y = factor(in_salary_rank) %>% fct_rev(), 
+      #color = factor(ntile(rank, 4)), size = ntile(rank, 4),
+      fill = factor(ntile(rank, 4))
+    ),color = "white"
+  ) +
+  scale_color_manual(
+    values = c("coral4", "coral3", "turquoise3", "turquoise4"),
+    labels = c("lower 25th", "25th - 50th", "50th - 75th", "top 25th")
+  ) +
+  scale_fill_manual(
+    values = c("grey90", "grey80", "paleturquoise2", "turquoise4"),
+    labels = c("lower 25th", "25th - 50th", "50th - 75th", "top 25th")
+  ) +
+  facet_grid(~salary_cat) +
+  labs(
+    title = "Few Great Batters in the $550K-2M Range (2013)",
+    subtitle = str_wrap("Players ranked from lowest salary (top) to highest (bottom) in the 2013 season. Stats at for each column represent hits, home runs, runs, and RBI, with each metric broken into percentiles. Only players with 100 plate appearances were included (n = 369).", 130),
+    fill = "Percentile",
+    x = "Stats",
+    y = "High                        Salary Rank                        Low\n ",
+    caption = "Lahman’s Baseball Database"
+  ) +
+  coord_equal(ratio = 0.7) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white", color = "grey90"),
+    plot.title = element_text(size = 17, face = "bold"),
+    plot.subtitle = element_text(size = 14),
+    axis.ticks = element_blank(),
+    plot.caption = element_text(color = "grey40", size = 11),
+    axis.text.y = element_text(color = "grey40")
+    #legend.position = "bottom"
+  )
+
+
+
+```
+
+
+
+
+
+# not using, correlations, etc
+
+
+```{r}
+# * set_dv ----
+# can be a single numeric column or a test "cyl == 4" or "(cyl == 4 & cty > 10)"
+set_dv <- "h/pa" 
+
+# * columns to ignore ----
+set_ignore <- c("player_name", "playerid", "teamid", "franchise")
+
+# * specify average (mean or median)
+avg_type <- "mean"
+```
+
+```{r}
+source("R/run_analysis.R")
+
+#field_scan(n_cat = 10, n_quantile = 7)
+
+variation_plot()
+
+variation_plot_single_obs(labels = TRUE, id = 1)
+
+```
+
+
+
+```{r}
+library(corrplot)
+
+raw_data %>% 
+select_if(is.numeric) %>% 
+cor() %>% 
+corrplot(
+  #method = "number",
+  #order = "AOE", 
+  type = "lower"
+)
+
+str_arrange <- function(x) {
+  sort(x) #%>% paste(collapse = " ")
+}
+
+cor_df <-
+  raw_data %>% 
+  select_if(is.numeric) %>% 
+  cor() %>% 
+  as.table() %>% 
+  as.data.frame(stringsAsFactors = FALSE) %>% 
+  rowwise() %>% 
+  mutate(
+    id = paste(str_arrange(c(Var1, Var2)), collapse = " "),
+    x = str_arrange(c(Var1, Var2))[1],
+    y = str_arrange(c(Var1, Var2))[2],
+    cor = Freq
+  ) %>% 
+  ungroup() %>% 
+  filter(Freq != 1) %>% 
+  filter(Var1 == x, Var2 == y) %>% 
+  #distinct(x, y, cor = Freq) %>% 
+  mutate(
+    x_ord = fct_infreq(x),#fct_reorder(x, cor),
+    y_ord = fct_infreq(y)#fct_reorder(y, cor)
+  )
+
+
+ggplot(cor_df) +
+  geom_point(aes(x_ord, y_ord, color = cor, size = abs(cor))) +
+  scale_color_gradient2()
+
+
+a <-
+  df %>% 
+  group_by(playerid) %>% 
+  summarise(n_distinct(throws))
+
+```
+
+
+```{r}
+df_long <-
+  raw_data %>% 
+  select_if(is.numeric) %>%
+  filter(
+    ab > 100,
+    season == 2016
+  ) %>% 
+  select(-season) #%>% head()
+
+
+df_vars <-
+  expand.grid(
+    v1 = names(df_long),
+    v2 = names(df_long),
+    KEEP.OUT.ATTRS = FALSE,
+    stringsAsFactors = FALSE
+  ) %>% 
+  rowwise() %>% 
+  mutate(
+    facet = paste(str_arrange(c(v1, v2)), collapse = " "),
+    x = str_arrange(c(v1, v2))[1],
+    y = str_arrange(c(v1, v2))[2]
+  ) %>% 
+  ungroup() %>% 
+  distinct(facet, x, y) %>% 
+  filter(x != y)
+
+
+grab_cols <- function(i){
+  df_long %>% 
+    select(
+      val_x = !! df_vars$x[i], 
+      val_y = !! df_vars$y[i]
+    ) %>% 
+    mutate(
+      facet = df_vars$facet[i],
+      x = df_vars$x[i], 
+      y = df_vars$y[i]
+    )
+}
+
+
+make_cor_df <-
+  which(str_detect(df_vars$facet, "salary")) %>% 
+  map_dfr(grab_cols)
+
+a <-
+  make_cor_df %>% 
+  left_join(df_vars)
+
+ggplot(a, aes(val_x, val_y)) +
+  geom_point(alpha = 0.2) +
+  facet_wrap(~facet, scales = "free")
+```
+
