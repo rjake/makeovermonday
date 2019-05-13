@@ -1,0 +1,75 @@
+---
+title: "Rhino Poaching"
+subtitle: "2019 week 20"
+author: "jake riley"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w20)
+
+```{r}
+library(data.world)
+library(tidyverse)
+library(simplecolors)
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM rhino_poaching"),
+    "makeovermonday/2019w20"
+  ) %>% 
+  data.frame() 
+
+
+df <-
+  raw_data %>% 
+  rename(n = 2) %>% 
+  mutate(
+    sum = cumsum(n),
+    pct = n/sum(n),
+    sum_pct = cumsum(pct),
+    pct_50 = sum_pct < .50
+  ) %>% 
+  rbind(
+    c(2013.5, 0, 0, 0, .54, TRUE),
+    c(2013.5, 0, 0, 0, .54, FALSE)
+  )
+
+
+ggplot(df, aes(year, sum_pct)) +
+  geom_area(
+    data = df %>% filter(pct_50 == TRUE),
+    aes(group = pct_50), 
+    fill = sc("grey2"), color = sc("grey5")
+  ) + 
+  geom_area(
+    data = df %>% filter(pct_50 == FALSE),
+    aes(group = pct_50), 
+    fill = sc("dullpink2"), color = sc("pink5")
+  ) + 
+  geom_point(data = df %>% filter(year != 2013.5)) +
+  geom_col(aes(y = pct, fill = factor(pct_50)), width = 0.3) +
+  scale_fill_manual(values = sc("pink5", "grey5"))+
+  scale_y_continuous(expand = expand_scale(c(0, 0.1)), labels = scales::percent) +
+  scale_x_continuous(breaks = c(2006, 2014:2016)) +
+  labs(
+    title = "Over 50% of the rhinos poached since 2006 \nwere killed in the last 3 years",
+    subtitle = str_wrap("Over 6K rhinos were poached between 2006 and 2016. Although the numbers have started to descend, the last 3 years have been deadly.", 70),
+    x = "",
+    y = "All Rhino Poachings",
+    caption = "Source: Department of Environmental Affairs"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white", color = "grey90"),
+    plot.title = element_text(size = 17, face = "bold"),
+    plot.subtitle = element_text(size = 13),
+    axis.ticks = element_blank(),
+    plot.caption = element_text(color = "grey40", size = 11),
+    axis.text.y = element_text(color = "grey40"),
+    legend.position = "none"
+  )
+```
