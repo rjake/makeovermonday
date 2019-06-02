@@ -1,0 +1,396 @@
+---
+  title: "C02 Emissions"
+subtitle: "2019 week 22"
+author: "jake riley"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w22)
+
+```{r}
+library(data.world)
+library(tidyverse)
+library(simplecolors)
+library(gganimate) #may need: devtools::install_github("dgrtwo/gganimate")
+library(animation)
+
+options(
+  scipen = 999,
+  digits = 3,
+  gganimate.dev_args = list(
+    width = 800, 
+    height = 650
+  )
+)
+
+metadata <-
+  read_csv("2019_22_metadata.csv")
+
+map_coords <-
+  read_csv("country_tile_map.csv")
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM co2_emissions_per_capita_per_country"),
+    "makeovermonday/2019w22"
+  ) %>% 
+  data.frame()
+round_down <- function(x, accuracy) {
+  (x %/% accuracy) * accuracy
+}
+
+prep_data <-
+  raw_data %>% 
+  left_join(metadata) %>% 
+  filter(!is.na(region)) %>% 
+  arrange(desc(X2014)) %>% 
+  mutate(
+    region = fct_inorder(region),
+    facet = fct_inorder(income_group)
+  ) %>% 
+  arrange(desc(facet), desc(X2014)) %>% 
+  mutate(
+    group = (row_number()-1) %/% 44 # 5 * 44
+  ) %>% 
+  group_by(group) %>% 
+  mutate(
+    group_ord = row_number()
+  ) %>% 
+  ungroup() %>%
+  mutate(country_name = fct_inorder(country_name)) %>% 
+  select(
+    facet, group, country_code, country_name, 
+    region, income_group,
+    starts_with("X")
+  ) %>% 
+  gather(year, value, starts_with("X")) %>% 
+  mutate(
+    year = as.numeric(str_extract(year, "\\d+"))  ) %>% 
+  filter(complete.cases(.))
+
+
+
+group_years <- function(n, cutoff) {
+  prep_data %>% 
+  mutate(year_round = round_down(year, n)) %>% 
+  group_by(year_round, country_code) %>% 
+    summarise(value = max(value)) %>% 
+  group_by(country_code) %>% 
+    arrange(year_round) %>% 
+    mutate(
+      over = value >= cutoff,
+      fill = ifelse(over, cutoff, value),
+      color = ifelse(over, "black", NA)
+    ) %>%
+  group_by(year_round) %>% 
+    mutate(
+      n = sum(over),
+      label = ifelse(country_code == "QAT" & value > 10, "Qatar", "")
+    ) %>% 
+  ungroup() %>% 
+  mutate(title = paste(year_round, n)) %>% 
+  left_join(map_coords) %>% 
+  left_join(metadata) %>% 
+  mutate(
+    point_color = 
+      case_when(
+        country_code == "QAT" ~ sc("brightred4"),
+        income_group == "High income" ~ sc("teal"),
+        TRUE ~ sc("grey3")
+      )
+
+  )
+}
+```  
+
+```{r animation}  
+  group_years(5, 5) %>% 
+  #filter(year_round == 2010) %>% 
+  ggplot(aes(x = map_col, y = map_row)) +
+  geom_tile(data = map_coords, fill = "grey90", color = "grey95") +
+  geom_tile(aes(fill = fill)) +
+  geom_tile(aes(color = color), fill = NA) +
+  geom_text(data = map_coords, aes(label = country_code), size = 4, color = "white", fontface = "bold") +
+  scale_color_identity() +
+  scale_fill_gradient(
+    low = "grey85",
+    high = sc("brightred4"),
+    #na.value = sc("brightred4"),
+    limits = c(0, 5)
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    plot.subtitle = element_text(size = 30),
+    plot.title = element_text(size = 20),
+    plot.caption = element_text(size = 12)
+  ) +
+  labs(
+    title = str_wrap("CO2 Emissions Around the World: More countries are hitting the 5 ton mark of CO2 emissions per capita. Some have reduced emissions but many conitnue to grow.", 85),
+    subtitle = 'Year: {current_frame}',
+    fill = "CO2\nEmissions\n(metric ton)\nper capita",
+    caption = "Source: World Bank 1960-2014\nMap inspired by Chris Love"
+  ) +
+  transition_manual(year_round)
+
+anim_save("2019_22_map.gif")
+```
+
+```{r}
+df_points <-
+  group_years(1, 110)# %>% filter(year_round < 1980) 
+
+year_avg <-
+  df_points %>% 
+  filter(income_group == "High income") %>% 
+  group_by(year_round, income_group) %>% 
+  summarise(
+    mean = mean(value),
+    ptile = quantile(value, 0.5)
+  ) %>% 
+  ungroup()
+
+p <-
+  ggplot(df_points, aes(year_round, value)) +
+  geom_point(
+    aes(color = point_color, group = country_code),
+    #width = 0.2, height = 0.1,
+    alpha = 0.4, size = 4, 
+    position = position_dodge(width = 1)
+  ) +
+  geom_text(
+    aes(x = year_round+3, y = value, label = label, group = country_code), 
+    size = 6, color = sc("brightred4")
+  ) +
+  geom_line(
+    data = year_avg,
+    aes(y = mean),
+    color = sc("teal"), linetype = "dashed"
+  ) +
+  geom_text(
+    data = year_avg,
+    aes(x = year_round+5, y = mean+6, group = income_group), 
+    size = 6, label = "High\nIncome\nCountries",
+    color = sc("teal")
+  ) +
+  geom_text(
+    data = year_avg,
+    aes(x = year_round+7, y = 1.5, group = income_group), 
+    size = 6, label = "Everyone Else",
+    color = sc("grey3")
+  ) +
+  scale_color_identity() +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 24, face = "bold"),
+    plot.subtitle = element_text(size = 18),
+    axis.title.y = element_text(size = 14),
+    axis.text = element_text(size = 14),
+    plot.caption = element_text(size = 12),
+    legend.position = "none"
+  ) +
+  xlim(1959, 2020) +
+  # gganimate code
+  labs(
+    title = "High income countries are still producing a lot of CO2 per capita\n...and someone needs to have a talk with Qatar\n ",
+    subtitle = " \nThe height of the point represents metric tons of CO2 per capita by country.With continued \nhigh CO2 emissions, we are juggling with our future.",
+    y = "Metric tons of CO2 per capita",
+    x = "",
+    caption = "Source: World Bank 1960-2014"
+  ) +
+  transition_reveal(year_round)
+
+
+animate(p, nframes = 110, duration = 20)
+
+anim_save(filename = "2019_22_points.gif")
+
+
+ggplot(prep_data) +
+  geom_boxplot(aes(factor(year_round), value))
+
+ggplot(long_data) +
+  geom_step(aes(year_round, cummulative, group = country_code))
+
+long_data %>% 
+  distinct(year_round, n)
+
+long_data %>% 
+  group_by(year_round) %>% 
+  summarise(
+    n = n_distinct(country_code),
+    sum = sum(value),
+    avg = sum/n,
+    mean = mean(value)
+  )
+```
+
+```{r}
+ggplot(long_data %>% filter(group == 3), aes(year, fct_rev(country_name))) +
+  facet_grid(facet~., scales = "free", space = "free") +
+  geom_tile(aes(fill = diff)) +
+  scale_fill_gradient2(
+     low = "navyblue", mid = "grey90", high = "darkred",
+     midpoint = 0, 
+    # breaks = c(0, 20, 50, 75, 100),
+     limit = c(-80, 80)
+  )
+
+
+agg_data <-
+  long_data %>% 
+  group_by(country_name, country_code) %>% 
+  summarise(
+    n_years = n(),
+    min = min(value),
+    mean = mean(value),
+    max = max(value),
+    range = max-min,
+    increase = sum(direction == 1 & slope > 2),
+    steady = sum(direction == 0),
+    decrease = sum(direction == -1 & slope < -2),
+    diff = decrease-increase,
+    current_val = last(value),
+    current_year = last(year),
+    improvement = max-current_val
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    category = 
+      case_when(
+        diff > 0 | improvement > 10 ~ "reverse course",
+        diff < 0 ~ "mostly increase",
+        TRUE ~ "other"
+      )
+  )
+
+count(agg_data, category)
+
+find_top <- function(stat, n = 5) {
+
+  top <-
+    agg_data %>% 
+    mutate(var = !! sym(stat)) %>% 
+    top_n(n, var) %>% 
+    arrange(desc(var)) %>% 
+    pull(country_name)
+  
+  long_data %>% 
+    filter(country_name %in% top) %>% 
+    mutate(country_name = factor(country_name, levels = top)) %>% 
+    ggplot(aes(year, fct_rev(country_name), fill = value)) +
+    geom_tile() +
+    scale_fill_gradient2(
+      low = "navyblue", mid = "grey90", high = "darkred",
+      midpoint = 20,
+      breaks = c(0, 20, 50, 75, 100),
+      limit = c(0, 120)
+    )
+}
+
+
+find_top("range", 10)
+find_top("max", 10)
+find_top("min", 10)
+find_top("improvement", 10)
+
+ggplot(agg_data, aes(mean, max)) +
+  geom_point(aes(size = max, color = max/mean))
+
+```
+
+```{r}
+theme_all <-
+  theme(
+    panel.background = element_rect(fill = "white"),
+    panel.border = element_rect(color = "grey90"),
+    panel.grid = element_blank()
+  )
+
+main <- {
+  ggplot(raw_data, aes(decade, fct_rev(month_fct), color = season_fct)) +
+    geom_count() +
+    scale_color_manual(values = sc_across("TORB")) +
+    scale_x_continuous(breaks = seq(1900, 2020, by = 20)) +
+    theme_all +
+    guides(color = FALSE) +
+    labs(color = "", y = "") +
+    theme(
+      plot.margin = unit(c(0,0,0,0), "cm"),
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank(),
+      legend.justification = c(0, 1), 
+      legend.position = c(0.02, 0.15),
+      legend.direction = "horizontal",
+      legend.background = element_rect(color = "grey90")
+    )
+}
+
+p2 <- 
+  ggplot(raw_data, aes(decade)) +
+  geom_bar(aes(fill = decade %in% c(1980, 2000, 2010))) +
+  theme_all +
+  scale_fill_manual(values = sc("grey2", "mutedred3")) +
+  scale_x_continuous(
+    breaks = seq(1900, 2020, by = 20),
+    expand = expand_scale(0.01)
+  ) +
+  labs(y = "") +
+  theme(
+    legend.position = "none",
+    plot.margin = unit(c(0,0,0,0), "cm"),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_blank()
+  )
+
+p3 <- {
+  ggplot(raw_data, aes(fct_rev(month_fct), fill = season_fct)) +
+    geom_bar() +
+    coord_flip() +
+    scale_fill_manual(values = sc_across("TORB")) +
+    theme_all +
+    theme(
+      plot.margin = unit(c(0,0,0,0), "cm"),
+      legend.position = "none",
+      axis.title.y = element_blank(),
+      axis.ticks.y = element_blank()
+    )
+}
+
+blank <- ggplot() + geom_blank() + theme_void()
+
+plot_title <-
+  grid::textGrob(
+    "Although bear attacks are rare, the 80s & early 00s had the\nhighest number of deaths\n  ",
+    gp = grid::gpar(fontface = "bold", fontsize = 14), 
+    hjust = 0, x = 0.05
+  )
+
+
+plot_caption <-
+  grid::textGrob(
+    "\nSource: Vox, via Wikipedia",
+    gp = grid::gpar(col = "grey50"), 
+    hjust = -0.7
+  )
+
+gridExtra::grid.arrange(
+  p2, blank, main, p3,
+  ncol = 2, nrow = 2,
+  widths = c(3, 1), 
+  heights = c(1, 3),
+  top = plot_title,
+  bottom = plot_caption
+)
+```
