@@ -1,0 +1,99 @@
+---
+  title: "Sleepless in America"
+subtitle: "2019 week 23"
+author: "jake riley"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w23)
+
+```{r}
+library(data.world)
+library(tidyverse)
+library(simplecolors)
+#library(gganimate) #may need: devtools::install_github("dgrtwo/gganimate")
+#(animation)
+
+options(
+  scipen = 999,
+  digits = 3
+)
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM bls_data_series"),
+    "makeovermonday/2019w23"
+  ) %>% 
+  data.frame() %>% 
+  select(-c(period, activity, standard_error)) %>% 
+  rename(
+    type = type_of_days,
+    hours = avg_hrs_per_day_sleeping
+  )
+
+prep_data <-
+  raw_data %>% 
+  filter(
+    sex == "Both",
+    type != "All days",
+    age_group != "15 years and over"
+  ) %>% 
+  select(-sex) %>% 
+  mutate(
+    type = ifelse(type == "Nonholiday weekdays", "workdays", "days_off"),
+    fill = case_when(
+      str_detect(age_group, "(1|6)5") ~ sc("orange"),
+      TRUE ~ sc("grey3")
+    )
+  ) %>% 
+  spread(type, hours) %>% 
+  mutate(
+    social_jetlag = days_off - workdays
+  )
+
+  
+label_plot <-
+  tribble(
+    ~year, ~y, ~label, ~age_group, ~color,
+    2005, 10.2, "Day off", "25 to 34 years", sc("teal"),
+    2005, 7.5, "Work day", "25 to 34 years", sc("red"),
+    2011, 3.5, str_wrap('"Social Jetlag" is the difference in sleeping more on weekends than on working days...', 24), "15 to 24 years", sc("orange4"),
+    2009, 1.8, str_wrap("...and it is lowest for those 65+", 30), "65 years and over", sc("orange4")
+  )
+
+ggplot(prep_data, aes(year)) +
+  geom_col(
+    aes(y = social_jetlag, 
+    fill = fill, color = "white")
+  ) +
+  geom_hline(yintercept = 8, linetype = "dotted") +
+  geom_line(aes(y = workdays), color = sc("red"), size = 1) +
+  geom_line(aes(y = days_off), color = sc("teal"), size = 1) +
+  geom_text(data = label_plot, aes(y = y, label = label, color = color)) +
+  facet_grid(~age_group) +
+  scale_color_identity() +
+  scale_fill_identity() +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    #axis.title = element_blank(),
+    #axis.text = element_blank(),
+    #axis.ticks = element_blank(),
+    legend.position = "none",
+    plot.title = element_text(size = 24),
+    plot.subtitle = element_text(size = 14),
+    strip.text = element_text(size = 10),
+    plot.caption = element_text(size = 12)
+  ) +
+  labs(
+    title = str_wrap("To get better sleep, stop working", 85),
+    subtitle = "Seniors (in HS) and seniors (age) get the most sleep on average. They are opposites however when it comes to social jetlag.",
+    caption = "Source: U.S. Bureau of Labor Statistics - Time Use Survey 2003-2017",
+    x = "",
+    y = "Avg. Hours Sleeping"
+  ) 
+```
