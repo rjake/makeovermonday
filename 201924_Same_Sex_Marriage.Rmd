@@ -1,0 +1,193 @@
+---
+  title: "GSS same-sex marriage"
+subtitle: "2019 week 24"
+author: "jake riley"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w24)
+
+```{r data_prep}
+library(data.world)
+library(tidyverse)
+library(simplecolors)
+library(ggforce)
+library(cowplot)
+
+
+raw_data <-
+  data.world::query(
+    qry_sql("SELECT * FROM same_sex_relations"),
+    "makeovermonday/2019w24"
+  ) %>% 
+  data.frame()
+
+
+prep_data <-
+  raw_data %>%
+  gather(year, pct, -age) %>% 
+  mutate(
+    age = factor(age),
+    year = as.integer(str_remove(year, "X"))
+  ) %>% 
+  group_by(year) %>% 
+  mutate(
+    youngest = max(ifelse(age == "18-34", pct, 0)),
+    oldest = max(ifelse(age == "65+", pct, 0)),
+    min = min(pct),
+    max = max(pct)
+  ) %>% 
+  group_by(age) %>% 
+  mutate(
+    start = max(ifelse(year == 1990, pct, 0))
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    diff_youngest = pct - youngest,
+    diff_oldest = pct - oldest,
+    diff_start = pct - start
+  )
+```
+
+
+```{r make_plots}
+df_zoom <- prep_data %>% mutate(zoom = TRUE)
+
+
+df_segments <-
+  tibble(
+    x = c(1990, 1990),
+    xend = c(1990, 2018),
+    y = c(0, 33.8),
+    yend = 33.8,
+    zoom = TRUE 
+  )
+
+
+zoom_text <-
+  tibble(
+    year = 1992,
+    diff_start = 36,
+    text = "Change since 1990",
+    zoom = TRUE
+  )
+
+
+age_colors <- sc_teal(light = 5:2, sat = "muted")
+
+
+my_theme <-
+  theme(
+    panel.grid = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    panel.border = element_rect(color = "grey80", fill = NA)
+  )
+
+
+change_to_1990 <-
+  ggplot(prep_data, aes(year, pct)) +
+  geom_line(aes(color = age)) +
+  geom_point(data = df_zoom, aes(color = age)) +
+  facet_zoom(xlim = c(1973, 1990), horizontal = FALSE, zoom.data = zoom) +
+  scale_color_manual(values = age_colors) +
+  labs(
+    title = "There was little change between 1975 & 1990",
+    color = "age group",
+    x = "", y = ""
+  ) +
+  guides(color = FALSE) +
+  my_theme +
+  theme(
+    title = element_text(hjust = -0.2)
+  )
+
+
+change_from_1990 <-
+  ggplot(mutate(prep_data, zoom = FALSE)) +
+  geom_line(aes(year, pct, color = age)) +
+  geom_segment(
+    data = df_segments, linetype = "dashed",
+    aes(x = x, y = y, xend = xend, yend = yend)
+  ) +
+  geom_line(
+    data = df_zoom, aes(year, diff_start, color = age)
+  ) +
+  geom_point(
+    data = df_zoom, aes(year, diff_start, color = age)
+  ) +
+  geom_text(
+    data = zoom_text, aes(year, diff_start, label = text),
+    hjust = 0.2
+  ) +
+  facet_zoom(
+    xlim = c(1990, 2018), ylim = c(0, 55), 
+    zoom.data = zoom, horizontal = FALSE
+  ) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  scale_color_manual(values = age_colors) +
+  labs(
+    title = "Since 1990 all groups have risen by at least 35 percentage points",
+    color = "age group",
+    x = "", y = ""
+  ) + 
+  my_theme +
+  theme(
+    title = element_text(hjust = 0.2)
+  )
+```
+
+
+```{r all_together}
+p <- plot_grid(change_to_1990, change_from_1990)
+
+
+title <- 
+  ggdraw() + 
+  draw_label(
+    "Acceptance of same-sex marriage has greatly improved over the past 30 years", 
+    fontface = "bold", hjust = 0.62, size = 20
+  )
+
+
+subtitle <- 
+  ggdraw() + 
+  draw_label(
+    'These charts show the proportion of respondents who answered "not at all" to the question "Is it wrong for same-sex adults to have sexual relations?"', 
+    fontface = "italic", 
+    hjust = 0.5, vjust = -0.5
+  )
+
+
+caption <-
+  ggdraw() + 
+  draw_label("Source: General Social Survey", hjust = -1.4)
+
+
+plot_grid(
+  title, 
+  subtitle, 
+  p, 
+  caption, 
+  
+  ncol = 1,
+  rel_heights = c(0.05, 0.1, 1, 0.05)
+) 
+
+```
+
+```{r}
+ggplot(prep_data, aes(year, diff_youngest, color = age)) +
+  geom_line(size = 1) +
+  geom_point()
+
+ggplot(prep_data, aes(year, diff_oldest, color = age)) +
+  geom_line(size = 1) +
+  geom_point() 
+
+ggplot(prep_data, aes(year, diff_start, color = age)) +
+  geom_line(size = 1)
+```
