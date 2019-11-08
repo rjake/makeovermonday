@@ -1,0 +1,58 @@
+---
+  title: "EU Asylum"
+subtitle: "2019 week 28"
+author: "jake riley"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w28)
+
+```{r data_prep}
+library(data.world)
+library(tidyverse)
+library(simplecolors)
+#library(lubridate)
+
+raw_decision <-
+  data.world::query(
+    qry_sql("select * from first_instance_decisions_on_app"),
+    "makeovermonday/2019w28"
+  ) %>% 
+  data.frame()
+
+raw_application <-
+  data.world::query(
+    qry_sql("select * from data"),
+    "makeovermonday/2019w28"
+  ) %>% 
+  data.frame()
+
+snake_case <- function(x) {
+  str_replace_all(x, "[[:punct:] ]+", "_") %>% 
+  str_to_lower(.)
+}
+
+# snake_case(names(long_decision))
+
+long_application <-
+  raw_application %>% 
+  gather(year, n, starts_with("X")) %>% 
+  spread(application_type, n) %>% 
+  mutate(year = str_remove(year, "X") %>% as.integer()) %>% 
+  filter(year >= 2016)
+
+long_decision <-
+  raw_decision %>% 
+  setNames(.[1,]) %>% 
+  tail(-1) %>% 
+  rename_all(snake_case) %>% 
+  rename(country = geo_time) %>% 
+  gather(year, n, starts_with("2")) %>% 
+  spread(application_type, n) %>% 
+  mutate(year = str_remove(year, "X") %>% as.integer()) %>% 
+  filter(year >= 2016)
+```

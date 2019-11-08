@@ -1,0 +1,289 @@
+---
+  title: "Airbnb Berlin"
+subtitle: "2019 week 25"
+author: "jake riley"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w25)
+
+```{r data_prep}
+library(data.world)
+library(tidyverse)
+library(glue)
+library(simplecolors)
+library(lubridate)
+library(cowplot)
+library(sf)
+
+# special thanks to Rushil @Rushil69075325 for digging into the details
+neighborhoods <-
+  geojsonsf::geojson_sf("2019_25_Airbnb_neighbourhoods.geojson")
+
+neighborhood_group <-
+  neighborhoods %>% 
+  group_by(neighbourhood_group) %>% 
+  summarise(a = 1) %>% 
+  ungroup()
+  
+ggplot() +
+  geom_sf(data = neighborhood_group)
+
+sample_data <-
+  data.world::query(
+    qry_sql(
+      "select *--count(distinct host_id) 
+      from airbnb_berlin 
+      where year(review_date) = 2019
+        and host_id = 102461 
+      limit 1000"
+    ),
+    "makeovermonday/2019w25"
+  ) %>% 
+  data.frame()
+
+
+col_check <-
+  tibble(
+    col = names(raw_data),
+    n = sapply(raw_data, n_distinct)
+  ) %>% 
+  filter(
+    n > 1,
+    !str_detect(col, "rating|response|reviewer|comments|location|city|review_id|listing_name|_url|accomodates|bath|beds|rooms|guests|reviews|instant|first|last")
+  )
+
+
+cols <- glue_collapse(col_check$col, ",")
+
+
+cols %>% sort()
+
+
+raw_data <- {
+  data.world::query(
+    qry_sql(
+      glue(
+        "select 
+          listing_id
+          , host_id
+          , review_date
+          , price
+          , min_nights
+          , neighbourhood as neighborhood
+          , neighborhood_group
+          , postal_code
+          , longitude as x
+          , latitude as y
+          , property_type
+          , room_type
+        from airbnb_berlin
+        where --listing_id = 13711603
+          year(review_date) = 2018
+          and (lower(property_type) like '%apartment%' 
+              or property_type = 'Loft')
+          and longitude between 13.25 and 13.55
+          and latitude between 52.45 and 52.575
+          --and room_type = 'Entire home/apt'
+          and host_since <= '2018-01-01'
+        "
+      )
+    ),
+    "makeovermonday/2019w25"
+  ) %>%
+  data.frame()
+}
+  
+sapply(raw_data, n_distinct)
+
+data_prep <-
+  raw_data %>% 
+  group_by(
+    listing_id = as.factor(listing_id), 
+    host_id = str_pad(host_id, 10, "left", "0"), 
+    postal_code, neighborhood, x, y, room_type
+  ) %>% 
+  summarise(
+    n = n(),
+    avg_nights = mean(min_nights),
+    min_nights = sum(min_nights),
+    avg_price = mean(price)
+  ) %>% 
+  group_by(host_id) %>% 
+  mutate(n_locations = n()) %>% 
+  ungroup() %>% 
+  mutate(
+    host_type = 
+      case_when(
+        n == 1 & n_locations == 1 ~ "1x only",
+        room_type == "Private room" ~ "Casual",
+        (n_locations > 2 | n > 15 ) & room_type == 'Entire home/apt' ~ "Commercial",
+        TRUE ~ "Casual"
+    ),
+    commercial_ind = as.integer(host_type == "Commercial")
+  )
+
+
+pct_commercial <-
+  data_prep %>% 
+  group_by(postal_code) %>% 
+  summarise(
+    n = n(),
+    p_comm = mean(commercial_ind),
+    n_comm = sum(commercial_ind)
+  ) %>% 
+  ungroup() %>% 
+  arrange(desc(p_comm))
+
+filter(data_prep, host_type != "Commercial") %>% 
+  ggplot(aes(x, y)) + #, color = (postal_code %in% c(10117, 10179, 10115))
+  geom_point(alpha = 0.2, color = "dodgerblue") +
+  geom_point(
+    data = filter(data_prep, host_type == "Commercial"), 
+    color = "black", alpha = .5
+  ) +
+  theme(legend.position = "none")
+
+
+hex_index <- function(x) {
+  mean(x) * sum(x)
+}
+
+
+hex_fill <- function(midpoint){
+  scale_fill_gradient2(
+    midpoint = midpoint, 
+    low = sc("brigtblue4"),
+    mid = sc("mutedviolet1"),
+    high = sc("brightorange4")
+  )
+}
+
+
+p <- 
+  ggplot(data_prep, aes(x, y, z = commercial_ind)) + 
+  coord_fixed(ratio = 1.6/1) +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank()
+  )
+
+
+
+p1 <- 
+  p + labs(fill = "mean") +
+  stat_summary_hex(fun = mean, aes(x, y, z = commercial_ind), bins = 20) + 
+  hex_fill(midpoint = 0.25)
+
+p1
+
+p2 <- 
+  p + labs(fill = "sum") +
+  stat_summary_hex(fun = sum, aes(x, y, z = commercial_ind), bins = 20) + 
+  hex_fill(midpoint = 5)
+
+p2 +
+  geom_sf(data = neighborhood_group, fill = NA)
+
+p3 <- 
+  p + labs(fill = "index") +
+  stat_summary_hex(fun = hex_index, aes(x, y, z = commercial_ind), bins = 20) + 
+  hex_fill(midpoint = 2)
+
+p3
+
+
+p_sf <-
+  ggplot(data_prep) +
+  stat_summary_hex(fun = hex_index, aes(x, y, z = commercial_ind), bins = 20) +
+  hex_fill(midpoint = 2) +
+  geom_sf(data = neighborhoods, fill = NA, aes(text = neighbourhood))
+  
+ggplotly(tooltip = "text")
+
+title <-
+  ggdraw() +
+  draw_label("Commercial Airbnb Hosts in Berlin", fontface='bold')
+
+plot_grid(
+  p1, 
+  p2,
+  p3,
+  ncol = 3
+)
+
+ggplot(mpg, aes(cty, hwy)) +
+  geom_point()
+ + theme(plot.subtitle = element_text(vjust = 1), 
+    plot.caption = element_text(vjust = 1), 
+    panel.background = element_rect(fill = "hotpink"), 
+    plot.background = element_rect(fill = "antiquewhite"))
+b1 <- ggplot_build(p1)$data[[1]] %>% mutate(stat = "mean")
+b2 <- ggplot_build(p2)$data[[1]] %>% mutate(stat = "sum")
+b3 <- ggplot_build(p3)$data[[1]] %>% mutate(stat = "index")
+
+compare <-
+  bind_rows(
+    b1, b2, b3
+  ) %>% 
+  select(stat, x, y, value) %>% 
+  spread(stat, value)
+
+
+
+
+#devtools::install_github("tylermorganwall/rayshader")
+library(rayshader)
+plot_gg(mtplot, width = 3.5, raytrace = FALSE, preview = TRUE)
+
+plot_gg(mtplot, width = 3.5, multicore = TRUE, windowsize = c(800, 800), 
+        zoom = 0.85, phi = 35, theta = 30, sunangle = 225, soliddepth = -100)
+render_snapshot(clear = TRUE)
+
+
++
+  scale_fill_gradient2(midpoint = 0.5)
+
+  stat_summary_2d(fun = sum)
+
+data_prep %>% 
+  group_by()
+  
+  
+ggplot(data_prep, aes(avg_price, n)) +
+  geom_point() +
+  xlim(0, 750)
+
+
+a <-
+  raw_data %>% 
+  filter(listing_id == 9544340)
+
+
+# https://sfbos.org/sites/default/files/FileCenter/Documents/52601-BLA.ShortTermRentals.051315.pdf
+# casual vs commercial hosts:
+#   - host does/nt live there & rents on a long term basis
+# Commercial hosts are thus assumed to be removing housing units that would otherwise be
+# available for the long-term rental market.
+
+# ggforce
+library(ggforce)
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) + 
+  geom_voronoi_tile(aes(fill = Species, group = -1L)) + 
+  geom_voronoi_segment() +
+  geom_point()
+
+
+ggplot(raw_data, aes(x, y)) + 
+  geom_voronoi_tile(aes(fill = neighborhood, group = -1L)) + 
+  geom_voronoi_segment() +
+  geom_point()
+
+
+
+```

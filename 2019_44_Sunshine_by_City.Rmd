@@ -1,0 +1,310 @@
+---
+title: "Sunshine by city"
+subtitle: "2019 week 44"
+author: "jake riley"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w44)
+
+```{r data_prep}
+library(data.world)
+library(tidyverse)
+library(lubridate)
+library(simplecolors)
+#library(lubridate)
+
+raw_data <-
+  data.world::query(
+    qry_sql("select * from cities_by_sunshine_duration"),
+    "makeovermonday/2019w44"
+  ) %>% 
+  data.frame() %>% 
+  rename(total = year)
+
+rank_order <- c(6,7,5,8,4,9,3,10,2,11,1,12)
+
+month_order <- 
+  month.abb[rev(rank_order)] %>% 
+  tolower()
+
+df <-
+  raw_data %>%
+  distinct() %>% 
+  #slice(100:120) %>% 
+  mutate(id = paste(country, city, sep = "-")) 
+
+df2 <- 
+  df %>% 
+  mutate_at(month_order, ntile, 10) %>% 
+  arrange_at(c(tolower(month.abb), "total")) %>% 
+  #select(-one_of(month_order)) %>% 
+  #left_join(df) %>% 
+  mutate(id = fct_inorder(id)) %>% 
+  gather(month, hours, month_order) %>% 
+  mutate(
+    month = fct_relevel(month, tolower(month.abb)),
+    split = as.integer(id) %/% 70
+  )
+  
+
+ggplot(df2, aes(month, id)) +
+  geom_tile(aes(fill = hours)) +
+  facet_wrap(~split, scales = "free", nrow = 1)
+
+
+ggplot(df2, aes(month, hours, color = id, group = id)) +
+  geom_area() +
+  facet_grid(rows = vars(id))
+
+  
+df3 <-
+  df %>% 
+  arrange(desc(total)) %>% 
+  slice(1:10) %>% 
+  select(id, tolower(month.abb))
+```
+
+
+```{r}
+df_orig <-
+  df %>% 
+  arrange((total)) %>% 
+  slice(210:230) %>% 
+  select(id, tolower(month.abb))
+
+df_sorted <- 
+  data.frame(
+    month = tolower(month.abb),
+    value = 0.0,
+    id = "base"
+  ) %>% 
+  spread(month, value)
+
+
+df_remaining <- df_orig
+
+
+compare_to_base <- function(i) {
+  month_list <- tolower(month.abb)
+  
+  tibble(
+    id = df_remaining$id[i],
+    month = month_list,
+    value = (as.numeric(df_remaining[i, month_list]) - as.numeric(df_sorted[1, month_list])),
+    sum = sum(value^2)
+  ) %>% 
+    spread(month, value) 
+}
+
+select_closest <- function() {
+  df_remaining <<-
+    df_remaining%>% 
+    filter(!id %in% df_sorted$id)
+  
+  
+  map_dfr(1:nrow(df_remaining), compare_to_base) %>% 
+    arrange(sum) %>% 
+    slice(1) %>% 
+    select(id, sum) %>% 
+    left_join(df_orig)
+  
+  #print(map_x)
+  # x <- 
+  #   map_x %>% 
+  #   pull(id)
+  # 
+  # filter(df_orig, id == x)
+}
+
+
+# loop_comparison
+for (i in 1:nrow(df_orig)) {
+    df_sorted <<- bind_rows(select_closest(), df_sorted)
+    print(i)
+}
+
+df_sorted
+
+# d <-
+#   map_dfr(1:nrow(df_remaining), compare_to_base) %>% 
+#   arrange(sum) %>% 
+#   select(id, sum) %>% 
+#   left_join(df_orig)
+
+df_sorted %>% 
+  gather(month, hours, -c(id, sum)) %>% 
+  mutate(
+    month = fct_relevel(month, tolower(month.abb)),
+    id = fct_inorder(id) %>% fct_rev(),
+    split = as.integer(id) %/% 70
+  ) %>% 
+  ggplot(aes(month, id)) +
+  geom_tile(aes(fill = hours)) +
+  facet_wrap(~split, scales = "free", nrow = 1)
+
+
+
+
+```
+
+
+```{r}
+library(tidyverse)
+
+set.seed(1)
+df <-
+  tibble(
+    month = as.Date("2019-01-01") + 1:12,
+    a = c(10:15, 15:10),
+    b = a + rnorm(12)*2,
+    c = a + rnorm(12)*2.2,
+    d = a + rnorm(12)*2.3,
+    e = a + rnorm(12)*2.4,
+  ) %>% 
+  gather(id, value, -month)
+
+#df
+
+
+ggplot(df, aes(month, value, fill = id, group = id)) +
+  geom_area() +
+  facet_grid(rows = vars(id))
+
+ggplot(df, aes(month, value, color = id, group = id)) +
+  geom_line()
+
+
+set.seed(7)
+df <- 
+  expand.grid(
+    id = LETTERS[1:5],
+    month = as.Date("2019-01-01") + 1:5
+  ) %>% 
+  arrange(id) %>% 
+  group_by(id) %>% 
+  mutate(value = 30 + cumsum(sample(-10:10, 5, replace = T))) %>% 
+  ungroup()
+
+ggplot(df, aes(month, value, color = id, group = id)) +
+  geom_line(size = 1)
+
+
+
+ggplot(df, aes(month, value, fill = id, group = id)) +
+  geom_area() +
+  facet_grid(rows = vars(fct_relevel(id, LETTERS[c(1,5,3,2,4)])))
+
+```
+
+```{r}
+# https://roamanalytics.com/2016/11/28/shape-matching-with-time-series-data/
+
+library(tidyverse)
+
+df <- 
+  read_csv("C://Users/foxtr/Downloads/shape_matching_blog.csv") %>%
+  #select(1:100) %>% 
+  mutate(
+    week = 1:52,
+    q = ((1:52)-1) %% 4
+  ) %>% 
+  gather(company, value, -c(week, q)) %>% 
+  group_by(company) %>% 
+  filter(
+    max(value) < 100000,
+    min(value) > 100
+  ) %>% 
+  group_by(company, q) %>% 
+  summarise(value = mean(value)) %>%
+  group_by(company) %>% 
+  mutate(total = sum(value)) %>% 
+  ungroup()
+
+df %>% 
+  mutate(company = fct_reorder(company, value, mean)) %>% 
+  ggplot(aes(q, value, group = company)) + 
+  geom_line() +
+  facet_grid(cols = vars(company))
+
+df %>% 
+  mutate(company = fct_reorder(company, value, mean)) %>% 
+  ggplot(aes(q, company, fill = value)) + 
+  geom_tile()
+
+
+
+
+
+
+
+
+
+
+
+
+set.seed(1)
+df_long <-
+  tibble(
+    month = as.Date("2019-01-01") + 1:12,
+    a = c(10:15, 15:10),
+    b = a + rnorm(12)*2,
+    c = a + rnorm(12)*2.2,
+    d = a + rnorm(12)*2.3,
+    e = a + rnorm(12)*2.4,
+  ) %>% 
+  gather(id, value, -month) 
+
+ggplot(df_long, aes(month, value, fill = id, group = id)) +
+  geom_area() +
+  facet_grid(rows = vars(id))
+
+ggplot(df_long, aes(month, value, color = id, group = id)) +
+  geom_line()
+
+df_wide <-
+  df_long %>% 
+  spread(month, value)
+
+#df
+
+distance <- # the default method is euclidean distance
+  df_wide %>% 
+  select(-id) %>% 
+  dist()
+
+# check out the different methods in the documentation
+hclustering <- 
+  hclust(distance, method = "average")
+
+# or make a dendrogram with as.dendrogram
+plot(hclustering) 
+
+split_cl <- 
+  cutree(hclustering, k = 3)
+
+
+df_cluster <-
+  df_wide %>% 
+  # add cluster value
+  mutate(cluster = split_cl) %>% 
+  # get back the data in tidy format
+  gather(month, value, -c(id, cluster)) %>% 
+  mutate(id = fct_reorder(id, cluster))
+
+
+df_cluster %>% 
+  ggplot(aes(month, id, fill = value)) + 
+  geom_tile()
+
+df_cluster %>% 
+  ggplot(aes(month, value, fill = id, group = id)) +
+  geom_area() +
+  facet_grid(rows = vars(id))
+
+```
+

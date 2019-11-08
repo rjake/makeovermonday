@@ -1,0 +1,72 @@
+---
+  title: "Spacewalks"
+subtitle: "2019 week 18"
+author: "jake riley"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w18)
+
+```{r data_prep}
+library(data.world)
+library(tidyverse)
+library(simplecolors)
+library(lubridate)
+
+# special thanks to Rushil @Rushil69075325 for digging into the details
+
+raw_data <-
+  read_csv("2019_18_spacewalk_raw_data.csv") %>%
+  rename(duration = `Total duration (Hours)`) %>%
+  select(Country, Date, Year, duration, Spacewalker) %>%
+  rename_all(tolower) %>%
+  data.frame()
+
+mission <-
+  raw_data %>%
+  group_by(mission, date, country) %>%
+  summarise(
+    # country = paste(unique(country), collapse = " & "),
+    sum_duration = sum(duration),
+    sum_walkers = n()
+  ) %>%
+  ungroup() %>%
+  mutate(order = row_number())
+
+prep_data <-
+  raw_data %>%
+  mutate(date = mdy(date)) %>%
+  arrange(date) %>%
+  group_by(country) %>%
+  mutate(
+    sum_duration = cumsum(duration),
+    sum_walks = cumsum(n)
+  ) %>%
+  ungroup()
+
+
+ggplot(mission, aes(order, fill = country)) +
+  geom_col(data = filter(mission, country == "USA"), aes(y = sum_walkers)) +
+  geom_col(data = filter(mission, country == "Russia"), aes(y = -sum_walkers))
+
+
+
+ggplot(prep_data, aes(date, sum_duration)) +
+  geom_step(aes(color = fct_rev(country)), alpha = 0.5)
+
+ggplot(mission, aes(factor(date), sum_walkers)) +
+  geom_col(data = filter(mission, country == "USA"), aes(fill = fct_rev(country)))
+
+
+
+
+ggplot(prep_data, aes(year, pct, color = factor(age))) +
+  geom_ribbon(aes(ymin = min, ymax = max)) +
+  geom_line(aes(group = year), color = "grey40")
+
+
+```

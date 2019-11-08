@@ -1,0 +1,83 @@
+---
+title: "Age at Suicide :("
+subtitle: "2019 week 43"
+author: "jake riley"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w43)
+
+```{r data_prep}
+library(data.world)
+library(tidyverse)
+library(simplecolors)
+#library(lubridate)
+
+raw_data <-
+  data.world::query(
+    qry_sql("select *, year - age as yob 
+            from suicide_deaths_by_age"),
+    "makeovermonday/2019w43"
+  ) %>% 
+  data.frame()
+
+raw_data %>% 
+  count(year, wt = suicides) %>% 
+  ggplot(aes(year, n)) +
+  geom_col()
+
+custom_cut <- function(x, breaks) {
+  cut(
+    x,
+    breaks = breaks,
+    include.lowest = T, right = T
+  )
+}
+
+custom_cut(1:100, c(0, 1:10*10))
+
+raw_data %>% 
+  mutate(age_range = custom_cut(age, c(10, 16, 18, 25, 40, 50, 60, 70, 80))) %>% 
+  count(age_range, year, wt = suicides) %>% 
+  ggplot(aes(age_range, year)) +
+  geom_tile(aes(fill = n))
+
+
+  
+raw_data %>% 
+  count(year, wt = suicides) %>% 
+  ggplot(aes(year, n)) +
+  geom_col()
+
+raw_data %>% 
+  ggplot(aes(age, year)) +
+  #geom_point(aes(size = suicides))
+  geom_tile(aes(fill = suicides))
+
+
+
+ray marcher
+
+
+df <-
+  raw_data %>%
+#  filter(year == 2010) %>% 
+  uncount(suicides)
+
+ggplot(df, aes(age, year)) +
+  stat_density_2d(geom = "raster", aes(fill = stat(density)), contour = FALSE)
+
+ggplot(df, aes(age, year)) +
+  stat_density_2d(
+    aes(fill = stat("density")), 
+    geom = "raster", contour = FALSE
+  ) 
++
+  geom_jitter(width = 0.1, height = 0.1)
+
+
+```
