@@ -1,0 +1,373 @@
+---
+title: "Fast Food Chains 2017"
+subtitle: "2019 week 50"
+author: "jake riley"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w50)
+
+```{r raw_data}
+library(data.world)
+library(tidyverse)
+library(simplecolors)
+#library(ggrepel)
+#library(glue)
+library(ggforce)
+#library(ggtext) # devtools::install_github("clauswilke/ggtext")
+library(cowplot)
+
+options(scipen = 999)
+theme_set(theme_gray(base_size = 11))
+
+raw_data <-
+  data.world::query(
+    qry_sql(
+      "select
+          rank
+          , chain
+          , sales_u_s_2017 as sales
+          , of_locations_u_s as n_locations
+      from top_30_us_fast_food_chains"
+    ),
+    "makeovermonday/2019w50"
+  ) %>% 
+  data.frame()
+```
+
+```{r colors}
+highlight <- sc("brightteal4")
+top_10 <- sc("dullblue3")
+high_avg <- sc("dullteal3")
+fade <- sc("grey2")
+
+color_order <- c(top_10, highlight, high_avg, fade)
+
+tibble(x = fct_inorder(color_order, ordered = TRUE)) %>% 
+  ggplot(aes(x = x, y = 1)) +
+  geom_point(aes(color = x), size = 20) +
+  scale_color_identity()
+```
+
+```{r df}
+df <-
+  raw_data %>% 
+  mutate(
+    chain = fct_reorder(chain, rank),
+    sales_b = sales / 1e9,
+    per_store = sales / n_locations,
+    per_store_m = per_store / 1e6,
+    n_locations_t = n_locations / 1e3,
+    group = case_when(
+      str_detect(chain, "McD|Sub") ~ 1,
+      str_detect(chain, "Burger|Wend|Taco") ~ 2,
+      str_detect(chain, "Chick") ~ 3,
+      per_store_m > 1.8 ~ 4,
+      rank <= 10 ~ 5,
+      TRUE ~ 6
+    ),
+    chain = fct_reorder(chain, sales_b),
+    label = case_when(
+      group == 1 ~ "Top 10",
+      group == 2 ~ "Top 10",
+      group == 3 ~ "Chick-fil-A",
+      group == 4 ~ "High average",
+      group == 5 ~ "Top 10",
+      group == 6 ~ "Other"
+    ) %>% 
+      fct_reorder(sales_b),
+    color = case_when(
+      str_detect(label, "Top") ~ top_10,
+      str_detect(label, "Chick") ~ highlight,
+      str_detect(label, "High") ~ high_avg,
+      TRUE ~ fade
+    )
+  )
+
+df %>% distinct(group, label, color)
+```
+
+```{r df_labels}
+df_labels <- 
+  df %>% 
+  filter(group != 6) %>% 
+  select(-c(rank, sales, n_locations, per_store)) %>% 
+  #concatenate list of chains
+  mutate(separate = ifelse(group %in% c(2, 4), group, chain)) %>% 
+  group_by(separate, group, color) %>% 
+  arrange(per_store_m) %>% 
+  mutate(all_chain = paste(chain, collapse = "\n")) %>%
+  ungroup() %>% 
+  mutate(
+    title = case_when(
+      #str_detect(chain, "Chick") ~ "Highest avg. \nsales per store",
+      str_detect(chain, "McD") ~ "Highest total sales",
+      str_detect(chain, "Sub") ~ "Lowest avg. \nsales per store",
+      group == 4 ~ "High avg. sales\nper store",
+      TRUE ~ ""
+    ),
+    description = ifelse(group == 4, NA, all_chain),
+    full_label = paste(title, chain, sep = "\n"),
+    richtext = case_when(
+      group == 1 ~ paste0("**", title, "**<br>", chain),
+      group == 2 ~ all_chain, 
+      group == 3 ~ paste0("**", chain, "**"),
+      group == 4 ~ title,
+      TRUE ~ paste(title, chain, sep = "\n")
+    ),
+    size = ifelse(group == 4, 14, 10),
+    n_locations_t = ifelse(group == 4, n_locations_t + 1, n_locations_t)
+  )
+
+
+distinct(df_labels, richtext)
+
+```
+
+```{r barchart}
+p_bar <-
+  ggplot(df, aes(chain, sales_b)) +
+  geom_col(aes(fill = color)) +
+  geom_point(
+    data = df %>% filter(group == 3),
+    aes(y = sales_b + 1), 
+    color = highlight, shape = 8
+  ) +
+  coord_flip() +
+  scale_fill_identity(
+    breaks = unique(df$color),
+    labels = unique(df$label),
+    guide = "legend"
+  ) +
+  scale_y_continuous(
+    labels = scales::dollar_format(suffix = "M"),
+    expand = expand_scale(mult = c(0, 0.1))
+  ) +
+  theme(
+    panel.background = element_rect(fill = "white", color = "grey80"),
+    legend.position = "none",
+    axis.text.y = element_text(size = 9)
+  ) +
+  labs(
+    title = "Chick-fil-A ranks 7th in total sales",
+    fill = "",
+    x = "",
+    y = "Total Sales 2017"
+  )
+
+# p_bar
+
+```
+
+```{r custom_annotate}
+custom_annotate <- function(use_group,
+                         shape_color = NA,
+                         font_color = NA,
+                         font_size = 10,
+                         con_type = "none",
+                         nudge_x = 0,
+                         nudge_y = 0,
+                         ...) {
+  
+  geom_mark_ellipse(
+    data = df_labels %>% filter(group %in% use_group),
+    aes(
+      x = n_locations_t + nudge_x,
+      y = per_store_m + nudge_y,
+      label = title,
+      description = description
+    ),
+    # custom
+    fill = shape_color,
+    label.colour = font_color,
+    label.fontsize = font_size,
+    # defaults
+    alpha = 0.2,
+    color = NA,
+    label.fill = NA,
+    label.buffer = unit(1, "mm"),
+    expand = unit(4, "mm"),
+    label.minwidth = unit(100, "mm"),
+    con.cap = 0, con.type = con_type,
+    ...
+  )
+}
+
+# ggplot(df, aes(n_locations_t, per_store_m, label = chain)) +
+#   custom_annotate(use_group = 2, shape_color = top_10) +
+#   geom_point(aes(size = sales_b, color = color)) +
+#   stat_ellipse(data = df_labels %>% filter(group == 4)) +
+#   custom_annotate(use_group = 4, shape_color = high_avg, nudge_x = -0.5) +
+#   coord_cartesian(xlim = c(0, 10)) +
+#   theme(legend.position = "none")
+```
+
+```{r custom_richtext}
+custom_richtext <- function(use_group, 
+                            use_size = 3.5,
+                            nudge_x = 0.4,
+                            nudge_y = 0.1) {
+  # use_group = 1:3
+  
+  use_df <-
+    df_labels %>% 
+    filter(group %in% use_group) %>% 
+    group_by(richtext, size, color) %>% 
+    summarise(
+      x = mean(n_locations_t), 
+      y = mean(per_store_m)
+    ) %>% 
+    ungroup() %>% 
+    mutate(richtext = str_replace_all(richtext, "\n", "<br>")) 
+    
+    
+  #ggplot(df) +
+  ggtext::geom_richtext(
+    data = use_df,
+    aes(
+      x, 
+      y,
+      label = richtext, 
+      color = color
+    ),
+    nudge_x = nudge_x,
+    nudge_y = nudge_y,
+    hjust = 0,
+    size = use_size,
+    fill = NA,
+    label.color = NA
+  )
+}
+
+# ggplot(df) +
+#   custom_richtext(use_group = 1:5) +
+#   scale_color_identity()
+```
+
+```{r scatter}
+base_scatter <-
+  ggplot(df, aes(n_locations_t, per_store_m, label = chain)) +
+  # outliers
+  custom_richtext(use_group = 1, nudge_y = 0.3) +
+  # Chick-fil-A
+  custom_richtext(use_group = 3, use_size = 5, nudge_y = 0.1) +
+  # burger king, wendys, taco bell
+  custom_richtext(use_group = 2, nudge_y = 0.3) +
+  custom_annotate(use_group = 2, shape_color = top_10) +
+  # left group
+  custom_richtext(use_group = 4, nudge_x = -1, nudge_y = 0.7) +
+  custom_annotate(use_group = 4, shape_color = high_avg, nudge_x = -0.7) +
+  # base points
+  custom_richtext(use_group = 5) +
+  geom_point(aes(size = sales_b, color = color)) +
+  scale_color_identity()
+  
+# base_scatter
+
+p_scatter <- 
+  base_scatter +
+  scale_y_continuous(
+    labels = scales::dollar_format(suffix = "M"),
+    expand = expand_scale(add = c(0.2, 0.3))
+  ) +
+  scale_x_continuous(
+    labels = scales::number_format(suffix = "K"),
+    expand = expand_scale(add = c(0.4, 7))
+  ) +
+  scale_size(labels = scales::dollar_format(suffix = "B")) +
+  theme(
+    panel.background = element_rect(fill = "white", color = "grey80"),
+    legend.position = "none"
+  ) +
+  #guides(color = FALSE) +
+  labs(
+    title = "... and has the highest avgerage in sales per store",
+    size = "Total Sales 2017",
+    x = "# of Locations",
+    y = "Avg. Sales per store"
+  )
+# p_scatter
+
+# geom_text(
+  #   data = df_labels %>% filter(group == 4) %>% slice(1), 
+  #   aes(label = title),
+  #   color = high_avg, hjust = -0.1, check_overlap = TRUE
+  # ) +
+# ggtext::geom_richtext(
+  #   data = df_labels %>% filter(group != 4),
+  #   aes(label = label, color = color, size = size),
+  #   fill = NA, label.color = NA, nudge_x = 2.8, vjust = 0.2
+  # ) +
+  # geom_text(
+  #   data = df_labels %>% filter(str_detect(chain, "Star")),
+  #   aes(label = chain, color = color, size = size),
+  #   nudge_x = 2.8, vjust = 0.2
+  # )
+```
+
+```{r shared_plot_parts}
+shared_color <- get_legend(p_bar + theme(legend.position = "right"))
+shared_size <- get_legend(p_scatter + theme(legend.position = "right"))
+
+shared_title <-
+  ggdraw() + 
+  draw_label(
+    "Chick-fil-A gets the highest return on each new location",
+    size = 20, x = 0.1, hjust = 0, fontface = "bold"
+  )
+
+shared_subtitle <-
+  ggdraw() + 
+  draw_label(
+    str_wrap("The data shows the top 30 U.S. fast food chains by total sales in 2017", width = 120),
+    size = 12, colour = "grey40", x = 0.1, hjust = 0
+  )
+
+shared_caption <-
+  ggdraw() + 
+  draw_label(
+    "Source:\nVisual Capitalist",
+    size = 10, x = 0, hjust = 0, colour = "grey40", fontface = "italic"
+  )
+```
+
+```{r final_plot}
+white_space <- ggplot() + theme_nothing()
+
+shared_legend <-
+  plot_grid(
+    white_space,
+    shared_size, 
+    shared_color, 
+    white_space, 
+    shared_caption,
+    white_space,
+    ncol = 1,
+    rel_heights = c(0.04, 1.06, 1, 0.65, 0.2, 0.2)
+  )
+
+# shared_legend
+
+main_plots <- 
+  plot_grid(
+    plot_grid(p_bar, p_scatter, nrow = 1, scale = 0.9),
+    shared_legend,
+    nrow = 1,
+    rel_widths = c(1, 0.12)
+  )
+
+# main_plots
+
+cowplot::plot_grid(
+  shared_title,
+  shared_subtitle,
+  main_plots,
+  ncol = 1,
+  rel_heights = c(0.1, 0.05, 1, 0.07)
+)
+```
+
