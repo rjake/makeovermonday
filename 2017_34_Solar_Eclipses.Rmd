@@ -1,0 +1,147 @@
+---
+title: "Solar Eclipsees"
+subtitle: "MakeoverMonday challenge for week 34 2017"
+date: "August 21, 2017"
+author: "jake riley"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, warning = F, message = F,
+                      cache = T#,
+                      #fig.height = 3.5, fig.width = 4
+)
+```
+
+####Find more information here:
+
+* [MakeoverMonday](http://www.makeovermonday.co.uk/data/)
+* [Original Data](https://eclipse.gsfc.nasa.gov/SEsearch/SEsearch.php)
+* [Code on GitHub/rjake](https://github.com/rjake/makeoverMonday/blob/master/2017_34_Solar_Eclipses.Rmd)
+
+```{r setup_workspace, echo = T}
+library(googlesheets)
+library(tidyverse)
+library(plotly)
+library(lubridate)
+#library(DT)
+#library(forcats)
+#library(gganimate) #may need: devtools::install_github("dgrtwo/gganimate")
+#library(animation)
+#library(ggmap)
+#library(knitr)
+#library(stringr)
+#library(tweenr)
+#library(ggrepel)
+```
+
+```{r file_options}
+#You may need this if R can't find the convert.exe file
+#Sys.setenv(PATH = paste("C:/Program Files/ImageMagick/bin", Sys.getenv("PATH"), sep = ";"))
+
+options(scipen = 999)
+
+challenge_week <- "34"
+```
+
+```{r read_data}
+#google sheet to read in
+  google_key <- 
+    gs_key("1XpDdIfrHLaL5Iiu7x8eVAIlDuq83zwUNqJSUsYSAh18")
+
+#get data from googlesheets
+  data_raw <- 
+    gs_read(google_key, 
+            ws = as.character(challenge_week), 
+            lookup = T, check.names = F) %>% 
+    data.frame() %>% 
+    filter()
+```
+
+```{r}
+get_season <-
+  function(x){
+    ifelse(!x %in% 1:12,"needs integer month value",
+    ifelse(x %in% c(12, 1, 2), "Dec-Jan-Feb",
+    ifelse(x >= 9, "Sep-Oct-Nov",
+    ifelse(x >= 6, "Jun-Jul-Aug", "Mar-Apr-May"))))
+  }
+
+get_season(12)
+
+data_clean <-
+  data_raw %>% 
+  rowwise() %>% 
+#  filter(Eclipse.Type..simplified. == "T") %>% 
+  arrange(Eclipse.ID) %>% 
+  mutate(Order = row_number(),
+         Month = month(Calendar.Date),
+         Duration.min = Duration.in.seconds %/% 60,
+         season = get_season(Month)) %>%
+  group_by(Saros.Number) %>% 
+  mutate(min.Order = min(Order)) %>%
+  ungroup() %>%
+  mutate(Saros.Order = dense_rank(min.Order)) #%>%
+  #filter(Order >= 100 & Order < 1400)
+```
+
+```{r charts}
+ggplot(data_clean, aes(Order, Duration.in.seconds)) +
+  geom_point(#aes(color = factor(Saros.Number),
+            #     size = 10), 
+    alpha = .2
+    ) + 
+  geom_line(aes(group = Saros.Number), alpha = .2) +
+  labs(title = "The durations of solar eclipses vary within their Saros periods",
+       subtitle = "Total solar eclipses happen somewhere on earth every 18 months. The Saros period is how long it will take for a solar eclipse to happen in the same location; it takes about 18 years for \nthe Earth, Sun & Moon to realign. All Saros start in the poles as partial eclipses and have total eclipses near the equator at their peak. This chart shows the duration of all 11K \neclipses from 2000 BCE to 3100 CE.")
+
+
+
+ggplot(data_clean, aes(Month, Latitude)) +
+  facet_grid(Eclipse.type.category ~ Duration.min) +
+  geom_point(aes(color = season)) +
+  scale_color_manual(
+    values = c("blue", "orange", "gold", "lightblue")) +
+  theme(
+      axis.text.x = element_blank(),
+      axis.ticks.x = element_blank(),
+      panel.background = element_rect(color = "grey40",
+                                      fill = "white"),
+      legend.position="top",
+      plot.title = element_text(size = 18)) +
+  labs(title = "The longest total solar eclipses happen closer to the equator in July")
+
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+
+
+
+```{r not_using}
+get_season <-
+  function(x){
+    m = month(x)
+    y = ifelse(m == 12, year(x) + 1, year(x))
+    
+    season =
+      ifelse(m %in% c(12, 1, 2), "DJF",
+      ifelse(m >= 9, "SON",
+      ifelse(m >= 6, "JJA", "MAM")))
+    
+    paste0(y, "_", season)
+  }
+
+get_season("2017-04-12")
+get_season("2017-12-12")
+
+```
+

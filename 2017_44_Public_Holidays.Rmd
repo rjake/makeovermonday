@@ -1,0 +1,168 @@
+---
+title: "Holidays around the World"
+subtitle: "MakeoverMonday challenge for week 44 2017"
+date: "October 31, 2017"
+author: "jake riley"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, warning = F, message = F,
+                      cache = T#,
+                      #fig.height = 3.5, fig.width = 4
+)
+```
+
+####Find more information here:
+
+* [MakeoverMonday](http://www.makeovermonday.co.uk/data/)
+* [Original Data](http://www.asercentre.org/p/289.html)
+* [Code on GitHub/rjake](https://github.com/rjake/makeoverMonday/blob/master/2017_32_Toilets_in_India.Rmd)
+
+
+Making the .gif was no easy task. You will need ImageMagic (zip + installer) and ffmpeg. I recommend these two articles:
+  
+* [https://rpubs.com/omicsdata/gganimate](https://rpubs.com/omicsdata/gganimate)
+* [https://github.com/dgrtwo/gganimate](https://github.com/dgrtwo/gganimate)
+
+#setup workspace
+```{r echo = T}
+library(googlesheets)
+library(tidyverse)
+library(tidytext)
+
+library(janeaustenr)
+
+library(stringr)
+
+
+library(ggmap)
+library(raster) #get India's boundary coordinates
+library(rgeos) #to simplify file
+
+options(scipen = 999)
+
+challenge_week <- "44"
+```
+
+#read in data from googledrive
+```{r}
+#google sheet to read in
+  google_key <- 
+    gs_key("1XpDdIfrHLaL5Iiu7x8eVAIlDuq83zwUNqJSUsYSAh18")
+
+#get data from googlesheets
+  data_raw <- 
+    gs_read(google_key, 
+            ws = as.character(challenge_week), 
+            lookup = T, check.names = F) %>% 
+    data.frame()
+```
+
+#clean data
+```{r}
+data_clean <-
+  data_raw %>%
+  select(-Holiday.Type) %>% 
+  distinct() %>% 
+  #case and punctuation
+  mutate(holiday = tolower(Holiday.Name),
+         holiday = gsub("'", "", holiday),                    #new year's
+         holiday = gsub("new years", "new year", holiday),
+         holiday = gsub(" \\((from .*)", "", holiday),        #.*(from 2pm)
+         holiday = gsub(" [ \\(]day [0-9][$) ]", "", holiday),#.*(day 2)
+         holiday = gsub("(\\b|\\s)((first|second|third|fourth) )(day|(day of) )", "", holiday),
+         holiday = gsub("^(lab(o|ou)r|may).*", "may / labor", holiday),
+         holiday = gsub("begins", "starts", holiday)
+  ) %>% 
+  #muslim holidays
+  mutate(holiday = gsub("aid el", "eid-al", holiday),
+         holiday = gsub("eid(\\s|-)[ua]l", "eid-al", holiday),
+         holiday = gsub(".*(islamic new year).*", "\\1", holiday),
+         holiday = gsub(".*(hijra new year).*", "islamic new year", holiday),
+         holiday = gsub(".*(eidala[dz]ha|eidalazha).*", "eidaladha", holiday),
+         holiday = gsub(".*sacrifice.*", "eidaladha", holiday),
+         holiday = gsub(".*f(e|i)t(r|ar).*", "eidalfitr", holiday),
+         holiday = gsub(".*eidefetr.*", "eidalfitr", holiday),
+         holiday = gsub(".*(ramadan feast)|(end of ramadan)|(ramadan holiday).*", "eidalfitr", holiday),
+         holiday = gsub(".*(destiny)|(alqadr).*", "laylat alqadr", holiday),
+         holiday = gsub(".*(prophets birthday).*", "the prophets birthday", holiday)
+  ) %>%
+  #christian
+  mutate(holiday = gsub("^all saints$", "all saints day", holiday),
+         holiday = gsub(".*(christmas.*)", "\\1", holiday),
+         holiday = gsub(".*(pentecost|whit).*", "pentecost", holiday),
+         holiday = gsub(".*(easter).*", "\\1", holiday)
+  ) %>% 
+  #jewish
+  mutate(holiday = gsub("^pesach i .*", "passover", holiday),
+         holiday = gsub("pesach vii ", "", holiday),
+         holiday = gsub(".*kippur.*", "yom kippur", holiday),
+         holiday = gsub(".*haatzmaut.*", "yom haatzmaut / independence", holiday),
+         holiday = gsub(".*haaliyah.*", "yom haaliyah", holiday),
+         holiday = gsub(".*hashoah.*", "yom hashoah / holocaust memorial", holiday),
+         holiday = gsub("[\\bc]hanuk.* ", "hanukkah", holiday),
+         holiday = gsub("hanukkah i .*", "hanukkah", holiday),
+         holiday = gsub("hanukkah viii .*", "last of hanukkah", holiday),
+         holiday = gsub("^carnival.*", "carnival", holiday)
+  ) %>% 
+  #asian
+  mutate(holiday = gsub(".*(diwali).*", "\\1", holiday),
+         holiday = gsub("chinese(\\b|\\slunar) new", "lunar new", holiday)
+  ) %>%   
+  #other
+  mutate(holiday = gsub("[^A-Za-z0-9 /]", "", holiday),
+         holiday = gsub("(\\b|\\s|holi)day [0-9]+", "", holiday),
+         holiday = gsub(" holiday$", "", holiday),
+         holiday = trimws(holiday)
+         ) %>% 
+  #metadata
+  mutate(n_words = str_count(holiday, "\\S+"),
+         has_observed = str_detect(holiday, " observed"),
+         has_eve = str_detect(holiday, " eve"),
+         has_day = str_detect(holiday, " day"),
+         has_holiday = str_detect(holiday, " holiday"),
+         text = gsub("( observed)|( eve)|( day)", "", holiday)
+         ) %>%
+  #each day listed in israel
+  filter(!str_detect(text, "pesach") &   
+         !str_detect(text, "hanukkah ")) %>% 
+  #duplicates in japan
+  filter(!str_detect(text, "spring equinox") & 
+         !str_detect(text, "autumn equinox"))
+
+a <- data_clean %>% count(text, sort = T) %>% head(100)
+
+n_distinct(data_clean$Holiday.Name)
+n_distinct(data_clean$holiday)
+n_distinct(data_clean$text)
+```
+
+```{r}
+ngram_base <-
+  data_clean %>%
+  distinct(holiday, text) %>% 
+  mutate(text_ngram = text)
+
+
+find_ngram <-
+  function(n_words){
+      #n_words = 2
+      ngram_base %>% 
+      arrange(text) %>% 
+      head %>% 
+      mutate(ngram_len = n_words) %>% 
+      unnest_tokens(ngram, text_ngram, token = "ngrams", n = n_words) %>% 
+      count(ngram) %>% 
+      filter(n > 1)
+  }
+
+ngram_2 <- find_ngram(2)
+ngram_3 <- find_ngram(3)
+ngram_4 <- find_ngram(4)
+ngram_5 <- find_ngram(5)
+ngram_6 <- find_ngram(6)
+ngram_7 <- find_ngram(7)
+
+```
+

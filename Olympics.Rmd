@@ -1,0 +1,75 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("C:/Users/foxtr/Desktop/makeoverMonday")
+
+library(tidyverse)
+library(plotly)
+options(scipen = 999)
+
+data_raw <- read.delim('Olympics.tsv', stringsAsFactors = F)
+
+
+plot_data <-
+  data_raw %>%
+  mutate(timeframe = cut(Year, breaks = c(1896, 1920, 1989, 2014), 
+                         include.lowest = T, dig.lab = 4, right = F)) %>% 
+  group_by(Country, timeframe) %>% 
+  summarise(n = n(),
+            medals = sum(Total > 0),
+            p_medalists = medals/n*100) %>%
+  group_by(timeframe) %>% 
+  mutate(t_participants = sum(n),
+         p_participants = n/t_participants*100) %>% 
+  ungroup()
+  
+ggplot(plot_data, aes(x = n, y = p_medalists, label = Country)) + 
+  facet_grid(~timeframe, scales = "free_x") +
+  geom_point() +
+  geom_smooth() +
+  ylim(0, 102)
+ggplotly()
+
+
+by_sports <-
+  data_raw %>% 
+  group_by(Country, Sport, Year) %>% 
+  summarise(n = n(),
+            medalists = sum(Total > 0)) %>% 
+  group_by(Country, Sport) %>% 
+  summarise(n = round(mean(n), 2),
+            placed = sum(medalists > 0),
+            years = n_distinct(Year),
+            p_placed = round(placed/years,2)) %>% 
+  ungroup()
+
+ggplot(by_sports, aes(x = n, y = p_placed, label = Country,
+                      color = (Country == "United States"),
+                      size = (Country == "United States"))) +
+  facet_wrap(~Sport, nrow = 6, scales = "free") +
+  scale_color_manual(values = c("grey80", "blue"), guide = F) +
+  scale_size_manual(values = c(1.5,3), guide = F) +
+  geom_point() +
+  expand_limits(x = 0, y = 0) +
+  labs(x = "# of participants",
+       y = "% of Years Placed") +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.background = element_rect(fill = "white", color = "grey75"))
+
+data_raw %>% 
+  distinct(Country, Year, Event) %>% 
+  ggplot() +
+  facet_grid(~Event) +
+  geom_bar(aes(x = Year))
+  
+
+```
+
