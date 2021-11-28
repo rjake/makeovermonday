@@ -8,33 +8,40 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-setwd("C:/Users/foxtr/Desktop/makeoverMonday")
-
 library(tidyverse)
 library(plotly)
+library(data.world) 
+# devtools::install_github("datadotworld/data.world-r")
+
 options(scipen = 999)
 
-data_raw <- read.delim('Olympics.tsv', stringsAsFactors = F)
-
+# https://data.world/msantolini/individual-performance-in-team/workspace/file?filename=Olympics.tsv
+data_raw <-
+  data.world::query(
+    qry_sql("select * from olympics"), # where total > 0
+    "msantolini/individual-performance-in-team"
+  ) %>% 
+  data.frame()
 
 plot_data <-
   data_raw %>%
-  mutate(timeframe = cut(Year, breaks = c(1896, 1920, 1989, 2014), 
+  mutate(timeframe = cut(year, breaks = c(1896, 1920, 1989, 2014), 
                          include.lowest = T, dig.lab = 4, right = F)) %>% 
-  group_by(Country, timeframe) %>% 
+  group_by(country, timeframe) %>% 
   summarise(n = n(),
-            medals = sum(Total > 0),
+            medals = sum(total > 0),
             p_medalists = medals/n*100) %>%
   group_by(timeframe) %>% 
   mutate(t_participants = sum(n),
          p_participants = n/t_participants*100) %>% 
   ungroup()
   
-ggplot(plot_data, aes(x = n, y = p_medalists, label = Country)) + 
+ggplot(plot_data, aes(x = n, y = p_medalists, label = country)) + 
   facet_grid(~timeframe, scales = "free_x") +
   geom_point() +
   geom_smooth() +
   ylim(0, 102)
+
 ggplotly()
 
 
