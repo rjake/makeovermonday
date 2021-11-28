@@ -1,0 +1,248 @@
+---
+title: '2018/W4: Turkey vulture migration in North and South America'
+output:
+  html_document:
+    #df_print: paged
+    code_folding: show
+editor_options:
+  chunk_output_type: console
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T, message = F, warning = F)
+```
+
+Querying the data from data.wold:
+```{r eval=FALSE}
+library(data.world) 
+library(tidyverse)
+library(lubridate)
+# devtools::install_github("datadotworld/data.world-r")
+
+data_raw <- 
+  data.world::query(
+    qry_sql("select * from data"),
+    "makeovermonday/2018-w-4-turkey-vulture-migration-in-north-and-south-america"
+  ) %>% 
+  data.frame() %>% 
+  mutate(timestamp = ymd_hms(timestamp))
+  
+
+#write.csv(data_raw, "turkey_vultures_raw.csv", row.names = F)
+saveRDS(data_raw, "2018_04-turkey-vulture-migration.Rds")
+```
+
+```{r}
+#setwd("../Desktop/makeoverMonday")
+
+library(tidyverse)
+library(lubridate)
+library(zoo)
+library(geosphere)
+library(data.table)
+
+options(scipen = 999, digits = 4)
+  
+data_raw <- readRDS(file = "2018_04-turkey-vulture-migration.Rds")
+
+data_prep <-
+  data_raw %>%
+  #rowwise() %>% 
+  mutate(week = floor_date(timestamp, "week")) %>% 
+  select(animal_id, animal_mass, tag_mass, week, 
+         x = location_long, 
+         y = location_lat)  %>% 
+  group_by(animal_id, week) %>% 
+    arrange(week) %>% 
+    filter(row_number() == 1) %>% 
+  group_by(animal_id) %>% 
+    mutate(x2 = lead(x, 1),
+           x2 = ifelse(is.na(x2), x, x2),
+           y2 = lead(y, 1),
+           y2 = ifelse(is.na(y2), y, y2)) %>% 
+  ungroup()%>% 
+  mutate(change_y = (y2 - y)*67)
+```
+
+```{r}
+data_summarized <-
+  data_prep %>% 
+  group_by(animal_id) %>% 
+    arrange(week) %>% 
+    mutate(ord = row_number(),
+           week_number = week(week), 
+           weeks_elapsed = ifelse(week == min(week), 0,
+                                  as.numeric(difftime(week, lag(week), 
+                                                      units = "weeks")))) %>% 
+    mutate(dir_chg = ifelse(abs(change_y) > 20, sign(change_y), 0), #results: 1, -1
+           #see direction change of rolling 3
+             dir_lag = rollsum(dir_chg,    2, na.pad = T, align = "right", fill = dir_chg),
+             dist_lag = rollsum(change_y,  2, na.pad = T, align = "right", fill = dir_chg),
+             dir_lead = rollsum(dir_chg,   2, na.pad = T, align = "left", fill = dir_chg),
+             dist_lead = rollsum(change_y, 2, na.pad = T, align = "left", fill = dir_chg)
+           ) %>% 
+  ungroup() %>% 
+  mutate(dist_mean = (dist_lag + dist_lead) / 2,
+         dir_mean = (dir_lag + dir_lead) / 2,
+         direction = ifelse(abs(dist_mean) < 20, "Neither",
+                     ifelse(dir_mean > 0, "North", 
+                     ifelse(dir_mean < 0, "South", "Neither")))) %>% 
+  mutate_at(.vars = vars(c(change_y:dist_mean)), .funs = funs(as.integer(.))) 
+  
+```
+
+```{r}
+data_migration <-
+  data_summarized %>% 
+  #identify periods of movement, this looks for changes in direction
+    group_by(animal_id) %>% 
+    arrange(week) %>% 
+    mutate(direction = 
+              ifelse( #fix end points
+                (direction != "North" & lag(direction) == "North" & lag(change_y) > 100), "North",
+              ifelse(
+                (direction != "South" & lag(direction) == "South" & lag(change_y) < -100), "South",
+              ifelse( #fix starting points
+                (direction != "North" & lead(direction) == "North" & (change_y) > 100), "North",
+              ifelse(
+                (direction != "South" & lead(direction) == "South" & (change_y) < -100), "South",
+                direction)))),
+           period = as.integer(direction != lag(direction, 1) | weeks_elapsed > 10),
+           period = cumsum(replace(period, is.na(period), 0))
+           ) %>% 
+    ungroup() %>% 
+  #get stats per period and min distance traveled
+    group_by(animal_id, period) %>% 
+    mutate(chg_y_pd = (last(y) - first(y))*67,
+           n_pts_pd = n(),
+           year = min(year(week))) %>% 
+    rowwise() %>% 
+    mutate(dist_meters = distHaversine(cbind(x, y),  
+                                        cbind(x2, y2)),
+            dist_miles = dist_meters * 0.000621371 ) %>% 
+    ungroup() %>%
+  #final classification
+  mutate(migration = ifelse(n_pts_pd < 3, "Neither",
+                     ifelse(chg_y_pd >= 200, "North",
+                     ifelse(chg_y_pd <= -200, "South", "Neither"))))
+```
+
+#charts
+```{r}
+data_migration %>% 
+filter(animal_id %in% c("Steamhouse 2", "Disney", "Butterball", "Irma")) %>%  
+ggplot(aes(week, y)) +
+  geom_line(aes(group = 1)) +
+  geom_point(aes(color = migration), size = 2) +
+  scale_color_manual(values = c("transparent", "red", "blue")) +
+  facet_wrap(~animal_id, ncol = 2, scales = "free_x") +
+  labs(title = "Identifying migration periods for 4 turkey vultures",
+       subtitle = "3 classified as migratory, 1 as non-migratory")
+
+#table(data_migration$animal_id)
+
+data_migration %>% 
+  mutate(animal_id = fct_reorder(animal_id, week, first)) %>% 
+  ggplot(aes(x = week, y = y)) +
+  facet_grid(animal_id ~ ., scales = "free_y") +
+  geom_area(aes(fill = migration, group = period)) +
+  scale_fill_manual(values = c("grey", "red", "blue")) +
+  theme(strip.text.y = element_text(angle = 0)) +
+  ggtitle("Identifying migration periods among all birds")
+
+```
+
+
+#identify groups and patterns per bird
+```{r}
+id_groups <-
+  data_migration %>% 
+  group_by(animal_id) %>% 
+    #identify birds as migratory or not, get location during summer (week 27)
+    mutate(migratory = n_distinct(migration) > 1) %>%
+    filter(week_number == 27) %>% 
+  #find average coordinates
+  group_by(animal_id, migratory, week_number) %>% 
+    summarise(avg_x = mean(x),
+              avg_y = mean(y)) %>% 
+    ungroup() %>% 
+  #find distance between x's and y's to form groups 
+  #with data sorted, see if the difference btw rows varies by a value < mean
+  arrange(avg_x) %>% 
+  mutate(diff_x = round(avg_x - lag(avg_x), 2),
+         diff_x = ifelse(is.na(diff_x), 0, diff_x),
+         group_x = cumsum(diff_x > ceiling(mean(diff_x)))) %>% 
+  arrange(avg_y) %>% 
+  mutate(diff_y = round(avg_y - lag(avg_y), 2),
+         diff_y = ifelse(is.na(diff_y), 0, diff_y),
+         group_y = cumsum(diff_y > ceiling(mean(diff_y))),
+         #this creates the final group ID:
+         group = group_x + (group_y/10))
+
+id_patterns <-
+  data_migration %>% 
+  filter(migration != "Neither") %>%
+  filter(!(animal_id == "Morongo" & week > "2008-12-01")) %>% 
+  group_by(animal_id, migration, year) %>% 
+  summarise(start_date = min(week),
+            end_date = max(week),
+            dist_y = max(y) - min(y)) %>% 
+  ungroup() %>% 
+  mutate(weeks_elapsed = as.numeric(difftime(end_date, start_date, units = "weeks")),
+         part_year = ifelse(week(start_date) %in% 1:26, "Spring", "Fall")) %>% 
+  group_by(animal_id, migration, part_year) %>% 
+  summarise(avg_weeks = mean(weeks_elapsed),
+            avg_start = mean(week(start_date)),
+            #avg_end = mean(week(end_date)),
+            avg_dist = mean(dist_y)*67) %>% #approximation in miles
+  ungroup() %>% 
+  mutate(speed = avg_dist/avg_weeks) %>% 
+  filter((migration == "North" & part_year == "Spring" |
+          migration == "South" & part_year == "Fall")) %>% 
+  left_join(id_groups %>% select(animal_id, migratory, group))
+```
+
+```{r}
+rescale <- 
+  function(x, new_min, new_max){
+    (x - min(x))/(max(x)-min(x)) * (new_max - new_min) + new_min 
+  }
+
+id_patterns_long <-
+  id_patterns %>% 
+  gather(key = metric, value = value, avg_weeks:speed) %>% 
+  group_by(metric, migration) %>% 
+  mutate(v_min = min(value),
+         v_max = max(value),
+         value_scale = rescale(value, 0, 1))
+```
+
+```{r}
+americas <- map_data("world")
+
+ggplot()+
+  geom_polygon(data = americas, aes(x=long, y=lat, group=group), colour = NA) +
+  geom_point(data = id_groups, aes(x = avg_x, y = avg_y, color = factor(group)),
+             size = 5, alpha = 0.5, show.legend = FALSE) +
+  coord_quickmap(xlim = c(-140, -25)) +
+  labs(title = "Birds Clustered by Avg. Coordinates")
+
+
+bird_of_interest <- filter(id_patterns_long, animal_id == "Steamhouse 2")
+
+ggplot(id_patterns_long) +
+  geom_boxplot(aes(x = metric, y = value_scale)) +
+  geom_point(aes(x = metric, y = value_scale), alpha = .2) +
+  geom_point(data = bird_of_interest, aes(x = metric, y = value_scale), color = "red", size = 3) +
+  coord_flip() +
+  #scale_color_manual(values = c("grey40", "red")) +
+  #labs(color = "Bird: Steamhouse 2") +
+  facet_grid(~migration) +
+  labs(y = "percentile", x = "") +
+  theme(aspect.ratio = 1) +
+  ggtitle("A Profile of Steamhouse 2 (turkey vulture)")
+```  
+
+
+```{r}
+knitr::knit_exit()
+```
