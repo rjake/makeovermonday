@@ -1,0 +1,165 @@
+---
+title: "Squirrels of NYC"
+subtitle: "2019 week 48"
+author: "jake riley"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2019w48)
+
+```{r data_prep}
+library(data.world)
+library(tidyverse)
+library(simplecolors)
+library(ggmap)
+library(ggmapstyles)
+# devtools::install_github("dr-harper/ggmapstyles")
+
+raw_data <-
+  data.world::qry_sql(
+    "select * 
+    from `2018_central_park_squirrel_census_squirrel_data`"
+  ) %>% 
+  data.world::query("makeovermonday/2019w48") %>% 
+  data.frame()
+
+
+#rotation <- 35.5 * pi / 180
+color_xy <-
+  raw_data %>%
+  select(x, y, color = primary_fur_color) %>%
+  drop_na() %>% 
+  mutate(
+    simp_x = round(x,3), 
+    simp_y = round(y, 3)
+  )
+#
+{#%>%
+  # mutate(
+  #   mean_x = mean(x),
+  #   mean_y = mean(y),
+  #   start_x = x - mean_x,
+  #   start_y = y - mean_y,
+  #   new_x = mean_x + (start_x) * cos(rotation) - (start_y) * sin(rotation),
+  #   new_y = mean_y + (start_x) * sin(rotation) + (start_y) * cos(rotation)
+  # )
+  }
+
+color_xy %>% 
+  add_count(color, name = "total_color") %>% 
+#  distinct(total_color)
+  mutate(expected = total_color/n())
+  mutate(locations = n_distinct(paste(simp_x, simp_y))) %>% 
+  group_by(simp_x, simp_y) %>% 
+  filter(n == max(n)) %>% 
+  ungroup() %>% 
+  count(color)
+
+
+color_xy %>% 
+  
+
+
+
+register_google(key = Sys.getenv("GOOGLE_API"))
+center <- c(mean(color_xy$x), mean(color_xy$y))
+
+#map_style()
+#central_park_23 <- get_snazzymap(center, mapRef = "23/bates-green")
+central_park_184 <- get_snazzymap(center, mapRef = "184", zoom = 14)
+
+central_park_1414 <- 
+  get_snazzymap(center, mapRef = "1414", zoom = 14)
+
+central_park_127403 <- get_snazzymap(center, mapRef = "127403", zoom = 14)
+
+ggmap(central_park_1414, darken = c(0.2, "grey60"))
+
+ggmap(central_park_127403
+      #, darken = c(0.2, "grey60")
+      ) +
+  coord_cartesian() +
+  theme(aspect.ratio = 1) +
+  geom_count(
+    data = color_xy, 
+    aes(round(x,3), round(y, 3))#, color = color)
+  ) +
+  scale_color_manual(values = sc("grey6", "red4", "grey3")) +
+    scale_size(range = c(1,3)) +
+  facet_grid(cols = vars(color))
+
+
+
+central_park <-
+  get_map(
+    location = c(mean(color_xy$x), mean(color_xy$y)),
+    zoom = 14#,
+    #maptype = "toner-lite",
+    #source = "stamen"
+  )
+
+create_plot <- function(group, low, high) {
+  df <-
+    color_xy %>% 
+    filter(color == group)
+  
+  ggmap(central_park) +
+    coord_cartesian() +
+    theme(aspect.ratio = 1) +
+    geom_hex(data = df, aes(x,y)) +
+    scale_color_gradient()
+  
+}
+
+```
+
+```{r geom_hex_examples}
+df <-
+  tibble(x = 1:10) %>% 
+  expand(x, y = 1:10) %>% 
+  mutate(
+    p = ifelse(y < x, y/x, x/y),
+    n = y+x
+  ) %>% 
+  uncount(n) %>% 
+  group_by(x,y) %>% 
+  mutate(ind = ifelse(row_number()/n() <= p, 1, 0)) %>% 
+  ungroup()
+
+
+ggplot(df, aes(x, y)) +
+  geom_jitter(color = "red", alpha = 0.8, width = 0.4, height = 0.4) +
+  geom_jitter(data = filter(df, ind == 1), width = 0.2, height = 0.2) +
+  scale_x_continuous(breaks = 0:10) +
+  scale_y_continuous(breaks = 0:10) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_line(color = "grey70")
+  )
+
+
+  
+ggplot(df, aes(x, y, z = ind)) +
+  stat_summary_hex(fun = sum, bins = 5)
+
+ggplot(df, aes(x, y, z = ind)) +
+  stat_summary_hex(fun = mean, bins = 5)
+
+df <-
+  tibble(
+    x = 1:10,
+    p = 1:10/10,
+    n = c(1:5, 5:1) * 10,
+    index = p*n
+  )
+
+ggplot(df, aes(x)) +
+  geom_tile(aes(y = "1 proportion", fill = p/sum(p)), color = "white") +
+  geom_tile(aes(y = "2 sum", fill = n/sum(n)), color = "white") +
+  geom_tile(aes(y = "3 index", fill = index/sum(index)), color = "white")
+```
+
