@@ -1,0 +1,69 @@
+---
+title: "Courses at UC Berkeley'
+''
+subtitle: "2020 week 12"
+author: "jake riley"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Source: [data.world](https://data.world/makeovermonday/2020w12)
+
+```{r raw_data}
+library(data.world)
+library(tidyverse)
+library(simplecolors)
+
+options(scipen = 999)
+theme_set(theme_gray(base_size = 11))
+
+raw_data <-
+  data.world::query(
+    qry_sql(
+      "select
+        year
+        , field
+        , genarea
+        , count(*) as n
+      from courses_berkeley_2018_01_15
+      where taught = 'TRUE'
+      group by year, field, genarea
+      "
+    ),
+    "makeovermonday/2020w12"
+  ) %>% 
+  data.frame()
+```
+
+```{r prep_data}
+prep_df <- 
+  raw_data %>% 
+  mutate(
+    field = case_when(
+      field == "Chemical E" ~ "Chemical Engineering",
+      TRUE ~ field
+    )
+  ) %>%
+  group_by(field) %>% 
+  mutate(
+    first = min(year),
+    last = max(year)
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    range = last - first,
+    ord = first + (last/max(year)) - 0.01,
+    alpha = case_when(
+      year == first ~ 1,
+      last == max(year) ~ 0.8,
+      last - year < 6 ~ (last - year + 1)  / 10,
+      TRUE ~ 0.8
+    )
+  )
+
+write_csv(prep_df, "2020_12_UC_Berkeley_courses.csv")
+```
+
