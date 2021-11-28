@@ -1,0 +1,170 @@
+```{r workspace}
+setwd("C:/Users/foxtr/Desktop/makeoverMonday/MotherViz")
+library(XML)
+library(tidyverse)
+library(stringr)
+library(stringi)
+library(zoo)
+library(lubridate)
+library(httr)
+library(RCurl)
+library(xlsx)
+library(rJava) #for xlsx package
+#options(java.parameters = "-Xmx2048m")
+options(scipen = 999)
+
+Sys.setenv(JAVA_HOME='C:\\Program Files\\Java\\jre1.8.0_111') #for xlsx package/rJava
+
+url <- "http://www.makeovermonday.co.uk/data/"
+```  
+
+```{r scrape table}
+tables <- readHTMLTable(url)
+n.rows <- unlist(lapply(tables, function(t) dim(t)[1]))
+
+metaTable <- 
+  data.frame(tables[[1]], stringsAsFactors = F) %>%
+  rename(Article = Source.Article.Visualisation) %>% 
+  mutate(Data = NULL,
+         Week = as.integer(as.character(Week)),
+         Article = as.character(Article) %>% 
+                   stri_trans_general(., "latin-ascii"),
+         Date = paste0(Date," 2016"))
+
+metaTable$Date <- strptime(metaTable$Date, "%b %d %Y")
+metaTable$Date <- ymd(metaTable$Date)
+
+
+a <-
+  data.frame(XML = readLines(url), stringsAsFactors = F) %>% 
+  mutate(Row = as.integer(row.names(.))) 
+
+
+filterWorksheets <- grep(x= a$XML, pattern="td>")
+
+tableDataSources <-
+  a %>% 
+  filter(Row<=max(filterWorksheets),
+         Row>=filterWorksheets[1]-1) %>% 
+  mutate(WeekPre = ifelse(str_detect(lag(XML), "tr>") == T, XML, NA),
+         Week = na.locf(WeekPre, na.rm = F)) %>% 
+  filter(str_detect(XML, "XLS|CSV|TDE")) %>% 
+  mutate(XML = gsub("CSV", "XLS", XML),
+         XLS = gsub("XLS.*", "", XML) %>% 
+                gsub(".*http", "http", .) %>% 
+                gsub("\".*", "", .) %>% trimws(),
+         TDE =gsub(".*XLS", "", XML) %>% 
+              gsub(".*http", "http", .) %>% 
+              gsub("\".*", "", .) %>% 
+              gsub("</a></td>", "", .) %>% trimws(),
+         Week = gsub("</td>", "", Week) %>% 
+                gsub(".*>", "", .) %>% as.integer(.),
+           CSV = "") %>% 
+  select(-c(WeekPre, XML))
+
+tableArticle <-
+  a %>% 
+  filter(Row<=max(filterWorksheets),
+         Row>=filterWorksheets[1]-1) %>% 
+  mutate(WeekPre = ifelse(str_detect(lag(XML), "tr>") == T, XML, NA),
+         Week = na.locf(WeekPre, na.rm = F)) %>% 
+  filter(!Row %in% tableDataSources$Row,
+         str_detect(XML, "href")==T,
+         substr(XML, 1, 1)=="<") %>% 
+  mutate(Link = gsub(".*http", "http", XML) %>% 
+                gsub("\".*", "", .) %>% trimws(),
+         Week = gsub("</td>", "", Week) %>% 
+           gsub(".*>", "", .) %>% as.integer(.)
+  ) %>% 
+  select(-c(WeekPre, XML, Row))
+
+
+b <- 1
+for(i in c(b:nrow(tableDataSources))){
+  tableDataSources$fullLink[i] <- httr::GET(tableDataSources$XLS[i])$url
+  print(i)
+  b <- b+1
+}
+
+finalTable <-
+  tableDataSources %>% 
+  left_join(tableArticle) %>% 
+  select(-Row) %>% 
+  left_join(metaTable) %>% 
+  mutate(Download = gsub("view.aspx|redir", "download", fullLink) %>% 
+                    gsub("xlsx.*", "xlsx", .))
+
+finalTable$fullLink[1]
+finalTable$Download[1]
+
+write.csv(finalTable, "finalMetaTable.csv", row.names = F)
+```
+
+#Download all csvs
+```{r download CSVs}
+finalTable <- read.csv("finalMetaTable.csv", stringsAsFactors = F)
+
+for(i in 1:nrow(finalTable)){
+  download.file(finalTable$Download[i], 
+                paste0("OrigData/Archive/", i,".xlsx"), 
+                mode = "wb")
+  print(i)
+}
+
+```
+
+```{r extract samples}
+for(i in 1:nrow(finalTable)){
+  #i = 38
+  rawData <- 
+    read.xlsx(paste0("OrigData/Archive/", i, ".xlsx"), 
+              sheetIndex = 1, 
+              stringsAsFactors = F, 
+              endRow = 100) %>% 
+    select_if(colSums(!is.na(.)) > 0)
+  
+  rawDataCols <- 
+    data.frame(Field = colnames(rawData),stringsAsFactors = F) %>% 
+    mutate(ColOrder = row_number())
+  
+  rawData2 <- 
+    rawData%>% 
+    filter(complete.cases(.)) %>% 
+    slice(1:5) %>% 
+    mutate(Week = i,
+           Observation = row_number()) %>% 
+    gather(key = Field, value = Value, -c(Week:Observation)) %>% 
+    left_join(rawDataCols)
+
+    write.table(rawData2, "OrigData/data_samples.csv", 
+                sep = ",",
+                col.names = ifelse(i == 1, T, F),
+                row.names = F, 
+                append = ifelse(i == 1, F, T))
+
+print(i)
+  
+}
+  
+
+#confirm joins
+confData <-
+  read.csv("OrigData/data_samples.csv", stringsAsFactors = F)
+
+table(confData$Week)
+```
+
+
+```{r not using}
+#changeURLS
+#testURL <- "http://1drv.ms/1JjABLA"
+#fixedURL <- getURL(testURL, followlocation=T)
+#parsed.html <- htmlParse(fixedURL)
+
+#                           vvvvvv                                           vvvvv
+#https://onedrive.live.com/view.aspx?resid=43EBDBC5D5265516!9920&ithint=file%2cxlsx&lor=shortUrl&app=Excel
+
+#becomes
+#                           vvvvvv                                           vvvvv
+#https://onedrive.live.com/download?resid=43EBDBC5D5265516!9920&ithint=file%2ccsv
+```

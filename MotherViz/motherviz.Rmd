@@ -1,0 +1,253 @@
+---
+title: "MotherViz"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("C:/Users/foxtr/Desktop/makeoverMonday/MotherViz")
+
+library(tidyverse)
+library(XML)
+library(RCurl)
+library(stringr)
+library(twitteR)
+library(httr)
+library(zoo)
+
+
+```
+
+read in (metadata)[https://docs.google.com/spreadsheets/d/1Kn04HJpdhdo5InGrH8OcAFknW55WLKynX3226NJdGqc/edit?ts=585a7f40#gid=0]
+```{r}
+mmMeta <-
+  read.csv("metadata_andy.csv", stringsAsFactors = F)
+
+
+url_pattern <- "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
+
+mmMeta2 <-
+  mmMeta %>% 
+  mutate(Tweet = Description, 
+         shortUrl = str_extract(Tweet, url_pattern),
+         shortUrl = gsub("[[:punct:]]$", "", shortUrl))
+
+sapply(X = mmMeta2, FUN = n_distinct)
+
+#unique ids: Pinterest.URL
+
+```
+
+(Unshorten URLs)[https://tonybreyal.wordpress.com/2011/12/13/unshorten-any-url-created-using-url-shortening-services-decode_shortened_url/]
+#had to remove curly quotes & curly apostrophe from original
+```{r eval = F}
+mmMetaLinks <- 
+  mmMeta2 %>% 
+  select(Pinterest.URL, shortUrl) %>%
+  filter(shortUrl != "") %>% 
+  mutate(Tabsoft = "")
+
+a <- mmMetaLinks$shortUrl[1]
+
+#original          "https://public.tableau.com/views/DCMetroScorecard_6/DCScorecard"
+#download workbook "https://public.tableau.com/workbooks/DCMetroScorecard_6.twb"
+
+httr::HEAD(a)$url
+
+b <- 1
+b <- 650
+b <- 1272
+b <- 1369
+b <- 1444
+b <- 1514
+for(i in c(b:nrow(mmMetaLinks))){
+ mmMetaLinks$Tabsoft[i] <- httr::HEAD(mmMetaLinks$shortUrl[i])$url[1]
+  print(i)
+ b <- b+1
+}
+
+ #mmMetaLinks$Tabsoft[i] <- decode_short_url(mmMetaLinks$shortUrl[i])[1]
+ #mmMetaLinks$Tabsoft[i] <- getLongURL.curl(mmMetaLinks$shortUrl[i])[1]
+
+write.csv(mmMetaLinks, "metadata_fullLinks.csv", row.names = F)
+#fail = 10
+
+```
+
+
+```{r}
+fullLinks <- read.csv("metadata_fullLinks.csv", stringsAsFactors = F)
+
+mmMeta3 <- 
+  mmMeta2 %>% 
+  left_join(fullLinks, by = c("Pinterest.URL", "shortUrl")) %>% 
+  group_by(Week) %>% 
+  arrange(Name) %>% 
+  mutate(ID = paste(Week, 
+                    str_pad(row_number(), pad = 0, side = "left", width = 4), 
+                    sep = "."))
+
+mmMeta3$ID[1:10]
+
+  #mutate(ID = gsub("\\D", "", Pinterest.URL))
+
+sapply(X = mmMeta3, FUN = n_distinct)
+
+write.csv(mmMeta3, "metadata_withLinks.csv", row.names = F)  
+```
+
+
+
+reading twb/twbx files
+```{r}
+twb <-  xmlParse("sample_workbook.twb")
+
+```
+
+using readLines
+```{r}
+a <-
+  data.frame(XML = readLines("sample_workbook.twb"), stringsAsFactors = F) %>% 
+  mutate(Row = as.integer(row.names(.))) 
+
+
+filterWorksheets <- grep(x= a$XML, pattern="worksheets>")
+
+b <-
+  a %>% 
+  filter(Row<=filterWorksheets[2],
+         Row>=filterWorksheets[1]) %>% 
+  mutate(SheetPre = ifelse(str_detect(XML, "<worksheet name=") == T, XML, NA),
+         Sheet = na.locf(SheetPre, na.rm = F)) %>% 
+  filter(str_detect(XML, "mark class")) %>% 
+  mutate(Mark = gsub("<mark class='|' />", "", XML) %>% trimws(.),
+         Sheet = gsub("<worksheet name='|'>", "", Sheet) %>% trimws(.),
+         MarkLvl = ifelse(Mark == "Text", 1, 
+                   ifelse(Mark == "Point", 2,
+                   ifelse(Mark == "Line", 3, 4)))) %>% 
+  select(-XML, -SheetPre, -Row) %>% 
+  distinct() %>% 
+  group_by(Sheet) %>% 
+  mutate(Primary = MarkLvl == max(MarkLvl)) %>% 
+  ungroup()
+
+filterDB <- grep(x= a$XML, pattern="dashboards>")
+
+db <-
+  a %>% 
+  filter(Row <= filterDB[2],
+         Row >= filterDB[1]) %>% 
+  mutate(DBPre = ifelse(str_detect(XML, "dashboard name=") == T, XML, NA),
+         DB = na.locf(DBPre, na.rm = F)) %>% 
+  filter(str_detect(XML, "<zone "),
+         !str_detect(XML, "type='layout")) %>% 
+  mutate(Element = gsub("(.* id=')(\\d+)(' .*)", "\\2", XML),
+         Type = ifelse(str_detect(XML, "type") == F, NA,
+                       gsub("(.* type=')(.*)(' w=.*)", "\\2", XML)),
+         
+         Sheet = ifelse(str_detect(XML, "name") == F, NA,
+                       gsub("(.* name=')(.*)(' w=.*)", "\\2", XML)) %>%
+                gsub("' show.*|' pane.*|' .*", "", .),
+         Height = gsub("(.* h=')(\\d+)(' .*)", "\\2", XML) %>% as.numeric(.)/1000,
+         Width =  gsub("(.* w=')(\\d+)(' .*)", "\\2", XML) %>% as.numeric(.)/1000,
+         Area = Height*Width) %>% 
+  group_by(DB) %>% 
+  mutate(PctArea = round(Area/sum(Area), 2)*100) %>%
+  #arrange(PctArea) %>% 
+  #mutate(Ord = row_number()) %>% 
+  ungroup() %>% 
+  left_join(filter(b, Primary == T))
+
+```
+
+
+using XML packages (not working)
+```{r}
+twb2 <- xml_children(twb)
+####################
+library(xml2)
+
+twb_xml <-
+  read_xml("sample_workbook.twb")
+
+twb_wk <- 
+  twb_xml %>% 
+  xml_find_all("//worksheet") %>%
+  xml_attr("name")
+
+twb_wkClass <- 
+  twb_xml %>% 
+  xml_find_all("//mark") %>%
+  xml_attr("class")
+
+
+b <- xml_nodes(twb_xml, xpath = "//workbook//worksheets")
+
+attr(b, which = "class")
+
+data.frame(Name =  twb_xml %>% xml_find_all("//worksheet") %>% xml_attr("name") %>% unlist(),
+           Class =   twb_xml %>% xml_find_all("//mark") %>% xml_attr("class") %>% unlist())
+
+  xml_attr("mark")
+  as.data.frame()  
+  mutate()
+
+
+
+
+```
+
+
+```{r download TWBs}
+twb <- "WMATARadarPlots.twb"
+twbx <- paste0("downloads/", wb, "x")
+
+download.file(url = paste0("https://public.tableau.com/workbooks/", twb), 
+              mode = "wb",
+              destfile = twbx)
+
+unzip(twbx,exdir = "downloads")
+```
+
+```{r twitteR}
+getTweet <- "811289272280027136"
+showStatus('123')
+showStatus(getTweet)
+retweets(getTweet)
+gets
+```
+
+
+
+
+
+
+
+
+
+# get blogger urls with XML:<br>
+library(RCurl)
+library(XML)
+library(stringr)
+url <- "https://www.r-bloggers.com/"
+script <- getURL(url)
+doc <- htmlParse(script)
+li <- getNodeSet(doc, "//ul[@class='xoxo blogroll']//a")
+urls <- sapply(li, xmlGetAttr, "href")
+
+# get ids for those with only 2 slashes (no 3rd in the end):
+id <- which(nchar(gsub("[^/]", "", urls )) == 2)
+slash_2 <- urls[id]
+# find position of 3rd slash occurrence in strings:
+slash_stop <- unlist(lapply(str_locate_all(urls, "/"),"[[", 3))
+slash_3 <- substring(urls, first = 1, last = slash_stop - 1)
+# final result, replace the ones with 2 slashes,
+# which are lacking in slash_3:
+blogs <- slash_3 
+blogs[id] <- slash_2
+```
+
+/

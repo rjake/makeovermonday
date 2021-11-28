@@ -1,0 +1,2848 @@
+"Week","Observation","Field","Value","ColOrder"
+1,1,"Player","Bryce Harper",1
+1,2,"Player","Mike Trout",1
+1,3,"Player","Mike Trout",1
+1,4,"Player","Mike Trout",1
+1,5,"Player","Josh Donaldson",1
+1,1,"Team","Nationals",2
+1,2,"Team","Angels",2
+1,3,"Team","Angels",2
+1,4,"Team","Angels",2
+1,5,"Team","Blue Jays",2
+1,1,"Year","2015",3
+1,2,"Year","2013",3
+1,3,"Year","2012",3
+1,4,"Year","2015",3
+1,5,"Year","2015",3
+1,1,"WAR","9.7",4
+1,2,"WAR","9.9",4
+1,3,"WAR","10.5",4
+1,4,"WAR","9.2",4
+1,5,"WAR","8.8",4
+1,1,"Value","75400000",5
+1,2,"Value","71000000",5
+1,3,"Value","66100000",5
+1,4,"Value","71400000",5
+1,5,"Value","68000000",5
+1,1,"Salary","2500000",6
+1,2,"Salary","500000",6
+1,3,"Salary","500000",6
+1,4,"Salary","6100000",6
+1,5,"Salary","4300000",6
+1,1,"Surplus","72900000",7
+1,2,"Surplus","70500000",7
+1,3,"Surplus","65600000",7
+1,4,"Surplus","65300000",7
+1,5,"Surplus","63700000",7
+2,1,"name","Stephen Curry",1
+2,2,"name","Stephen Curry",1
+2,3,"name","Stephen Curry",1
+2,4,"name","Stephen Curry",1
+2,5,"name","Stephen Curry",1
+2,1,"team_name","Golden State Warriors",2
+2,2,"team_name","Golden State Warriors",2
+2,3,"team_name","Golden State Warriors",2
+2,4,"team_name","Golden State Warriors",2
+2,5,"team_name","Golden State Warriors",2
+2,1,"game_date","42228",3
+2,2,"game_date","42167",3
+2,3,"game_date","27/10/2015",3
+2,4,"game_date","27/10/2015",3
+2,5,"game_date","42350",3
+2,1,"season","2015",4
+2,2,"season","2015",4
+2,3,"season","2015",4
+2,4,"season","2015",4
+2,5,"season","2015",4
+2,1,"espn_player_id","3975",5
+2,2,"espn_player_id","3975",5
+2,3,"espn_player_id","3975",5
+2,4,"espn_player_id","3975",5
+2,5,"espn_player_id","3975",5
+2,1,"team_id","1610612744",6
+2,2,"team_id","1610612744",6
+2,3,"team_id","1610612744",6
+2,4,"team_id","1610612744",6
+2,5,"team_id","1610612744",6
+2,1,"espn_game_id","400828201",7
+2,2,"espn_game_id","400828187",7
+2,3,"espn_game_id","400827890",7
+2,4,"espn_game_id","400827890",7
+2,5,"espn_game_id","400828238",7
+2,1,"period","1",8
+2,2,"period","1",8
+2,3,"period","3",8
+2,4,"period","1",8
+2,5,"period","4",8
+2,1,"minutes_remaining","10",9
+2,2,"minutes_remaining","2",9
+2,3,"minutes_remaining","7",9
+2,4,"minutes_remaining","10",9
+2,5,"minutes_remaining","4",9
+2,1,"seconds_remaining","43",10
+2,2,"seconds_remaining","44",10
+2,3,"seconds_remaining","35",10
+2,4,"seconds_remaining","56",10
+2,5,"seconds_remaining","11",10
+2,1,"shot_made_flag","1",11
+2,2,"shot_made_flag","1",11
+2,3,"shot_made_flag","1",11
+2,4,"shot_made_flag","1",11
+2,5,"shot_made_flag","1",11
+2,1,"action_type","Alley Oop Layup shot",12
+2,2,"action_type","Cutting Finger Roll Layup Shot",12
+2,3,"action_type","Cutting Finger Roll Layup Shot",12
+2,4,"action_type","Cutting Finger Roll Layup Shot",12
+2,5,"action_type","Cutting Layup Shot",12
+2,1,"shot_type","2PT Field Goal",13
+2,2,"shot_type","2PT Field Goal",13
+2,3,"shot_type","2PT Field Goal",13
+2,4,"shot_type","2PT Field Goal",13
+2,5,"shot_type","2PT Field Goal",13
+2,1,"shot_distance","2.2",14
+2,2,"shot_distance","3.2",14
+2,3,"shot_distance","1.1",14
+2,4,"shot_distance","1.7",14
+2,5,"shot_distance","3.6",14
+2,1,"opponent","Indiana Pacers",15
+2,2,"opponent","Brooklyn Nets",15
+2,3,"opponent","New Orleans Pelicans",15
+2,4,"opponent","New Orleans Pelicans",15
+2,5,"opponent","Milwaukee Bucks",15
+2,1,"x","1",16
+2,2,"x","25",16
+2,3,"x","-7",16
+2,4,"x","12",16
+2,5,"x","-2",16
+2,1,"y","-5",17
+2,2,"y","7",17
+2,3,"y","13",17
+2,4,"y","31",17
+2,5,"y","2",17
+2,1,"dribbles","0",18
+2,2,"dribbles","0",18
+2,3,"dribbles","0",18
+2,4,"dribbles","0",18
+2,5,"dribbles","9",18
+2,1,"touch_time","0.4",19
+2,2,"touch_time","0.7",19
+2,3,"touch_time","0",19
+2,4,"touch_time","0.5",19
+2,5,"touch_time","5.3",19
+2,1,"defender_name","Hill, George",20
+2,2,"defender_name","Larkin, Shane",20
+2,3,"defender_name","Smith, Ish",20
+2,4,"defender_name","Perkins, Kendrick",20
+2,5,"defender_name","Monroe, Greg",20
+2,1,"defender_distance","1.5",21
+2,2,"defender_distance","5.7",21
+2,3,"defender_distance","4.3",21
+2,4,"defender_distance","1.1",21
+2,5,"defender_distance","6.3",21
+2,1,"shot_clock","11.7",22
+2,2,"shot_clock","19.1",22
+2,3,"shot_clock","17",22
+2,4,"shot_clock","4.9",22
+2,5,"shot_clock","17.8",22
+3,1,"Product","Smartphone",1
+3,2,"Product","Smartphone",1
+3,3,"Product","Laptop",1
+3,4,"Product","Laptop",1
+3,5,"Product","Television",1
+3,1,"Year","2016",2
+3,2,"Year","2015",2
+3,3,"Year","2016",2
+3,4,"Year","2015",2
+3,5,"Year","2016",2
+3,1,"Purchase.Intent.Rate","0.48",3
+3,2,"Purchase.Intent.Rate","0.57",3
+3,3,"Purchase.Intent.Rate","0.3",3
+3,4,"Purchase.Intent.Rate","0.36",3
+3,5,"Purchase.Intent.Rate","0.3",3
+4,1,"Age.Group","Young Millenials",1
+4,2,"Age.Group","Young Millenials",1
+4,3,"Age.Group","Young Millenials",1
+4,4,"Age.Group","Young Millenials",1
+4,5,"Age.Group","Young Millenials",1
+4,1,"Age.Range","18-24",2
+4,2,"Age.Range","18-24",2
+4,3,"Age.Range","18-24",2
+4,4,"Age.Range","18-24",2
+4,5,"Age.Range","18-24",2
+4,1,"Savings.Amount","I don't have a savings account",3
+4,2,"Savings.Amount","$0",3
+4,3,"Savings.Amount","Just the minimum balance requirement",3
+4,4,"Savings.Amount","Less than $1,000",3
+4,5,"Savings.Amount","$1,000-$4,999",3
+4,1,"Response.Rate","0.224",4
+4,2,"Response.Rate","0.218",4
+4,3,"Response.Rate","0.097",4
+4,4,"Response.Rate","0.191",4
+4,5,"Response.Rate","0.147",4
+5,1,"Year",2000,1
+5,2,"Year",2001,1
+5,3,"Year",2002,1
+5,4,"Year",2003,1
+5,5,"Year",2004,1
+5,1,"Travel.Agents",123457.996406109,2
+5,2,"Travel.Agents",110810.122791254,2
+5,3,"Travel.Agents",104093.665768194,2
+5,4,"Travel.Agents",103308.625336927,2
+5,5,"Travel.Agents",90399.0715783168,2
+5,1,"Online.Hotel.Revenue",13629629629.6296,3
+5,2,"Online.Hotel.Revenue",20761571932.7097,3
+5,3,"Online.Hotel.Revenue",28485832733.7513,3
+5,4,"Online.Hotel.Revenue",40655360263.1308,3
+5,5,"Online.Hotel.Revenue",51639428512.694,3
+6,1,"Victim.s.name","Kobvey Igbuhay",1
+6,2,"Victim.s.name","Kevin Lau",1
+6,3,"Victim.s.name","Omar Ali",1
+6,4,"Victim.s.name","Mohamed Ibrahim",1
+6,5,"Victim.s.name","Curtis James Meyer",1
+6,1,"Victim.s.age","18",2
+6,2,"Victim.s.age","44",2
+6,3,"Victim.s.age","27",2
+6,4,"Victim.s.age","28",2
+6,5,"Victim.s.age","37",2
+6,1,"Victim.s.gender","Male",3
+6,2,"Victim.s.gender","Male",3
+6,3,"Victim.s.gender","Male",3
+6,4,"Victim.s.gender","Male",3
+6,5,"Victim.s.gender","Male",3
+6,1,"Victim.s.race","Asian",4
+6,2,"Victim.s.race","Asian",4
+6,3,"Victim.s.race","Asian",4
+6,4,"Victim.s.race","Asian",4
+6,5,"Victim.s.race","Asian",4
+6,1,"URL.of.image.of.victim","http://www.killedbypolice.net/victims/150979.jpg",5
+6,2,"URL.of.image.of.victim","http://www.killedbypolice.net/victims/150917.jpg",5
+6,3,"URL.of.image.of.victim","http://www.killedbypolice.net/victims/150908.jpg",5
+6,4,"URL.of.image.of.victim","http://www.killedbypolice.net/victims/150815.jpg",5
+6,5,"URL.of.image.of.victim","http://www.killedbypolice.net/victims/150802.jpg",5
+6,1,"Date.of.injury.resulting.in.death..month.day.year.","16734",6
+6,2,"Date.of.injury.resulting.in.death..month.day.year.","16719",6
+6,3,"Date.of.injury.resulting.in.death..month.day.year.","16699",6
+6,4,"Date.of.injury.resulting.in.death..month.day.year.","16684",6
+6,5,"Date.of.injury.resulting.in.death..month.day.year.","16682",6
+6,1,"Location.of.injury..address.","4307 W Humphrey St.",7
+6,2,"Location.of.injury..address.","737 Contour Dr",7
+6,3,"Location.of.injury..address.","738 Canton Rd",7
+6,4,"Location.of.injury..address.","2900 block Holly St.",7
+6,5,"Location.of.injury..address.","500 block N Mentzer St",7
+6,1,"Location.of.death..city.","Tampa",8
+6,2,"Location.of.death..city.","Lake Charles",8
+6,3,"Location.of.death..city.","Akron",8
+6,4,"Location.of.death..city.","Shreveport",8
+6,5,"Location.of.death..city.","Mitchell",8
+6,1,"Location.of.death..state.","FL",9
+6,2,"Location.of.death..state.","LA",9
+6,3,"Location.of.death..state.","OH",9
+6,4,"Location.of.death..state.","LA",9
+6,5,"Location.of.death..state.","SD",9
+6,1,"Location.of.death..zip.code.","33614",10
+6,2,"Location.of.death..zip.code.","70605",10
+6,3,"Location.of.death..zip.code.","44312",10
+6,4,"Location.of.death..zip.code.","71104",10
+6,5,"Location.of.death..zip.code.","57301",10
+6,1,"Location.of.death..county.","Hillsborough",11
+6,2,"Location.of.death..county.","Calcasieu ",11
+6,3,"Location.of.death..county.","Summit",11
+6,4,"Location.of.death..county.","Caddo",11
+6,5,"Location.of.death..county.","Davison",11
+6,1,"Agency.responsible.for.death","Tampa Police Department",12
+6,2,"Agency.responsible.for.death","Lake Charles Police Department",12
+6,3,"Agency.responsible.for.death","Akron Police Department",12
+6,4,"Agency.responsible.for.death","Shreveport Police Department",12
+6,5,"Agency.responsible.for.death","Mitchell Police Division",12
+6,1,"Cause.of.death","Gunshot",13
+6,2,"Cause.of.death","Gunshot",13
+6,3,"Cause.of.death","Gunshot",13
+6,4,"Cause.of.death","Gunshot",13
+6,5,"Cause.of.death","Gunshot",13
+6,1,"A.brief.description.of.the.circumstances.surrounding.the.death","Officers chased Igbuhay and three others who were driving in a stolen car and eventually caught up with them near a swamp, police said. Igbuhay was shot after he allegedly tried to drown a police dog and then another officer in the water. The dog and the officer were not hurt.",14
+6,2,"A.brief.description.of.the.circumstances.surrounding.the.death","Lau was reportedly involved in a domestic disturbance and was armed with a gun when officers responded to his home, police said. Police shot him after he pointed a gun in their direction and ignored commands to lower it, according to authorities.",14
+6,3,"A.brief.description.of.the.circumstances.surrounding.the.death","Ali was under investigation for selling drugs and had reportedly choked a woman when officers approached the hookah bar that Ali owned, police said. A SWAT team raided the bar and shot Ali when he reached into his waistband, according to authorities. Ali died several weeks after the shooting.",14
+6,4,"A.brief.description.of.the.circumstances.surrounding.the.death","The police are called regarding a man stealing purses and trying to sell drugs. Police caught up with Mohamed Ibrahim, and he shot at police and fled the scene. Five hours after the first call, deputies spotted his vehicle on Interstate 220 and attempted to stop him, but they engaged in a pursuit before finally stopping his car. Ibrahim got out of the car, showing a handgun. Officers fired at Ibrahim striking him multiple times. He was pronounced deceased at the scene. Ibrahim's family says police came to their home's front door, several hours before his death and had informed officers that Ibrahim has been diagnosed and hospitalized with schizophrenia.",14
+6,5,"A.brief.description.of.the.circumstances.surrounding.the.death","Police responded to a disturbance call and encountered Meyer armed with a gun. The situation escalated and resulted in an officer fatally wounding Meyer with Meyer's gun.",14
+6,1,"Official.disposition.of.death..justified.or.other.","Pending investigation",15
+6,2,"Official.disposition.of.death..justified.or.other.","Pending investigation",15
+6,3,"Official.disposition.of.death..justified.or.other.","Pending investigation",15
+6,4,"Official.disposition.of.death..justified.or.other.","Pending investigation",15
+6,5,"Official.disposition.of.death..justified.or.other.","Pending investigation",15
+6,1,"Criminal.Charges.","No Known Charges",16
+6,2,"Criminal.Charges.","No Known Charges",16
+6,3,"Criminal.Charges.","No Known Charges",16
+6,4,"Criminal.Charges.","No Known Charges",16
+6,5,"Criminal.Charges.","No Known Charges",16
+6,1,"Link.to.news.article.or.photo.of.official.document","http://www.tampabay.com/news/publicsafety/crime/one-suspect-shot-two-in-custody-and-tampa-police-hunting-for-a-fourth/2251265",17
+6,2,"Link.to.news.article.or.photo.of.official.document","http://www.fox8live.com/story/30234295/one-dead-following-officer-involved-shooting-at-a-lake-charles-home",17
+6,3,"Link.to.news.article.or.photo.of.official.document","http://www.cleveland.com/akron/index.ssf/2015/10/akron_hookah_bar_owner_shot_du.html",17
+6,4,"Link.to.news.article.or.photo.of.official.document","http://www.ktbs.com/story/29975939/update-police-pursuit-ends-in-death-of-mentally-ill-suspect",17
+6,5,"Link.to.news.article.or.photo.of.official.document","http://www.mitchellrepublic.com/news/local/3832217-authorities-mitchell-man-fatally-shot-own-gun-police-officer",17
+6,1,"Symptoms.of.mental.illness.","No",18
+6,2,"Symptoms.of.mental.illness.","No",18
+6,3,"Symptoms.of.mental.illness.","No",18
+6,4,"Symptoms.of.mental.illness.","Yes",18
+6,5,"Symptoms.of.mental.illness.","No",18
+6,1,"Unarmed","Unarmed",19
+6,2,"Unarmed","Allegedly Armed",19
+6,3,"Unarmed","Unclear",19
+6,4,"Unarmed","Allegedly Armed",19
+6,5,"Unarmed","Allegedly Armed",19
+7,1,"Gaming.Device","Desktop or Laptop Computer",1
+7,2,"Gaming.Device","Game Console",1
+7,3,"Gaming.Device","Mobile Device",1
+7,4,"Gaming.Device","Portable Gaming Device",1
+7,5,"Gaming.Device","Desktop or Laptop Computer",1
+7,1,"Category","Adults",2
+7,2,"Category","Adults",2
+7,3,"Category","Adults",2
+7,4,"Category","Adults",2
+7,5,"Category","Teens",2
+7,1,"Usage.Rate","0.73",3
+7,2,"Usage.Rate","0.53",3
+7,3,"Usage.Rate","0.35",3
+7,4,"Usage.Rate","0.25",3
+7,5,"Usage.Rate","0.76",3
+8,1,"Platform","Netflix",1
+8,2,"Platform","YouTube",1
+8,3,"Platform","HTTP",1
+8,4,"Platform","Amazon Video",1
+8,5,"Platform","iTunes",1
+8,1,"X..of.Peak.Period","0.371",2
+8,2,"X..of.Peak.Period","0.179",2
+8,3,"X..of.Peak.Period","0.061",2
+8,4,"X..of.Peak.Period","0.031",2
+8,5,"X..of.Peak.Period","0.028",2
+9,1,"Season","1984-85",1
+9,2,"Season","1984-85",1
+9,3,"Season","1984-85",1
+9,4,"Season","1984-85",1
+9,5,"Season","1984-85",1
+9,1,"Division","Division One",2
+9,2,"Division","Division Two",2
+9,3,"Division","Division Three",2
+9,4,"Division","Division Four",2
+9,5,"Division","Average",2
+9,1,"Level","1",3
+9,2,"Level","2",3
+9,3,"Level","3",3
+9,4,"Level","4",3
+9,5,"Level","Avg",3
+9,1,"Average.Wage","24900",4
+9,2,"Average.Wage","15500",4
+9,3,"Average.Wage","11200",4
+9,4,"Average.Wage","8300",4
+9,5,"Average.Wage","9800",4
+10,1,"Status","Members of Public",1
+10,2,"Status","Members of Public",1
+10,3,"Status","Members of Public",1
+10,4,"Status","Members of Public",1
+10,5,"Status","Members of Public",1
+10,1,"Injury.type","Fatal",2
+10,2,"Injury.type","Fatal",2
+10,3,"Injury.type","Fatal",2
+10,4,"Injury.type","Fatal",2
+10,5,"Injury.type","Fatal",2
+10,1,"What.happened.","Hit by moving, falling object",3
+10,2,"What.happened.","Hit by moving, falling object",3
+10,3,"What.happened.","Hit by moving, falling object",3
+10,4,"What.happened.","Hit by moving, falling object",3
+10,5,"What.happened.","Hit by moving, falling object",3
+10,1,"Year","2001/02",4
+10,2,"Year","2002/03",4
+10,3,"Year","2003/04",4
+10,4,"Year","2004/05",4
+10,5,"Year","2005/06",4
+10,1,"Injuries","0",5
+10,2,"Injuries","0",5
+10,3,"Injuries","0",5
+10,4,"Injuries","0",5
+10,5,"Injuries","1",5
+11,1,"Region","Europe",1
+11,2,"Region","Europe",1
+11,3,"Region","Oceania",1
+11,4,"Region","Europe",1
+11,5,"Region","Asia",1
+11,1,"Country","Denmark",2
+11,2,"Country","Finland",2
+11,3,"Country","New Zealand",2
+11,4,"Country","Sweden",2
+11,5,"Country","Singapore",2
+11,1,"Country.Code","DK",3
+11,2,"Country.Code","FI",3
+11,3,"Country.Code","NZ",3
+11,4,"Country.Code","SE",3
+11,5,"Country.Code","SG",3
+11,1,"Year","2012",4
+11,2,"Year","2012",4
+11,3,"Year","2012",4
+11,4,"Year","2012",4
+11,5,"Year","2012",4
+11,1,"CPI","90",5
+11,2,"CPI","90",5
+11,3,"CPI","90",5
+11,4,"CPI","88",5
+11,5,"CPI","87",5
+11,1,"Rank","1",6
+11,2,"Rank","1",6
+11,3,"Rank","1",6
+11,4,"Rank","4",6
+11,5,"Rank","5",6
+12,1,"Country","Albania",1
+12,2,"Country","Algeria",1
+12,3,"Country","Angola",1
+12,4,"Country","Argentina",1
+12,5,"Country","Armenia",1
+12,1,"Is.there.legislation.that.specifically.addresses.domestic.violence.","Yes",2
+12,2,"Is.there.legislation.that.specifically.addresses.domestic.violence.","No",2
+12,3,"Is.there.legislation.that.specifically.addresses.domestic.violence.","Yes",2
+12,4,"Is.there.legislation.that.specifically.addresses.domestic.violence.","Yes",2
+12,5,"Is.there.legislation.that.specifically.addresses.domestic.violence.","No",2
+12,1,"Is.there.a.specialized.court.or.procedure.for.cases.of.domestic.violence.","Yes",3
+12,2,"Is.there.a.specialized.court.or.procedure.for.cases.of.domestic.violence.","No",3
+12,3,"Is.there.a.specialized.court.or.procedure.for.cases.of.domestic.violence.","No",3
+12,4,"Is.there.a.specialized.court.or.procedure.for.cases.of.domestic.violence.","Yes",3
+12,5,"Is.there.a.specialized.court.or.procedure.for.cases.of.domestic.violence.","No",3
+12,1,"Does.domestic.violence.legislation.protect.women.in.unmarried.intimate.relationships.","Yes",4
+12,2,"Does.domestic.violence.legislation.protect.women.in.unmarried.intimate.relationships.","No",4
+12,3,"Does.domestic.violence.legislation.protect.women.in.unmarried.intimate.relationships.","No",4
+12,4,"Does.domestic.violence.legislation.protect.women.in.unmarried.intimate.relationships.","Yes",4
+12,5,"Does.domestic.violence.legislation.protect.women.in.unmarried.intimate.relationships.","No",4
+12,1,"Does.domestic.violence.legislation.include.emotional.abuse.","Yes",5
+12,2,"Does.domestic.violence.legislation.include.emotional.abuse.","No",5
+12,3,"Does.domestic.violence.legislation.include.emotional.abuse.","Yes",5
+12,4,"Does.domestic.violence.legislation.include.emotional.abuse.","Yes",5
+12,5,"Does.domestic.violence.legislation.include.emotional.abuse.","No",5
+12,1,"Does.domestic.violence.legislation.include.financial.abuse.","Yes",6
+12,2,"Does.domestic.violence.legislation.include.financial.abuse.","No",6
+12,3,"Does.domestic.violence.legislation.include.financial.abuse.","Yes",6
+12,4,"Does.domestic.violence.legislation.include.financial.abuse.","Yes",6
+12,5,"Does.domestic.violence.legislation.include.financial.abuse.","No",6
+12,1,"Does.domestic.violence.legislation.include.physical.abuse.","Yes",7
+12,2,"Does.domestic.violence.legislation.include.physical.abuse.","No",7
+12,3,"Does.domestic.violence.legislation.include.physical.abuse.","Yes",7
+12,4,"Does.domestic.violence.legislation.include.physical.abuse.","Yes",7
+12,5,"Does.domestic.violence.legislation.include.physical.abuse.","No",7
+12,1,"Does.domestic.violence.legislation.include.sexual.abuse.","Yes",8
+12,2,"Does.domestic.violence.legislation.include.sexual.abuse.","No",8
+12,3,"Does.domestic.violence.legislation.include.sexual.abuse.","Yes",8
+12,4,"Does.domestic.violence.legislation.include.sexual.abuse.","Yes",8
+12,5,"Does.domestic.violence.legislation.include.sexual.abuse.","No",8
+13,1,"Age.Group","Children 1.5-3",1
+13,2,"Age.Group","Children 1.5-3",1
+13,3,"Age.Group","Children 1.5-3",1
+13,4,"Age.Group","Children 1.5-3",1
+13,5,"Age.Group","Children 1.5-3",1
+13,1,"Sugar.Source","Soft Drinks",2
+13,2,"Sugar.Source","Milk Products",2
+13,3,"Sugar.Source","Cereals, Cakes, Biscuits",2
+13,4,"Sugar.Source","Sugar, Sweets, Jams",2
+13,5,"Sugar.Source","Other",2
+13,1,"Amount","0.27",3
+13,2,"Amount","0.18",3
+13,3,"Amount","0.25",3
+13,4,"Amount","0.19",3
+13,5,"Amount","0.11",3
+14,1,"City","Albuquerque",1
+14,2,"City","Anaheim",1
+14,3,"City","Anchorage",1
+14,4,"City","Arlington",1
+14,5,"City","Atlanta",1
+14,1,"State","NM",2
+14,2,"State","CA",2
+14,3,"State","AK",2
+14,4,"State","TX",2
+14,5,"State","GA",2
+14,1,"Citywide.Diversity.Index","0.6",3
+14,2,"Citywide.Diversity.Index","0.619",3
+14,3,"Citywide.Diversity.Index","0.571",3
+14,4,"Citywide.Diversity.Index","0.68",3
+14,5,"Citywide.Diversity.Index","0.568",3
+14,1,"Neighborhood.Diversity.Index","0.52",4
+14,2,"Neighborhood.Diversity.Index","0.539",4
+14,3,"Neighborhood.Diversity.Index","0.538",4
+14,4,"Neighborhood.Diversity.Index","0.589",4
+14,5,"Neighborhood.Diversity.Index","0.307",4
+14,1,"Integration...Segregation.Index","0.046",5
+14,2,"Integration...Segregation.Index","0.052",5
+14,3,"Integration...Segregation.Index","0.084",5
+14,4,"Integration...Segregation.Index","0.062",5
+14,5,"Integration...Segregation.Index","-0.145",5
+15,1,"Name","Mark Zuckerberg",1
+15,2,"Name","Evan Spiegel",1
+15,3,"Name","Larry Page",1
+15,4,"Name","Bill Gates",1
+15,5,"Name","Jeff Bezos",1
+15,1,"Age..M.","22",2
+15,2,"Age..M.","23",2
+15,3,"Age..M.","25",2
+15,4,"Age..M.","26",2
+15,5,"Age..M.","33",2
+15,1,"Age..B.","23",3
+15,2,"Age..B.","25",3
+15,3,"Age..B.","30",3
+15,4,"Age..B.","31",3
+15,5,"Age..B.","35",3
+15,1,"Net.Worth","43500000000",4
+15,2,"Net.Worth","2100000000",4
+15,3,"Net.Worth","37400000000",4
+15,4,"Net.Worth","77600000000",4
+15,5,"Net.Worth","54400000000",4
+16,1,"State","Alabama",1
+16,2,"State","Alaska",1
+16,3,"State","Arizona",1
+16,4,"State","Arkansas",1
+16,5,"State","California",1
+16,1,"Metric","% of Population",2
+16,2,"Metric","% of Population",2
+16,3,"Metric","% of Population",2
+16,4,"Metric","% of Population",2
+16,5,"Metric","% of Population",2
+16,1,"Male","0.48",3
+16,2,"Male","0.51",3
+16,3,"Male","0.49",3
+16,4,"Male","0.48",3
+16,5,"Male","0.49",3
+16,1,"Female","0.52",4
+16,2,"Female","0.49",4
+16,3,"Female","0.51",4
+16,4,"Female","0.52",4
+16,5,"Female","0.51",4
+17,1,"Year","2007",1
+17,2,"Year","2007",1
+17,3,"Year","2007",1
+17,4,"Year","2007",1
+17,5,"Year","2007",1
+17,1,"Tier","Tier 1",2
+17,2,"Tier","Tier 1",2
+17,3,"Tier","Tier 1",2
+17,4,"Tier","Tier 1",2
+17,5,"Tier","Tier 1",2
+17,1,"Country","Australia",3
+17,2,"Country","Austria",3
+17,3,"Country","Belgium",3
+17,4,"Country","Canada",3
+17,5,"Country","Colombia",3
+17,1,"Region","Oceania",4
+17,2,"Region","Europe",4
+17,3,"Region","Europe",4
+17,4,"Region","North America",4
+17,5,"Region","South America",4
+18,1,"State","Alabama",1
+18,2,"State","Alaska",1
+18,3,"State","Arizona",1
+18,4,"State","Arkansas",1
+18,5,"State","California",1
+18,1,"X2004.05","5682.83812038015",2
+18,2,"X2004.05","4328.28136219641",2
+18,3,"X2004.05","5138.49531151003",2
+18,4,"X2004.05","5772.30186906019",2
+18,5,"X2004.05","5285.92148891235",2
+18,1,"X2005.06","5840.54978505629",3
+18,2,"X2005.06","4632.6234493347",3
+18,3,"X2005.06","5415.51604912999",3
+18,4,"X2005.06","6082.37932446264",3
+18,5,"X2005.06","5527.88128966223",3
+18,1,"X2006.07","5753.49643243243",4
+18,2,"X2006.07","4918.50061916462",4
+18,3,"X2006.07","5481.41914496315",4
+18,4,"X2006.07","6231.97717936118",4
+18,5,"X2006.07","5334.82577886978",4
+18,1,"X..2007.08.","6008.16887181949",5
+18,2,"X..2007.08.","5069.82213154105",5
+18,3,"X..2007.08.","5681.63795487278",5
+18,4,"X..2007.08.","6414.90036485838",5
+18,5,"X..2007.08.","5672.47217474796",5
+18,1,"X2008.09","6475.09170591551",6
+18,2,"X2008.09","5075.48240621193",6
+18,3,"X2008.09","6058.46382135258",6
+18,4,"X2008.09","6416.50340964885",6
+18,5,"X2008.09","5897.88849084396",6
+18,1,"X2009.10","7188.95430251079",7
+18,2,"X2009.10","5454.60660967444",7
+18,3,"X2009.10","7263.20433153317",7
+18,4,"X2009.10","6627.09214259511",7
+18,5,"X2009.10","7258.7714939796",7
+18,1,"X2010.11","8071.13375930572",8
+18,2,"X2010.11","5759.15295099789",8
+18,3,"X2010.11","8839.60465297623",8
+18,4,"X2010.11","6900.91241267642",8
+18,5,"X2010.11","8193.73880217053",8
+18,1,"X2011.12","8451.90222289109",9
+18,2,"X2011.12","5762.42052566815",9
+18,3,"X2011.12","9966.7163445791",9
+18,4,"X2011.12","7028.99105000841",9
+18,5,"X2011.12","9436.42576641496",9
+18,1,"X2012.13","9098.06915636567",10
+18,2,"X2012.13","6026.14266883162",10
+18,3,"X2012.13","10133.5031775962",10
+18,4,"X2012.13","7286.58046127523",10
+18,5,"X2012.13","9360.57355611425",10
+18,1,"X2013.14","9358.92884192072",11
+18,2,"X2013.14","6012.4447345055",11
+18,3,"X2013.14","10296.1997094545",11
+18,4,"X2013.14","7408.49506258476",11
+18,5,"X2013.14","9274.19326640112",11
+18,1,"X2014.15","9496.08410616773",12
+18,2,"X2014.15","6148.80801037424",12
+18,3,"X2014.15","10413.8438819488",12
+18,4,"X2014.15","7606.4100076367",12
+18,5,"X2014.15","9186.82433000429",12
+18,1,"X2015.16","9751.10134925195",13
+18,2,"X2015.16","6571.3403169487",13
+18,3,"X2015.16","10646.2783517494",13
+18,4,"X2015.16","7867.29673593428",13
+18,5,"X2015.16","9269.84422722464",13
+19,1,"Country","Australia",1
+19,2,"Country","Australia",1
+19,3,"Country","Australia",1
+19,4,"Country","Australia",1
+19,5,"Country","Australia",1
+19,1,"Hour.bands","1 to 19 hours",2
+19,2,"Hour.bands","20 to 29 hours",2
+19,3,"Hour.bands","30 to 34 hours",2
+19,4,"Hour.bands","35 to 39 hours",2
+19,5,"Hour.bands","40 hours or more",2
+19,1,"X2000","",3
+19,2,"X2000","",3
+19,3,"X2000","",3
+19,4,"X2000","",3
+19,5,"X2000","",3
+19,1,"X2001","0.231804087680182",4
+19,2,"X2001","0.156534796667252",4
+19,3,"X2001","0.0775925618824256",4
+19,4,"X2001","0.208388282797211",4
+19,5,"X2001","0.325680270972929",4
+19,1,"X2002","0.234284641561693",5
+19,2,"X2002","0.156473803676412",5
+19,3,"X2002","0.0802819709093757",5
+19,4,"X2002","0.20910670558216",5
+19,5,"X2002","0.31985287827036",5
+19,1,"X2003","0.234345069964954",6
+19,2,"X2003","0.159245221232493",6
+19,3,"X2003","0.0811287644925508",6
+19,4,"X2003","0.208491928694862",6
+19,5,"X2003","0.316789015615139",6
+19,1,"X2004","0.225791558727003",7
+19,2,"X2004","0.158129038394968",7
+19,3,"X2004","0.0858372761450777",7
+19,4,"X2004","0.210361678451432",7
+19,5,"X2004","0.31988044828152",7
+19,1,"X2005","0.221965725619284",8
+19,2,"X2005","0.165002640188403",8
+19,3,"X2005","0.0855007050393015",8
+19,4,"X2005","0.214159120924092",8
+19,5,"X2005","0.313371808228919",8
+19,1,"X2006","0.21807788050047",9
+19,2,"X2006","0.164455024899893",9
+19,3,"X2006","0.0847740121195668",9
+19,4,"X2006","0.220359997974178",9
+19,5,"X2006","0.312333084505893",9
+19,1,"X2007","0.214346320136909",10
+19,2,"X2007","0.162494223308941",10
+19,3,"X2007","0.0849252093095955",10
+19,4,"X2007","0.219831828820663",10
+19,5,"X2007","0.318402418423892",10
+19,1,"X2008","0.211557569286359",11
+19,2,"X2008","0.165258947567381",11
+19,3,"X2008","0.086111385366073",11
+19,4,"X2008","0.224507779311252",11
+19,5,"X2008","0.312564318468935",11
+19,1,"X2009","0.217119696916755",12
+19,2,"X2009","0.165112098551213",12
+19,3,"X2009","0.0878843822581924",12
+19,4,"X2009","0.224093627181024",12
+19,5,"X2009","0.305790195092816",12
+19,1,"X2010","0.216809797098234",13
+19,2,"X2010","0.168740558163163",13
+19,3,"X2010","0.0892219309605451",13
+19,4,"X2010","0.22574404448681",13
+19,5,"X2010","0.299483669291247",13
+19,1,"X2011","0.213001139786097",14
+19,2,"X2011","0.170671849102221",14
+19,3,"X2011","0.0897239558065552",14
+19,4,"X2011","0.231574195120048",14
+19,5,"X2011","0.295028860185078",14
+19,1,"X2012","0.211580859628349",15
+19,2,"X2012","0.170483117252055",15
+19,3,"X2012","0.0901829573778036",15
+19,4,"X2012","0.231694579462036",15
+19,5,"X2012","0.296058486279756",15
+19,1,"X2013","0.210979568816824",16
+19,2,"X2013","0.170498377281484",16
+19,3,"X2013","0.0942524348862836",16
+19,4,"X2013","0.231010120812402",16
+19,5,"X2013","0.293259498203006",16
+19,1,"X2014","0.209544154820625",17
+19,2,"X2014","0.173942636974013",17
+19,3,"X2014","0.0971431812440654",17
+19,4,"X2014","0.2340473811618",17
+19,5,"X2014","0.285322645799496",17
+20,1,"Date","1850/01/01",1
+20,2,"Date","1850/02/01",1
+20,3,"Date","1850/03/01",1
+20,4,"Date","1850/04/01",1
+20,5,"Date","1850/05/01",1
+20,1,"Median","-0.702",2
+20,2,"Median","-0.284",2
+20,3,"Median","-0.732",2
+20,4,"Median","-0.57",2
+20,5,"Median","-0.325",2
+20,1,"Lower.CI","-0.757",3
+20,2,"Lower.CI","-0.336",3
+20,3,"Lower.CI","-0.797",3
+20,4,"Lower.CI","-0.628",3
+20,5,"Lower.CI","-0.381",3
+20,1,"Upper.CI","-0.627",4
+20,2,"Upper.CI","-0.216",4
+20,3,"Upper.CI","-0.682",4
+20,4,"Upper.CI","-0.504",4
+20,5,"Upper.CI","-0.276",4
+21,1,"Import.Export","Import",1
+21,2,"Import.Export","Import",1
+21,3,"Import.Export","Import",1
+21,4,"Import.Export","Import",1
+21,5,"Import.Export","Import",1
+21,1,"Country.Region","Australia",2
+21,2,"Country.Region","Belgium",2
+21,3,"Country.Region","Canada",2
+21,4,"Country.Region","Chile",2
+21,5,"Country.Region","China",2
+21,1,"Region","Oceania",3
+21,2,"Region","Europe",3
+21,3,"Region","North America",3
+21,4,"Region","South America",3
+21,5,"Region","Asia",3
+21,1,"X1950","462",4
+21,2,"X1950","198",4
+21,3,"X1950","605",4
+21,4,"X1950","1",4
+21,5,"X1950","2701",4
+21,1,"X1951","365",5
+21,2,"X1951","485",5
+21,3,"X1951","1000",5
+21,4,"X1951","247",5
+21,5,"X1951","2307",5
+21,1,"X1952","408",6
+21,2,"X1952","920",6
+21,3,"X1952","1060",6
+21,4,"X1952","19",6
+21,5,"X1952","3797",6
+21,1,"X1953","153",7
+21,2,"X1953","704",7
+21,3,"X1953","1640",7
+21,4,"X1953","10",7
+21,5,"X1953","3512",7
+21,1,"X1954","125",8
+21,2,"X1954","411",8
+21,3,"X1954","1206",8
+21,4,"X1954","40",8
+21,5,"X1954","3475",8
+21,1,"X1955","637",9
+21,2,"X1955","361",9
+21,3,"X1955","970",9
+21,4,"X1955","5",9
+21,5,"X1955","1540",9
+21,1,"X1956","451",10
+21,2,"X1956","682",10
+21,3,"X1956","718",10
+21,4,"X1956","90",10
+21,5,"X1956","2255",10
+21,1,"X1957","445",11
+21,2,"X1957","681",11
+21,3,"X1957","749",11
+21,4,"X1957","28",11
+21,5,"X1957","2126",11
+21,1,"X1958","534",12
+21,2,"X1958","888",12
+21,3,"X1958","252",12
+21,4,"X1958","32",12
+21,5,"X1958","2778",12
+21,1,"X1959","412",13
+21,2,"X1959","176",13
+21,3,"X1959","368",13
+21,4,"X1959","20",13
+21,5,"X1959","3159",13
+21,1,"X1960","113",14
+21,2,"X1960","92",14
+21,3,"X1960","165",14
+21,4,"X1960","312",14
+21,5,"X1960","2431",14
+21,1,"X1961","40",15
+21,2,"X1961","132",15
+21,3,"X1961","1742",15
+21,4,"X1961","45",15
+21,5,"X1961","936",15
+21,1,"X1962","571",16
+21,2,"X1962","188",16
+21,3,"X1962","1066",16
+21,4,"X1962","19",16
+21,5,"X1962","307",16
+21,1,"X1963","383",17
+21,2,"X1963","569",17
+21,3,"X1963","1012",17
+21,4,"X1963","127",17
+21,5,"X1963","450",17
+21,1,"X1964","528",18
+21,2,"X1964","644",18
+21,3,"X1964","728",18
+21,4,"X1964","34",18
+21,5,"X1964","395",18
+21,1,"X1965","900",19
+21,2,"X1965","505",19
+21,3,"X1965","527",19
+21,4,"X1965","57",19
+21,5,"X1965","218",19
+21,1,"X1966","694",20
+21,2,"X1966","101",20
+21,3,"X1966","273",20
+21,4,"X1966","80",20
+21,5,"X1966","233",20
+21,1,"X1967","759",21
+21,2,"X1967","35",21
+21,3,"X1967","243",21
+21,4,"X1967","140",21
+21,5,"X1967","145",21
+21,1,"X1968","445",22
+21,2,"X1968","216",22
+21,3,"X1968","324",22
+21,4,"X1968","62",22
+21,5,"X1968","182",22
+21,1,"X1969","828",23
+21,2,"X1969","232",23
+21,3,"X1969","504",23
+21,4,"X1969","17",23
+21,5,"X1969","2",23
+21,1,"X1970","240",24
+21,2,"X1970","528",24
+21,3,"X1970","611",24
+21,4,"X1970","62",24
+21,5,"X1970","2",24
+21,1,"X1971","309",25
+21,2,"X1971","509",25
+21,3,"X1971","455",25
+21,4,"X1971","202",25
+21,5,"X1971","2",25
+21,1,"X1972","60",26
+21,2,"X1972","512",26
+21,3,"X1972","382",26
+21,4,"X1972","51",26
+21,5,"X1972","2",26
+21,1,"X1973","701",27
+21,2,"X1973","599",27
+21,3,"X1973","80",27
+21,4,"X1973","278",27
+21,5,"X1973","3",27
+21,1,"X1974","884",28
+21,2,"X1974","111",28
+21,3,"X1974","196",28
+21,4,"X1974","299",28
+21,5,"X1974","3",28
+21,1,"X1975","96",29
+21,2,"X1975","128",29
+21,3,"X1975","223",29
+21,4,"X1975","195",29
+21,5,"X1975","3",29
+21,1,"X1976","81",30
+21,2,"X1976","177",30
+21,3,"X1976","28",30
+21,4,"X1976","404",30
+21,5,"X1976","3",30
+21,1,"X1977","268",31
+21,2,"X1977","180",31
+21,3,"X1977","28",31
+21,4,"X1977","25",31
+21,5,"X1977","75",31
+21,1,"X1978","1019",32
+21,2,"X1978","407",32
+21,3,"X1978","172",32
+21,4,"X1978","117",32
+21,5,"X1978","86",32
+21,1,"X1979","191",33
+21,2,"X1979","786",33
+21,3,"X1979","235",33
+21,4,"X1979","103",33
+21,5,"X1979","12",33
+21,1,"X1980","404",34
+21,2,"X1980","574",34
+21,3,"X1980","441",34
+21,4,"X1980","145",34
+21,5,"X1980","7",34
+21,1,"X1981","449",35
+21,2,"X1981","522",35
+21,3,"X1981","452",35
+21,4,"X1981","148",35
+21,5,"X1981","2",35
+21,1,"X1982","131",36
+21,2,"X1982","438",36
+21,3,"X1982","274",36
+21,4,"X1982","344",36
+21,5,"X1982","15",36
+21,1,"X1983","633",37
+21,2,"X1983","583",37
+21,3,"X1983","647",37
+21,4,"X1983","137",37
+21,5,"X1983","27",37
+21,1,"X1984","626",38
+21,2,"X1984","575",38
+21,3,"X1984","646",38
+21,4,"X1984","450",38
+21,5,"X1984","73",38
+21,1,"X1985","515",39
+21,2,"X1985","294",39
+21,3,"X1985","847",39
+21,4,"X1985","10",39
+21,5,"X1985","115",39
+21,1,"X1986","819",40
+21,2,"X1986","98",40
+21,3,"X1986","809",40
+21,4,"X1986","174",40
+21,5,"X1986","17",40
+21,1,"X1987","592",41
+21,2,"X1987","106",41
+21,3,"X1987","786",41
+21,4,"X1987","156",41
+21,5,"X1987","53",41
+21,1,"X1988","720",42
+21,2,"X1988","422",42
+21,3,"X1988","741",42
+21,4,"X1988","87",42
+21,5,"X1988","71",42
+21,1,"X1989","693",43
+21,2,"X1989","218",43
+21,3,"X1989","67",43
+21,4,"X1989","141",43
+21,5,"X1989","110",43
+21,1,"X1990","352",44
+21,2,"X1990","320",44
+21,3,"X1990","159",44
+21,4,"X1990","130",44
+21,5,"X1990","214",44
+21,1,"X1991","213",45
+21,2,"X1991","133",45
+21,3,"X1991","751",45
+21,4,"X1991","111",45
+21,5,"X1991","392",45
+21,1,"X1992","365",46
+21,2,"X1992","48",46
+21,3,"X1992","405",46
+21,4,"X1992","173",46
+21,5,"X1992","1169",46
+21,1,"X1993","449",47
+21,2,"X1993","76",47
+21,3,"X1993","189",47
+21,4,"X1993","88",47
+21,5,"X1993","1187",47
+21,1,"X1994","262",48
+21,2,"X1994","49",48
+21,3,"X1994","454",48
+21,4,"X1994","82",48
+21,5,"X1994","274",48
+21,1,"X1995","64",49
+21,2,"X1995","16",49
+21,3,"X1995","390",49
+21,4,"X1995","342",49
+21,5,"X1995","680",49
+21,1,"X1996","597",50
+21,2,"X1996","3",50
+21,3,"X1996","417",50
+21,4,"X1996","178",50
+21,5,"X1996","1494",50
+21,1,"X1997","35",51
+21,2,"X1997","53",51
+21,3,"X1997","362",51
+21,4,"X1997","296",51
+21,5,"X1997","900",51
+21,1,"X1998","542",52
+21,2,"X1998","55",52
+21,3,"X1998","129",52
+21,4,"X1998","87",52
+21,5,"X1998","382",52
+21,1,"X1999","673",53
+21,2,"X1999","58",53
+21,3,"X1999","196",53
+21,4,"X1999","206",53
+21,5,"X1999","1785",53
+21,1,"X2000","338",54
+21,2,"X2000","35",54
+21,3,"X2000","570",54
+21,4,"X2000","202",54
+21,5,"X2000","2552",54
+21,1,"X2001","1236",55
+21,2,"X2001","29",55
+21,3,"X2001","538",55
+21,4,"X2001","60",55
+21,5,"X2001","2833",55
+21,1,"X2002","663",56
+21,2,"X2002","56",56
+21,3,"X2002","428",56
+21,4,"X2002","74",56
+21,5,"X2002","2891",56
+21,1,"X2003","801",57
+21,2,"X2003","21",57
+21,3,"X2003","152",57
+21,4,"X2003","187",57
+21,5,"X2003","2373",57
+21,1,"X2004","472",58
+21,2,"X2004","15",58
+21,3,"X2004","352",58
+21,4,"X2004","70",58
+21,5,"X2004","3316",58
+21,1,"X2005","459",59
+21,2,"X2005","3",59
+21,3,"X2005","124",59
+21,4,"X2005","449",59
+21,5,"X2005","3558",59
+21,1,"X2006","727",60
+21,2,"X2006","27",60
+21,3,"X2006","104",60
+21,4,"X2006","1095",60
+21,5,"X2006","2900",60
+21,1,"X2007","675",61
+21,2,"X2007","174",61
+21,3,"X2007","456",61
+21,4,"X2007","662",61
+21,5,"X2007","1692",61
+21,1,"X2008","445",62
+21,2,"X2008","203",62
+21,3,"X2008","408",62
+21,4,"X2008","397",62
+21,5,"X2008","1892",62
+21,1,"X2009","775",63
+21,2,"X2009","90",63
+21,3,"X2009","106",63
+21,4,"X2009","335",63
+21,5,"X2009","1407",63
+21,1,"X2010","1507",64
+21,2,"X2010","32",64
+21,3,"X2010","236",64
+21,4,"X2010","475",64
+21,5,"X2010","1045",64
+21,1,"X2011","1567",65
+21,2,"X2011","21",65
+21,3,"X2011","351",65
+21,4,"X2011","316",65
+21,5,"X2011","1128",65
+21,1,"X2012","876",66
+21,2,"X2012","32",66
+21,3,"X2012","211",66
+21,4,"X2012","62",66
+21,5,"X2012","1703",66
+21,1,"X2013","255",67
+21,2,"X2013","46",67
+21,3,"X2013","194",67
+21,4,"X2013","51",67
+21,5,"X2013","1452",67
+21,1,"X2014","932",68
+21,2,"X2014","103",68
+21,3,"X2014","306",68
+21,4,"X2014","125",68
+21,5,"X2014","1184",68
+21,1,"X2015","1574",69
+21,2,"X2015","49",69
+21,3,"X2015","395",69
+21,4,"X2015","114",69
+21,5,"X2015","1214",69
+22,1,"Name","Charlize Theron",1
+22,2,"Name","Cesária Évora",1
+22,3,"Name","Umm Kulthum",1
+22,4,"Name","Mariza",1
+22,5,"Name","Miriam Makeba",1
+22,1,"Birthcity","Johannesburg",2
+22,2,"Birthcity","Mindelo",2
+22,3,"Birthcity","El Senbellawein",2
+22,4,"Birthcity","Maputo",2
+22,5,"Birthcity","Johannesburg",2
+22,1,"Birthyear","1975",3
+22,2,"Birthyear","1941",3
+22,3,"Birthyear","1904",3
+22,4,"Birthyear","1973",3
+22,5,"Birthyear","1932",3
+22,1,"Continent.Name","Africa",4
+22,2,"Continent.Name","Africa",4
+22,3,"Continent.Name","Africa",4
+22,4,"Continent.Name","Africa",4
+22,5,"Continent.Name","Africa",4
+22,1,"Country.Code","ZA",5
+22,2,"Country.Code","CV",5
+22,3,"Country.Code","EG",5
+22,4,"Country.Code","MZ",5
+22,5,"Country.Code","ZA",5
+22,1,"Country.Name","SOUTH AFRICA",6
+22,2,"Country.Name","CAPE VERDE",6
+22,3,"Country.Name","EGYPT",6
+22,4,"Country.Name","MOZAMBIQUE",6
+22,5,"Country.Name","SOUTH AFRICA",6
+22,1,"countryCode3","ZAF",7
+22,2,"countryCode3","CPV",7
+22,3,"countryCode3","EGY",7
+22,4,"countryCode3","MOZ",7
+22,5,"countryCode3","ZAF",7
+22,1,"Dead.or.Alive","Alive",8
+22,2,"Dead.or.Alive","Dead",8
+22,3,"Dead.or.Alive","Dead",8
+22,4,"Dead.or.Alive","Alive",8
+22,5,"Dead.or.Alive","Dead",8
+22,1,"Domain","ARTS",9
+22,2,"Domain","ARTS",9
+22,3,"Domain","ARTS",9
+22,4,"Domain","ARTS",9
+22,5,"Domain","ARTS",9
+22,1,"First.Initial","C",10
+22,2,"First.Initial","C",10
+22,3,"First.Initial","U",10
+22,4,"First.Initial","M",10
+22,5,"First.Initial","M",10
+22,1,"Gender","Female",11
+22,2,"Gender","Female",11
+22,3,"Gender","Female",11
+22,4,"Gender","Female",11
+22,5,"Gender","Female",11
+22,1,"Industry","FILM AND THEATRE",12
+22,2,"Industry","MUSIC",12
+22,3,"Industry","MUSIC",12
+22,4,"Industry","MUSIC",12
+22,5,"Industry","MUSIC",12
+22,1,"Occupation","ACTOR",13
+22,2,"Occupation","SINGER",13
+22,3,"Occupation","SINGER",13
+22,4,"Occupation","SINGER",13
+22,5,"Occupation","SINGER",13
+22,1,"To","0",14
+22,2,"To","2011",14
+22,3,"To","1975",14
+22,4,"To","0",14
+22,5,"To","2008",14
+22,1,"Average.Views","445516.7581",15
+22,2,"Average.Views","42942.5098",15
+22,3,"Average.Views","31192.71875",15
+22,4,"Average.Views","32927.14815",15
+22,5,"Average.Views","129043.6",15
+22,1,"En.Curid","5132",16
+22,2,"En.Curid","8611104",16
+22,3,"En.Curid","214221",16
+22,4,"En.Curid","494073",16
+22,5,"En.Curid","598363",16
+22,1,"HPI","20.91267584",17
+22,2,"HPI","23.08611721",17
+22,3,"HPI","24.03941582",17
+22,4,"HPI","18.38548749",17
+22,5,"HPI","22.46208069",17
+22,1,"L.star","6.189525539",18
+22,2,"L.star","9.251755139",18
+22,3,"L.star","7.981308528",18
+22,4,"L.star","7.007172818",18
+22,5,"L.star","8.702419483",18
+22,1,"LAT","-26.188333",19
+22,2,"LAT","16.886",19
+22,3,"LAT","30.879834",19
+22,4,"LAT","-25.966667",19
+22,5,"LAT","-26.204444",19
+22,1,"LON","28.320556",20
+22,2,"LON","-24.988",20
+22,3,"LON","31.469479",20
+22,4,"LON","32.583333",20
+22,5,"LON","28.045556",20
+22,1,"Numlangs","62",21
+22,2,"Numlangs","51",21
+22,3,"Numlangs","64",21
+22,4,"Numlangs","27",21
+22,5,"Numlangs","45",21
+22,1,"Page.Views.English","14527556",22
+22,2,"Page.Views.English","738043",22
+22,3,"Page.Views.English","838461",22
+22,4,"Page.Views.English","344275",22
+22,5,"Page.Views.English","2659699",22
+22,1,"Page.Views.Non.English","13094483",23
+22,2,"Page.Views.Non.English","1452025",23
+22,3,"Page.Views.Non.English","1157873",23
+22,4,"Page.Views.Non.English","544758",23
+22,5,"Page.Views.Non.English","3147263",23
+22,1,"Std.Dev.Page.Views","227524.2552",24
+22,2,"Std.Dev.Page.Views","42904.45403",24
+22,3,"Std.Dev.Page.Views","17551.83876",24
+22,4,"Std.Dev.Page.Views","2596.329261",24
+22,5,"Std.Dev.Page.Views","415839.0696",24
+22,1,"Total.Page.Views","27622039",25
+22,2,"Total.Page.Views","2190068",25
+22,3,"Total.Page.Views","1996334",25
+22,4,"Total.Page.Views","889033",25
+22,5,"Total.Page.Views","5806962",25
+23,1,"Year","2015",1
+23,2,"Year","2015",1
+23,3,"Year","2015",1
+23,4,"Year","2015",1
+23,5,"Year","2015",1
+23,1,"Energy.Source","Clean & Renewable",2
+23,2,"Energy.Source","Coal",2
+23,3,"Energy.Source","Nuclear",2
+23,4,"Energy.Source","Natural Gas",2
+23,5,"Energy.Source","Uncategorized",2
+23,1,"Amount","0.35",3
+23,2,"Amount","0.26",3
+23,3,"Amount","0.18",3
+23,4,"Amount","0.16",3
+23,5,"Amount","0.04",3
+24,1,"Year","2012",1
+24,2,"Year","2015",1
+24,3,"Year","2012",1
+24,4,"Year","2015",1
+24,5,"Year","2012",1
+24,1,"Level","Entry Level",2
+24,2,"Level","Entry Level",2
+24,3,"Level","Manager",2
+24,4,"Level","Manager",2
+24,5,"Level","Senior Manager / Director",2
+24,1,"Female","0.42",3
+24,2,"Female","0.45",3
+24,3,"Female","0.33",3
+24,4,"Female","0.37",3
+24,5,"Female","0.28",3
+24,1,"Male","0.58",4
+24,2,"Male","0.55",4
+24,3,"Male","0.67",4
+24,4,"Male","0.63",4
+24,5,"Male","0.72",4
+25,1,"Theft.Type","Breaking & Entering",1
+25,2,"Theft.Type","Breaking & Entering",1
+25,3,"Theft.Type","Breaking & Entering",1
+25,4,"Theft.Type","Breaking & Entering",1
+25,5,"Theft.Type","Breaking & Entering",1
+25,1,"Category","Unoccupied house",2
+25,2,"Category","Unoccupied store",2
+25,3,"Category","Occupied building",2
+25,4,"Category","Unoccupied office",2
+25,5,"Category","Other",2
+25,1,"X..of.Total","0.042",3
+25,2,"X..of.Total","0.016",3
+25,3,"X..of.Total","0.013",3
+25,4,"X..of.Total","0.012",3
+25,5,"X..of.Total","0.028",3
+25,1,"Crimes","43699",4
+25,2,"Crimes","16647",4
+25,3,"Crimes","13526",4
+25,4,"Crimes","12485",4
+25,5,"Crimes","29133",4
+26,2016-07-21 11:33:53,1,"Pinterest.Board","Makeover Monday",1
+26,2016-07-21 11:32:59,2,"Pinterest.Board","Makeover Monday",1
+26,2016-07-19 20:28:11,3,"Pinterest.Board","Makeover Monday",1
+26,2016-07-19 19:44:10,4,"Pinterest.Board","Makeover Monday",1
+26,2016-07-19 17:28:43,5,"Pinterest.Board","Makeover Monday",1
+26,2016-07-21 11:33:53,1,"Pinboard.URL","https://www.pinterest.com/andykriebel/makeover-monday/",2
+26,2016-07-21 11:32:59,2,"Pinboard.URL","https://www.pinterest.com/andykriebel/makeover-monday/",2
+26,2016-07-19 20:28:11,3,"Pinboard.URL","https://www.pinterest.com/andykriebel/makeover-monday/",2
+26,2016-07-19 19:44:10,4,"Pinboard.URL","https://www.pinterest.com/andykriebel/makeover-monday/",2
+26,2016-07-19 17:28:43,5,"Pinboard.URL","https://www.pinterest.com/andykriebel/makeover-monday/",2
+26,2016-07-21 11:33:53,1,"Image.URL","https://s-media-cache-ak0.pinimg.com/originals/64/db/56/64db56ac54eb8516a323e22f35b02315.jpg",3
+26,2016-07-21 11:32:59,2,"Image.URL","https://s-media-cache-ak0.pinimg.com/originals/93/0c/5b/930c5b18528fb5e0d64e0d359a87dbcf.jpg",3
+26,2016-07-19 20:28:11,3,"Image.URL","https://s-media-cache-ak0.pinimg.com/originals/50/e5/32/50e532a391421e5d526f65fefa17dfa6.jpg",3
+26,2016-07-19 19:44:10,4,"Image.URL","https://s-media-cache-ak0.pinimg.com/originals/b8/b5/34/b8b534193c5c8fd11bc831c54608d919.jpg",3
+26,2016-07-19 17:28:43,5,"Image.URL","https://s-media-cache-ak0.pinimg.com/originals/86/7c/4d/867c4d48066933ab6e390704b51b4174.jpg",3
+26,2016-07-21 11:33:53,1,"Description","“#MakeoverMonday ....I don't like my first take on it. Will probably iterate later today lol. https://t.co/kwH94bdo4T”",4
+26,2016-07-21 11:32:59,2,"Description","“And another one, inspiration for the infographic from @VizWizBI . #MakeoverMonday #TheftinJapan”",4
+26,2016-07-19 20:28:11,3,"Description","“Capital Punishment in the USA on #MakeoverMonday - used lots of interactivity, check it out! https://t.co/egSsae9K8O”",4
+26,2016-07-19 19:44:10,4,"Description","“My \"in late\" #MakeoverMonday @VizWizBI https://t.co/r9UPEClwUu”",4
+26,2016-07-19 17:28:43,5,"Description","“My week 29 submission #MakeoverMonday - @VizWizBI @acotgreave https://t.co/Pon8i0OHDH”",4
+26,2016-07-21 11:33:53,1,"Pin.Note","Week 29 - Rody Zakovich",5
+26,2016-07-21 11:32:59,2,"Pin.Note","Week 25 - Quincy van der Ree",5
+26,2016-07-19 20:28:11,3,"Pin.Note","Week 29 - Katie Paige",5
+26,2016-07-19 19:44:10,4,"Pin.Note","Week 29 - Simona Loffredo",5
+26,2016-07-19 17:28:43,5,"Pin.Note","Week 29 - Ma'an Alkhabaz",5
+26,2016-07-21 11:33:53,1,"Original.Link","https://twitter.com/rodyzakovich/status/756081330555846656",6
+26,2016-07-21 11:32:59,2,"Original.Link","https://twitter.com/qvanderree/status/756082718832783360",6
+26,2016-07-19 20:28:11,3,"Original.Link","https://twitter.com/patiekaige/status/755432631983017984",6
+26,2016-07-19 19:44:10,4,"Original.Link","https://twitter.com/simonaloffredo2/status/755483009571233792",6
+26,2016-07-19 17:28:43,5,"Original.Link","https://twitter.com/alkhabazmaan/status/755454171583684608",6
+26,2016-07-21 11:33:53,1,"Pinterest.URL","https://www.pinterest.com/pin/468937379932847572/",7
+26,2016-07-21 11:32:59,2,"Pinterest.URL","https://www.pinterest.com/pin/468937379932847565/",7
+26,2016-07-19 20:28:11,3,"Pinterest.URL","https://www.pinterest.com/pin/468937379932821743/",7
+26,2016-07-19 19:44:10,4,"Pinterest.URL","https://www.pinterest.com/pin/468937379932820937/",7
+26,2016-07-19 17:28:43,5,"Pinterest.URL","https://www.pinterest.com/pin/468937379932819422/",7
+26,2016-07-21 11:33:53,1,"Name","Rody Zakovich",8
+26,2016-07-21 11:32:59,2,"Name","Quincy van der Ree",8
+26,2016-07-19 20:28:11,3,"Name","Katie Paige",8
+26,2016-07-19 19:44:10,4,"Name","Simona Loffredo",8
+26,2016-07-19 17:28:43,5,"Name","Ma'an Alkhabaz",8
+27,1,"State","Alabama",1
+27,2,"State","Alaska",1
+27,3,"State","Arizona",1
+27,4,"State","Arkansas",1
+27,5,"State","California",1
+27,1,"Overall.Rank","46",2
+27,2,"Overall.Rank","33",2
+27,3,"Overall.Rank","45",2
+27,4,"Overall.Rank","44",2
+27,5,"Overall.Rank","36",2
+27,1,"Economic.Well.Being.Rank","46",3
+27,2,"Economic.Well.Being.Rank","35",3
+27,3,"Economic.Well.Being.Rank","39",3
+27,4,"Economic.Well.Being.Rank","36",3
+27,5,"Economic.Well.Being.Rank","47",3
+27,1,"Education.Rank","48",4
+27,2,"Education.Rank","41",4
+27,3,"Education.Rank","44",4
+27,4,"Education.Rank","38",4
+27,5,"Education.Rank","35",4
+27,1,"Health.Rank","42",5
+27,2,"Health.Rank","35",5
+27,3,"Health.Rank","45",5
+27,4,"Health.Rank","46",5
+27,5,"Health.Rank","11",5
+27,1,"Family...Community.Rank","43",6
+27,2,"Family...Community.Rank","16",6
+27,3,"Family...Community.Rank","46",6
+27,4,"Family...Community.Rank","45",6
+27,5,"Family...Community.Rank","41",6
+28,1,"Topic","Thoughts & prayers",1
+28,2,"Topic","Thoughts & prayers",1
+28,3,"Topic","Addressed LGBT community",1
+28,4,"Topic","Addressed LGBT community",1
+28,5,"Topic","Mentioned hate",1
+28,1,"Party","Democrat",2
+28,2,"Party","Republican",2
+28,3,"Party","Democrat",2
+28,4,"Party","Republican",2
+28,5,"Party","Democrat",2
+28,1,"Mentions","114",3
+28,2,"Mentions","199",3
+28,3,"Mentions","123",3
+28,4,"Mentions","19",3
+28,5,"Mentions","94",3
+28,1,"Didn.t.Mention","73",4
+28,2,"Didn.t.Mention","48",4
+28,3,"Didn.t.Mention","64",4
+28,4,"Didn.t.Mention","228",4
+28,5,"Didn.t.Mention","93",4
+29,1,"Date","5853",1
+29,2,"Date","5489",1
+29,3,"Date","9869",1
+29,4,"Date","9869",1
+29,5,"Date","8771",1
+29,1,"Name","James Roach",2
+29,2,"Name","Joseph Shaw",2
+29,3,"Name","Paul Ruiz",2
+29,4,"Name","Earl Van Denton",2
+29,5,"Name","Keith Wells",2
+29,1,"Age","25",3
+29,2,"Age","29",3
+29,3,"Age","49",3
+29,4,"Age","47",3
+29,5,"Age","31",3
+29,1,"Sex","m",4
+29,2,"Sex","m",4
+29,3,"Sex","m",4
+29,4,"Sex","m",4
+29,5,"Sex","m",4
+29,1,"Race","White",5
+29,2,"Race","White",5
+29,3,"Race","Latino",5
+29,4,"Race","White",5
+29,5,"Race","White",5
+29,1,"Number...Race...Sex.of.Victims","1 White Male(s)1 White Female(s)",6
+29,2,"Number...Race...Sex.of.Victims","1 White Male(s)1 White Female(s)",6
+29,3,"Number...Race...Sex.of.Victims","2 White Male(s)",6
+29,4,"Number...Race...Sex.of.Victims","2 White Male(s)",6
+29,5,"Number...Race...Sex.of.Victims","1 White Male(s)1 White Female(s)",6
+29,1,"State","SC",7
+29,2,"State","SC",7
+29,3,"State","AR",7
+29,4,"State","AR",7
+29,5,"State","ID",7
+29,1,"Region","S",8
+29,2,"Region","S",8
+29,3,"Region","S",8
+29,4,"Region","S",8
+29,5,"Region","W",8
+29,1,"Method","Electrocution",9
+29,2,"Method","Electrocution",9
+29,3,"Method","Lethal Injection",9
+29,4,"Method","Lethal Injection",9
+29,5,"Method","Lethal Injection",9
+29,1,"Juvenile","Yes",10
+29,2,"Juvenile","No",10
+29,3,"Juvenile","No",10
+29,4,"Juvenile","No",10
+29,5,"Juvenile","No",10
+29,1,"Federal","No",11
+29,2,"Federal","No",11
+29,3,"Federal","No",11
+29,4,"Federal","No",11
+29,5,"Federal","No",11
+29,1,"Volunteer","No",12
+29,2,"Volunteer","No",12
+29,3,"Volunteer","No",12
+29,4,"Volunteer","No",12
+29,5,"Volunteer","Yes",12
+29,1,"Foreign.National","No",13
+29,2,"Foreign.National","No",13
+29,3,"Foreign.National","No",13
+29,4,"Foreign.National","No",13
+29,5,"Foreign.National","No",13
+29,1,"County","Richland",14
+29,2,"County","Richland",14
+29,3,"County","Logan",14
+29,4,"County","Nevada",14
+29,5,"County","Ada",14
+30,1,"Category","Census",1
+30,2,"Category","Census",1
+30,3,"Category","Census",1
+30,4,"Category","Census",1
+30,5,"Category","Census",1
+30,1,"Year","1911",2
+30,2,"Year","1921",2
+30,3,"Year","1931",2
+30,4,"Year","1939",2
+30,5,"Year","1950",2
+30,1,"Total","18994",3
+30,2,"Total","20127",3
+30,3,"Total","27789",3
+30,4,"Total","30516",3
+30,5,"Total","37403",3
+30,1,"Male","9070",4
+30,2,"Male","9629",4
+30,3,"Male","14174",4
+30,4,"Male","15034",4
+30,5,"Male","18148",4
+30,1,"Female","9924",5
+30,2,"Female","10498",5
+30,3,"Female","13615",5
+30,4,"Female","15482",5
+30,5,"Female","19255",5
+31,1,"Phrase","Groin",1
+31,2,"Phrase","Below the belt",1
+31,3,"Phrase","Nuts",1
+31,4,"Phrase","Low Blow",1
+31,5,"Phrase","Private area",1
+31,1,"CBS.Sports","22",2
+31,2,"CBS.Sports","4",2
+31,3,"CBS.Sports","0",2
+31,4,"CBS.Sports","6",2
+31,5,"CBS.Sports","5",2
+31,1,"S.I.","19",3
+31,2,"S.I.","1",3
+31,3,"S.I.","0",3
+31,4,"S.I.","0",3
+31,5,"S.I.","1",3
+31,1,"ESPN","18",4
+31,2,"ESPN","2",4
+31,3,"ESPN","0",4
+31,4,"ESPN","1",4
+31,5,"ESPN","0",4
+31,1,"Fox","15",5
+31,2,"Fox","4",5
+31,3,"Fox","1",5
+31,4,"Fox","0",5
+31,5,"Fox","1",5
+31,1,"Old.Media","9",6
+31,2,"Old.Media","0",6
+31,3,"Old.Media","0",6
+31,4,"Old.Media","0",6
+31,5,"Old.Media","0",6
+31,1,"New.Media","23",7
+31,2,"New.Media","2",7
+31,3,"New.Media","5",7
+31,4,"New.Media","3",7
+31,5,"New.Media","0",7
+31,1,"All.Others","42",8
+31,2,"All.Others","4",8
+31,3,"All.Others","9",8
+31,4,"All.Others","4",8
+31,5,"All.Others","5",8
+31,1,"Total","148",9
+31,2,"Total","17",9
+31,3,"Total","15",9
+31,4,"Total","14",9
+31,5,"Total","12",9
+32,1,"Edition","1896",1
+32,2,"Edition","1896",1
+32,3,"Edition","1896",1
+32,4,"Edition","1896",1
+32,5,"Edition","1896",1
+32,1,"Rank","1",2
+32,2,"Rank","2",2
+32,3,"Rank","3",2
+32,4,"Rank","4",2
+32,5,"Rank","5",2
+32,1,"Country","United States",3
+32,2,"Country","Greece",3
+32,3,"Country","Germany",3
+32,4,"Country","France",3
+32,5,"Country","Great Britain",3
+32,1,"Country.Group","United States",4
+32,2,"Country.Group","Greece",4
+32,3,"Country.Group","Germany",4
+32,4,"Country.Group","France",4
+32,5,"Country.Group","Great Britain",4
+32,1,"Gold","11",5
+32,2,"Gold","10",5
+32,3,"Gold","6",5
+32,4,"Gold","5",5
+32,5,"Gold","2",5
+32,1,"Silver","7",6
+32,2,"Silver","17",6
+32,3,"Silver","5",6
+32,4,"Silver","4",6
+32,5,"Silver","3",6
+32,1,"Bronze","2",7
+32,2,"Bronze","19",7
+32,3,"Bronze","2",7
+32,4,"Bronze","2",7
+32,5,"Bronze","2",7
+32,1,"Total","20",8
+32,2,"Total","46",8
+32,3,"Total","13",8
+32,4,"Total","11",8
+32,5,"Total","7",8
+33,1,"Category","Fragrances",1
+33,2,"Category","Fragrances",1
+33,3,"Category","Fragrances",1
+33,4,"Category","Fragrances",1
+33,5,"Category","Fragrances",1
+33,1,"Product","Fine Female",2
+33,2,"Product","Fine Male",2
+33,3,"Product","Mass Female",2
+33,4,"Product","Mass Male",2
+33,5,"Product","Fine Unisex",2
+33,1,"X2014","729960000",3
+33,2,"X2014","416030000",3
+33,3,"X2014","79820000",3
+33,4,"X2014","64220000",3
+33,5,"X2014","25990000",3
+33,1,"X2013","746749080",4
+33,2,"X2013","417278090",4
+33,3,"X2013","85886320",4
+33,4,"X2013","68843840",4
+33,5,"X2013","25834060",4
+33,1,"X..Change","-0.023",5
+33,2,"X..Change","-0.003",5
+33,3,"X..Change","-0.076",5
+33,4,"X..Change","-0.072",5
+33,5,"X..Change","0.006",5
+34,1,"Country","Angola",1
+34,2,"Country","Argentina",1
+34,3,"Country","Azerbaijan",1
+34,4,"Country","Bangladesh",1
+34,5,"Country","Bhutan",1
+34,1,"X2014","5714",2
+34,2,"X2014","0",2
+34,3,"X2014","0",2
+34,4,"X2014","45",2
+34,5,"X2014","0",2
+34,1,"X2013","7300",3
+34,2,"X2013","0",3
+34,3,"X2013","0",3
+34,4,"X2013","15",3
+34,5,"X2013","0",3
+34,1,"X2012","5736",4
+34,2,"X2012","0",4
+34,3,"X2012","0",4
+34,4,"X2012","11",4
+34,5,"X2012","1",4
+34,1,"X2011","6909",5
+34,2,"X2011","0",5
+34,3,"X2011","0",5
+34,4,"X2011","36",5
+34,5,"X2011","1",5
+34,1,"X2010","8114",6
+34,2,"X2010","0",6
+34,3,"X2010","0",6
+34,4,"X2010","37",6
+34,5,"X2010","2",6
+34,1,"X2009","10530",7
+34,2,"X2009","0",7
+34,3,"X2009","0",7
+34,4,"X2009","47",7
+34,5,"X2009","4",7
+34,1,"X2008","9465",8
+34,2,"X2008","0",8
+34,3,"X2008","0",8
+34,4,"X2008","154",8
+34,5,"X2008","2",8
+34,1,"X2007","9812",9
+34,2,"X2007","0",9
+34,3,"X2007","0",9
+34,4,"X2007","228",9
+34,5,"X2007","2",9
+34,1,"X2006","10220",10
+34,2,"X2006","0",10
+34,3,"X2006","0",10
+34,4,"X2006","508",10
+34,5,"X2006","7",10
+34,1,"X2005","13768",11
+34,2,"X2005","0",11
+34,3,"X2005","0",11
+34,4,"X2005","501",11
+34,5,"X2005","5",11
+34,1,"X2004","12459",12
+34,2,"X2004","0",12
+34,3,"X2004","0",12
+34,4,"X2004","505",12
+34,5,"X2004","7",12
+34,1,"X2003","38598",13
+34,2,"X2003","1",13
+34,3,"X2003","0",13
+34,4,"X2003","574",13
+34,5,"X2003","14",13
+34,1,"X2002","14434",14
+34,2,"X2002","0",14
+34,3,"X2002","0",14
+34,4,"X2002","598",14
+34,5,"X2002","11",14
+34,1,"X2001","9473",15
+34,2,"X2001","0",15
+34,3,"X2001","0",15
+34,4,"X2001","470",15
+34,5,"X2001","14",15
+34,1,"X2000","9510",16
+34,2,"X2000","0",16
+34,3,"X2000","0",16
+34,4,"X2000","484",16
+34,5,"X2000","15",16
+35,1,"Company","Advanced Micro Devices",1
+35,2,"Company","Air products & Chemicals",1
+35,3,"Company","AK Steel Holding",1
+35,4,"Company","American Express",1
+35,5,"Company","Ameriprise Financial",1
+35,1,"Tax.Haven.Subsidiaries","3",2
+35,2,"Tax.Haven.Subsidiaries","14",2
+35,3,"Tax.Haven.Subsidiaries","4",2
+35,4,"Tax.Haven.Subsidiaries","23",2
+35,5,"Tax.Haven.Subsidiaries","18",2
+35,1,"Location.of.Tax.Haven.Subsidiaries","Barbados(1), Bermuda(1), Singapore(1)",3
+35,2,"Location.of.Tax.Haven.Subsidiaries","Bahrain(1), Bermuda(1), Ireland(3), Netherlands(5), Panama(1), Singapore(2), Switzerland(1)",3
+35,3,"Location.of.Tax.Haven.Subsidiaries","Cayman Islands(1), Netherlands(1), Singapore(1), Vanuatu(1)",3
+35,4,"Location.of.Tax.Haven.Subsidiaries","Bahrain(1), Channel Islands(5), Hong Kong(1), Luxembourg(4), Netherlands(8), Netherlands Antilles(1), Singapore(1), Switzerland(2)",3
+35,5,"Location.of.Tax.Haven.Subsidiaries","Channel Islands(9), Hong Kong(1), Luxembourg(3), Singapore(1), Switzerland(4)",3
+35,1,"Amount.Held.Offshore....millions.","349",4
+35,2,"Amount.Held.Offshore....millions.","5894",4
+35,3,"Amount.Held.Offshore....millions.","27",4
+35,4,"Amount.Held.Offshore....millions.","9700",4
+35,5,"Amount.Held.Offshore....millions.","180",4
+35,1,"Tax.Rate.Paid.on.Offshore.Cash","0",5
+35,2,"Tax.Rate.Paid.on.Offshore.Cash","0.1",5
+35,3,"Tax.Rate.Paid.on.Offshore.Cash","0",5
+35,4,"Tax.Rate.Paid.on.Offshore.Cash","0.04",5
+35,5,"Tax.Rate.Paid.on.Offshore.Cash","0.13",5
+35,1,"Estimated.U.S..Tax.Bill.on.Offshore.Cash","122",6
+35,2,"Estimated.U.S..Tax.Bill.on.Offshore.Cash","1466",6
+35,3,"Estimated.U.S..Tax.Bill.on.Offshore.Cash","10",6
+35,4,"Estimated.U.S..Tax.Bill.on.Offshore.Cash","3000",6
+35,5,"Estimated.U.S..Tax.Bill.on.Offshore.Cash","40",6
+35,1,"State.Located","California",7
+35,2,"State.Located","Pennsylvania",7
+35,3,"State.Located","Ohio",7
+35,4,"State.Located","New York",7
+35,5,"State.Located","Minnesota",7
+36,1,"Date","16612",1
+36,2,"Date","14673",1
+36,3,"Date","16948",1
+36,4,"Date","9332",1
+36,5,"Date","11390",1
+36,1,"Title","A Little Chaos",2
+36,2,"Title","Alice in Wonderland (2010)*
+(Voice",2
+36,3,"Title","Alice Through the Looking Glass",2
+36,4,"Title","An Awfully Big Adventure",2
+36,5,"Title","Blow Dry",2
+36,1,"Studio","Focus",3
+36,2,"Studio","BV",3
+36,3,"Studio","BV",3
+36,4,"Studio","FL",3
+36,5,"Studio","Mira.",3
+36,1,"Adjusted.Gross","585900",4
+36,2,"Adjusted.Gross","364037100",4
+36,3,"Adjusted.Gross","76424600",4
+36,4,"Adjusted.Gross","517100",4
+36,5,"Adjusted.Gross","975800",4
+36,1,"Lifetime.Gross","558173",5
+36,2,"Lifetime.Gross","334191110",5
+36,3,"Lifetime.Gross","77022323",5
+36,4,"Lifetime.Gross","259724",5
+36,5,"Lifetime.Gross","637769",5
+36,1,"Theatres","87",6
+36,2,"Theatres","3739",6
+36,3,"Theatres","3763",6
+36,4,"Theatres","12",6
+36,5,"Theatres","157",6
+36,1,"Opening","181791",7
+36,2,"Opening","116101023",7
+36,3,"Opening","26858726",7
+36,4,"Opening","49429",7
+36,5,"Opening","240166",7
+36,1,"Opening.Theatres","83",8
+36,2,"Opening.Theatres","3728",8
+36,3,"Opening.Theatres","3763",8
+36,4,"Opening.Theatres","7",8
+36,5,"Opening.Theatres","157",8
+36,1,"Rank","21",9
+36,2,"Rank","2",9
+36,3,"Rank","7",9
+36,4,"Rank","23",9
+36,5,"Rank","20",9
+36,1,"Cameo","N",10
+36,2,"Cameo","N",10
+36,3,"Cameo","N",10
+36,4,"Cameo","N",10
+36,5,"Cameo","N",10
+36,1,"TomatometerScore","0.45",11
+36,2,"TomatometerScore","0.52",11
+36,3,"TomatometerScore","0.3",11
+36,4,"TomatometerScore","0.33",11
+36,5,"TomatometerScore","0.19",11
+36,1,"AudienceScore","0.48",12
+36,2,"AudienceScore","0.55",12
+36,3,"AudienceScore","0.53",12
+36,4,"AudienceScore","0.56",12
+36,5,"AudienceScore","0.55",12
+37,1,"Rank","1",1
+37,2,"Rank","2",1
+37,3,"Rank","3",1
+37,4,"Rank","4",1
+37,5,"Rank","5",1
+37,1,"Company","APM-Maersk",2
+37,2,"Company","Mediterranean Shg Co",2
+37,3,"Company","CMA CGM Group",2
+37,4,"Company","COSCO Container Lines",2
+37,5,"Company","Evergreen Line",2
+37,1,"Total.TEU","3159054",3
+37,2,"Total.TEU","2759542",3
+37,3,"Total.TEU","2235416",3
+37,4,"Total.TEU","1534950",3
+37,5,"Total.TEU","956864",3
+37,1,"Total.Ships","615",4
+37,2,"Total.Ships","485",4
+37,3,"Total.Ships","490",4
+37,4,"Total.Ships","278",4
+37,5,"Total.Ships","188",4
+37,1,"Total.TEU.per.Ship","5136.67317073171",5
+37,2,"Total.TEU.per.Ship","5689.77731958763",5
+37,3,"Total.TEU.per.Ship","4562.07346938775",5
+37,4,"Total.TEU.per.Ship","5521.40287769784",5
+37,5,"Total.TEU.per.Ship","5089.70212765957",5
+37,1,"Owned.TEU","1746756",6
+37,2,"Owned.TEU","1055967",6
+37,3,"Owned.TEU","1011166",6
+37,4,"Owned.TEU","463317",6
+37,5,"Owned.TEU","557365",6
+37,1,"Owned.Ships","261",7
+37,2,"Owned.Ships","190",7
+37,3,"Owned.Ships","140",7
+37,4,"Owned.Ships","81",7
+37,5,"Owned.Ships","107",7
+37,1,"Owned.TEU.per.Ship","6692.55172413793",8
+37,2,"Owned.TEU.per.Ship","5557.72105263158",8
+37,3,"Owned.TEU.per.Ship","7222.61428571429",8
+37,4,"Owned.TEU.per.Ship","5719.96296296296",8
+37,5,"Owned.TEU.per.Ship","5209.01869158879",8
+37,1,"X..Owned","0.552936417041304",9
+37,2,"X..Owned","0.382660238546831",9
+37,3,"X..Owned","0.452339072458996",9
+37,4,"X..Owned","0.301845011238151",9
+37,5,"X..Owned","0.58249134673266",9
+37,1,"Chartered.TEU","1412298",10
+37,2,"Chartered.TEU","1703575",10
+37,3,"Chartered.TEU","1224250",10
+37,4,"Chartered.TEU","1071633",10
+37,5,"Chartered.TEU","399499",10
+37,1,"Chartered.Ships","354",11
+37,2,"Chartered.Ships","295",11
+37,3,"Chartered.Ships","350",11
+37,4,"Chartered.Ships","197",11
+37,5,"Chartered.Ships","81",11
+37,1,"Chartered.TEU.per.Ship","3989.54237288136",12
+37,2,"Chartered.TEU.per.Ship","5774.83050847458",12
+37,3,"Chartered.TEU.per.Ship","3497.85714285714",12
+37,4,"Chartered.TEU.per.Ship","5439.7614213198",12
+37,5,"Chartered.TEU.per.Ship","4932.08641975309",12
+37,1,"X..Chartered","0.447",13
+37,2,"X..Chartered","0.617",13
+37,3,"X..Chartered","0.548",13
+37,4,"X..Chartered","0.698",13
+37,5,"X..Chartered","0.418",13
+37,1,"Orderbook.TEU","387150",14
+37,2,"Orderbook.TEU","401063",14
+37,3,"Orderbook.TEU","235624",14
+37,4,"Orderbook.TEU","560888",14
+37,5,"Orderbook.TEU","367272",14
+37,1,"Orderbook.Ships","29",15
+37,2,"Orderbook.Ships","30",15
+37,3,"Orderbook.Ships","24",15
+37,4,"Orderbook.Ships","35",15
+37,5,"Orderbook.Ships","39",15
+37,1,"X..Orderbook","0.123",16
+37,2,"X..Orderbook","0.145",16
+37,3,"X..Orderbook","0.105",16
+37,4,"X..Orderbook","0.365",16
+37,5,"X..Orderbook","0.384",16
+38,1,"Entity","Blue Cross Blue Shield of Tennessee",1
+38,2,"Entity","Heartland",1
+38,3,"Entity","Jefferson County",1
+38,1,"Alternative.name","US health insurance organization",2
+38,2,"Alternative.name","Independent payment processor",2
+38,3,"Alternative.name","West Virginia, US",2
+38,1,"Story","A thief stole 57 hard drives from the closet of a BlueCross call center in Chattanooga, Tenn. Data on the stolen hard drives was encoded but not encrypted. Bluecross stated there was no evidence the information was accessed due to the specialized nature of the hardware stolen.",3
+38,2,"Story","The biggest credit card scam in history, Heartland eventually paid more than $110 million to Visa, MasterCard, American Express and other card associations to settle claims related to the breach.",3
+38,3,"Story","\"Jefferson County Clerk Jennifer Maghan said she unveiled a new online search tool that enabled residents and business professionals to access nearly 1.6 million documents that are stored in her office via their home computers\"",3
+38,1,"Year","2009",4
+38,2,"Year","2009",4
+38,3,"Year","2008",4
+38,1,"Records.Lost","1023209",5
+38,2,"Records.Lost","130000000",5
+38,3,"Records.Lost","1600000",5
+38,1,"Organisation","healthcare",6
+38,2,"Organisation","financial",6
+38,3,"Organisation","government",6
+38,1,"Method.of.Leak","lost / stolen media",7
+38,2,"Method.of.Leak","hacked",7
+38,3,"Method.of.Leak","accidentally published",7
+38,1,"Interesting.story","y",8
+38,2,"Interesting.story","y",8
+38,3,"Interesting.story","y",8
+38,1,"Records.Stolen","1000000",9
+38,2,"Records.Stolen","130000000",9
+38,3,"Records.Stolen","1600000",9
+38,1,"Data.Sensitivity","SSN/Personal details",10
+38,2,"Data.Sensitivity","Credit card information",10
+38,3,"Data.Sensitivity","SSN/Personal details",10
+38,1,"X1st.source","http://www.scmagazine.com/thief-steals-57-hard-drives-from-bluecross-blueshield-of-tennessee/article/162178/",11
+38,2,"X1st.source","http://www.guardian.co.uk/technology/blog/2009/aug/24/hacking-law?INTCMP=SRCH",11
+38,3,"X1st.source","http://www.idtheftcenter.org/artman2/publish/lib_survey/ITRC_2008_Breach_List.shtml",11
+38,1,"X2nd.source","http://www.hhs.gov/ocr/privacy/hipaa/administrative/breachnotificationrule/breachtool.html",12
+38,2,"X2nd.source","http://money.cnn.com/2012/03/30/technology/credit-card-data-breach/index.htm",12
+38,3,"X2nd.source","http://www.journal-news.net/page/content.detail/id/511806.html?nav=5006",12
+38,1,"Source.name","ITRC",13
+38,2,"Source.name","Guardian",13
+38,3,"Source.name","ITRC",13
+39,1,"Country","Afghanistan",1
+39,2,"Country","Albania",1
+39,3,"Country","Algeria",1
+39,4,"Country","Argentina",1
+39,5,"Country","Australia",1
+39,1,"Item","Peaches and nectarines",2
+39,2,"Item","Peaches and nectarines",2
+39,3,"Item","Peaches and nectarines",2
+39,4,"Item","Peaches and nectarines",2
+39,5,"Item","Peaches and nectarines",2
+39,1,"Metric","Production (tonnes)",3
+39,2,"Metric","Production (tonnes)",3
+39,3,"Metric","Production (tonnes)",3
+39,4,"Metric","Production (tonnes)",3
+39,5,"Metric","Production (tonnes)",3
+39,1,"X1961","12000",4
+39,2,"X1961","2000",4
+39,3,"X1961","11100",4
+39,4,"X1961","186000",4
+39,5,"X1961","52970",4
+39,1,"X1962","12000",5
+39,2,"X1962","1000",5
+39,3,"X1962","10400",5
+39,4,"X1962","183000",5
+39,5,"X1962","52970",5
+39,1,"X1963","12000",6
+39,2,"X1963","900",6
+39,3,"X1963","4000",6
+39,4,"X1963","186000",6
+39,5,"X1963","83735",6
+39,1,"X1964","14700",7
+39,2,"X1964","900",7
+39,3,"X1964","8400",7
+39,4,"X1964","158000",7
+39,5,"X1964","84446",7
+39,1,"X1965","16300",8
+39,2,"X1965","900",8
+39,3,"X1965","8391",8
+39,4,"X1965","238000",8
+39,5,"X1965","91543",8
+39,1,"X1966","18200",9
+39,2,"X1966","10000",9
+39,3,"X1966","7424",9
+39,4,"X1966","113000",9
+39,5,"X1966","106567",9
+39,1,"X1967","22100",10
+39,2,"X1967","900",10
+39,3,"X1967","7720",10
+39,4,"X1967","203300",10
+39,5,"X1967","115665",10
+39,1,"X1968","22300",11
+39,2,"X1968","1000",11
+39,3,"X1968","7903",11
+39,4,"X1968","224200",11
+39,5,"X1968","124244",11
+39,1,"X1969","22500",12
+39,2,"X1969","1500",12
+39,3,"X1969","8094",12
+39,4,"X1969","248400",12
+39,5,"X1969","131644",12
+39,1,"X1970","21800",13
+39,2,"X1970","2000",13
+39,3,"X1970","8400",13
+39,4,"X1970","236100",13
+39,5,"X1970","111337",13
+39,1,"X1971","17200",14
+39,2,"X1971","2000",14
+39,3,"X1971","8785",14
+39,4,"X1971","277700",14
+39,5,"X1971","115489",14
+39,1,"X1972","21300",15
+39,2,"X1972","2000",15
+39,3,"X1972","7990",15
+39,4,"X1972","265300",15
+39,5,"X1972","126550",15
+39,1,"X1973","22100",16
+39,2,"X1973","2000",16
+39,3,"X1973","9013",16
+39,4,"X1973","90400",16
+39,5,"X1973","123881",16
+39,1,"X1974","22300",17
+39,2,"X1974","3000",17
+39,3,"X1974","13080",17
+39,4,"X1974","265300",17
+39,5,"X1974","122456",17
+39,1,"X1975","22300",18
+39,2,"X1975","3000",18
+39,3,"X1975","18620",18
+39,4,"X1975","251900",18
+39,5,"X1975","86012",18
+39,1,"X1976","20900",19
+39,2,"X1976","4000",19
+39,3,"X1976","13075",19
+39,4,"X1976","287900",19
+39,5,"X1976","94139",19
+39,1,"X1977","12400",20
+39,2,"X1977","4000",20
+39,3,"X1977","14080",20
+39,4,"X1977","283000",20
+39,5,"X1977","83896",20
+39,1,"X1978","18100",21
+39,2,"X1978","5000",21
+39,3,"X1978","9262",21
+39,4,"X1978","250000",21
+39,5,"X1978","70152",21
+39,1,"X1979","17300",22
+39,2,"X1979","5000",22
+39,3,"X1979","9558",22
+39,4,"X1979","282000",22
+39,5,"X1979","65955",22
+39,1,"X1980","17900",23
+39,2,"X1980","4700",23
+39,3,"X1980","11946",23
+39,4,"X1980","238000",23
+39,5,"X1980","72174",23
+39,1,"X1981","17700",24
+39,2,"X1981","3700",24
+39,3,"X1981","16260",24
+39,4,"X1981","222000",24
+39,5,"X1981","73346",24
+39,1,"X1982","17100",25
+39,2,"X1982","3500",25
+39,3,"X1982","15970",25
+39,4,"X1982","182000",25
+39,5,"X1982","83186",25
+39,1,"X1983","16600",26
+39,2,"X1983","3300",26
+39,3,"X1983","17060",26
+39,4,"X1983","256000",26
+39,5,"X1983","69500",26
+39,1,"X1984","16000",27
+39,2,"X1984","3000",27
+39,3,"X1984","19642",27
+39,4,"X1984","241000",27
+39,5,"X1984","68422",27
+39,1,"X1985","15300",28
+39,2,"X1985","2600",28
+39,3,"X1985","20190",28
+39,4,"X1985","287400",28
+39,5,"X1985","53371",28
+39,1,"X1986","15500",29
+39,2,"X1986","4900",29
+39,3,"X1986","21880",29
+39,4,"X1986","209000",29
+39,5,"X1986","65259",29
+39,1,"X1987","13300",30
+39,2,"X1987","3900",30
+39,3,"X1987","29850",30
+39,4,"X1987","196200",30
+39,5,"X1987","67000",30
+39,1,"X1988","13500",31
+39,2,"X1988","3900",31
+39,3,"X1988","23686",31
+39,4,"X1988","260000",31
+39,5,"X1988","67836",31
+39,1,"X1989","13600",32
+39,2,"X1989","4800",32
+39,3,"X1989","32790",32
+39,4,"X1989","249500",32
+39,5,"X1989","73973",32
+39,1,"X1990","13574",33
+39,2,"X1990","4300",33
+39,3,"X1990","15336",33
+39,4,"X1990","220000",33
+39,5,"X1990","60048",33
+39,1,"X1991","13611",34
+39,2,"X1991","2900",34
+39,3,"X1991","33103",34
+39,4,"X1991","240000",34
+39,5,"X1991","68033",34
+39,1,"X1992","13800",35
+39,2,"X1992","2140",35
+39,3,"X1992","35631",35
+39,4,"X1992","235000",35
+39,5,"X1992","70180",35
+39,1,"X1993","13500",36
+39,2,"X1993","3000",36
+39,3,"X1993","41191",36
+39,4,"X1993","250000",36
+39,5,"X1993","75958",36
+39,1,"X1994","13700",37
+39,2,"X1994","2500",37
+39,3,"X1994","36217",37
+39,4,"X1994","243722",37
+39,5,"X1994","79098",37
+39,1,"X1995","14000",38
+39,2,"X1995","2000",38
+39,3,"X1995","38654",38
+39,4,"X1995","199000",38
+39,5,"X1995","75579",38
+39,1,"X1996","14734",39
+39,2,"X1996","1600",39
+39,3,"X1996","45291",39
+39,4,"X1996","260000",39
+39,5,"X1996","78638",39
+39,1,"X1997","16171",40
+39,2,"X1997","1800",40
+39,3,"X1997","38697",40
+39,4,"X1997","230274",40
+39,5,"X1997","93986",40
+39,1,"X1998","18485",41
+39,2,"X1998","2000",41
+39,3,"X1998","45153",41
+39,4,"X1998","261648",41
+39,5,"X1998","87564",41
+39,1,"X1999","20618",42
+39,2,"X1999","2000",42
+39,3,"X1999","60911",42
+39,4,"X1999","240000",42
+39,5,"X1999","93459",42
+39,1,"X2000","21451",43
+39,2,"X2000","2000",43
+39,3,"X2000","59140",43
+39,4,"X2000","209634",43
+39,5,"X2000","112000",43
+39,1,"X2001","24432",44
+39,2,"X2001","6100",44
+39,3,"X2001","57674",44
+39,4,"X2001","257768",44
+39,5,"X2001","107703",44
+39,1,"X2002","24005",45
+39,2,"X2002","4000",45
+39,3,"X2002","65767",45
+39,4,"X2002","211922",45
+39,5,"X2002","117474",45
+39,1,"X2003","18200",46
+39,2,"X2003","4400",46
+39,3,"X2003","73964",46
+39,4,"X2003","255785",46
+39,5,"X2003","126983",46
+39,1,"X2004","16800",47
+39,2,"X2004","4800",47
+39,3,"X2004","80462",47
+39,4,"X2004","272442",47
+39,5,"X2004","99489",47
+39,1,"X2005","16100",48
+39,2,"X2005","5600",48
+39,3,"X2005","95059",48
+39,4,"X2005","272500",48
+39,5,"X2005","130171",48
+39,1,"X2006","14700",49
+39,2,"X2006","7540",49
+39,3,"X2006","117504",49
+39,4,"X2006","260000",49
+39,5,"X2006","139570",49
+39,1,"X2007","13622",50
+39,2,"X2007","7500",50
+39,3,"X2007","75174",50
+39,4,"X2007","270000",50
+39,5,"X2007","130916",50
+39,1,"X2008","24960",51
+39,2,"X2008","9000",51
+39,3,"X2008","118757",51
+39,4,"X2008","308731",51
+39,5,"X2008","128000",51
+39,1,"X2009","16752",52
+39,2,"X2009","11047",52
+39,3,"X2009","147400",52
+39,4,"X2009","300000",52
+39,5,"X2009","117188",52
+39,1,"X2010","13400",53
+39,2,"X2010","11525",53
+39,3,"X2010","156890",53
+39,4,"X2010","318000",53
+39,5,"X2010","113700",53
+39,1,"X2011","15016",54
+39,2,"X2011","13100",54
+39,3,"X2011","180319",54
+39,4,"X2011","284970",54
+39,5,"X2011","97547",54
+39,1,"X2012","15997",55
+39,2,"X2012","14600",55
+39,3,"X2012","177986",55
+39,4,"X2012","290000",55
+39,5,"X2012","100462",55
+40,1,"Code","AFG",1
+40,2,"Code","ALB",1
+40,3,"Code","DZA",1
+40,4,"Code","AGO",1
+40,5,"Code","ARG",1
+40,1,"Country","Afghanistan",2
+40,2,"Country","Albania",2
+40,3,"Country","Algeria",2
+40,4,"Country","Angola",2
+40,5,"Country","Argentina",2
+40,1,"Year","2008",3
+40,2,"Year","2008",3
+40,3,"Year","2008",3
+40,4,"Year","2008",3
+40,5,"Year","2008",3
+40,1,"Score","3.001",4
+40,2,"Score","1.967",4
+40,3,"Score","2.386",4
+40,4,"Score","2.266",4
+40,5,"Score","1.834",4
+40,1,"Rank","159",5
+40,2,"Rank","67",5
+40,3,"Rank","130",5
+40,4,"Rank","119",5
+40,5,"Rank","50",5
+41,1,"Survey.Date","Nov-Dec 2012",1
+41,2,"Survey.Date","May-Jun 2015",1
+41,3,"Survey.Date","Nov-Dec 2012",1
+41,4,"Survey.Date","May-Jun 2015",1
+41,5,"Survey.Date","Nov-Dec 2012",1
+41,1,"City","Antwerpen",2
+41,2,"City","Antwerpen",2
+41,3,"City","Brussel/ Bruxelles",2
+41,4,"City","Brussel/ Bruxelles",2
+41,5,"City","Liege",2
+41,1,"Country","Belgium",3
+41,2,"Country","Belgium",3
+41,3,"Country","Belgium",3
+41,4,"Country","Belgium",3
+41,5,"Country","Belgium",3
+41,1,"TOTAL","500",4
+41,2,"TOTAL","505",4
+41,3,"TOTAL","500",4
+41,4,"TOTAL","501",4
+41,5,"TOTAL","503",4
+41,1,"Very.satisfied","106",5
+41,2,"Very.satisfied","122",5
+41,3,"Very.satisfied","110",5
+41,4,"Very.satisfied","96",5
+41,5,"Very.satisfied","92",5
+41,1,"X..Very.satisfied","0.21",6
+41,2,"X..Very.satisfied","0.24",6
+41,3,"X..Very.satisfied","0.22",6
+41,4,"X..Very.satisfied","0.19",6
+41,5,"X..Very.satisfied","0.18",6
+41,1,"Rather.satisfied","194",7
+41,2,"Rather.satisfied","243",7
+41,3,"Rather.satisfied","225",7
+41,4,"Rather.satisfied","261",7
+41,5,"Rather.satisfied","232",7
+41,1,"X..Rather.satisfied","0.39",8
+41,2,"X..Rather.satisfied","0.48",8
+41,3,"X..Rather.satisfied","0.45",8
+41,4,"X..Rather.satisfied","0.52",8
+41,5,"X..Rather.satisfied","0.46",8
+41,1,"Rather.unsatisfied","104",9
+41,2,"Rather.unsatisfied","83",9
+41,3,"Rather.unsatisfied","85",9
+41,4,"Rather.unsatisfied","86",9
+41,5,"Rather.unsatisfied","79",9
+41,1,"X..Rather.unsatisfied","0.21",10
+41,2,"X..Rather.unsatisfied","0.17",10
+41,3,"X..Rather.unsatisfied","0.17",10
+41,4,"X..Rather.unsatisfied","0.17",10
+41,5,"X..Rather.unsatisfied","0.16",10
+41,1,"Not.at.all.satisfied","73",11
+41,2,"Not.at.all.satisfied","35",11
+41,3,"Not.at.all.satisfied","50",11
+41,4,"Not.at.all.satisfied","35",11
+41,5,"Not.at.all.satisfied","50",11
+41,1,"X..Not.at.all.satisfied","0.15",12
+41,2,"X..Not.at.all.satisfied","0.07",12
+41,3,"X..Not.at.all.satisfied","0.1",12
+41,4,"X..Not.at.all.satisfied","0.07",12
+41,5,"X..Not.at.all.satisfied","0.1",12
+41,1,"Don.t.know","23",13
+41,2,"Don.t.know","22",13
+41,3,"Don.t.know","29",13
+41,4,"Don.t.know","23",13
+41,5,"Don.t.know","51",13
+41,1,"X..Don.t.know","0.04",14
+41,2,"X..Don.t.know","0.04",14
+41,3,"X..Don.t.know","0.06",14
+41,4,"X..Don.t.know","0.05",14
+41,5,"X..Don.t.know","0.1",14
+41,1,"Total..Satisfied.","300",15
+41,2,"Total..Satisfied.","365",15
+41,3,"Total..Satisfied.","335",15
+41,4,"Total..Satisfied.","357",15
+41,5,"Total..Satisfied.","324",15
+41,1,"X..Total..Satisfied.","0.6",16
+41,2,"X..Total..Satisfied.","0.72",16
+41,3,"X..Total..Satisfied.","0.67",16
+41,4,"X..Total..Satisfied.","0.71",16
+41,5,"X..Total..Satisfied.","0.64",16
+41,1,"Total..Not.satisfied.","177",17
+41,2,"Total..Not.satisfied.","118",17
+41,3,"Total..Not.satisfied.","136",17
+41,4,"Total..Not.satisfied.","121",17
+41,5,"Total..Not.satisfied.","128",17
+41,1,"X..Total..Not.satisfied.","0.36",18
+41,2,"X..Total..Not.satisfied.","0.24",18
+41,3,"X..Total..Not.satisfied.","0.27",18
+41,4,"X..Total..Not.satisfied.","0.24",18
+41,5,"X..Total..Not.satisfied.","0.26",18
+42,1,"Date","16892",1
+42,2,"Date","16893",1
+42,3,"Date","16894",1
+42,4,"Date","16895",1
+42,5,"Date","16896",1
+42,1,"Clinton","0.3778",2
+42,2,"Clinton","0.3776",2
+42,3,"Clinton","0.3765",2
+42,4,"Clinton","0.3757",2
+42,5,"Clinton","0.3746",2
+42,1,"Trump","0.5282",3
+42,2,"Trump","0.5283",3
+42,3,"Trump","0.5295",3
+42,4,"Trump","0.5303",3
+42,5,"Trump","0.5314",3
+42,1,"Other","0.0095",4
+42,2,"Other","0.0095",4
+42,3,"Other","0.0095",4
+42,4,"Other","0.0095",4
+42,5,"Other","0.0095",4
+42,1,"Undecided","0.0846",5
+42,2,"Undecided","0.0846",5
+42,3,"Undecided","0.0845",5
+42,4,"Undecided","0.0845",5
+42,5,"Undecided","0.0845",5
+42,1,"State","Alabama",6
+42,2,"State","Alabama",6
+42,3,"State","Alabama",6
+42,4,"State","Alabama",6
+42,5,"State","Alabama",6
+43,1,"Area","United States",1
+43,2,"Area","Rest of World",1
+43,1,"Debt","19500000000000",2
+43,2,"Debt","39000000000000",2
+44,1,"Data.Zone","S01000001",1
+44,2,"Data.Zone","S01000003",1
+44,3,"Data.Zone","S01000004",1
+44,4,"Data.Zone","S01000005",1
+44,5,"Data.Zone","S01000006",1
+44,1,"Local.Authority.Code","100",2
+44,2,"Local.Authority.Code","100",2
+44,3,"Local.Authority.Code","100",2
+44,4,"Local.Authority.Code","100",2
+44,5,"Local.Authority.Code","100",2
+44,1,"Local.Authority.Name","Aberdeen City",3
+44,2,"Local.Authority.Name","Aberdeen City",3
+44,3,"Local.Authority.Name","Aberdeen City",3
+44,4,"Local.Authority.Name","Aberdeen City",3
+44,5,"Local.Authority.Name","Aberdeen City",3
+44,1,"Intermediate.Geography.name","Aberdeen City - Culter",4
+44,2,"Intermediate.Geography.name","Aberdeen City - Cove South",4
+44,3,"Intermediate.Geography.name","Aberdeen City - Cove South",4
+44,4,"Intermediate.Geography.name","Aberdeen City - Culter",4
+44,5,"Intermediate.Geography.name","Aberdeen City - Culter",4
+44,1,"Nearest.settlement","Peterculter",5
+44,2,"Nearest.settlement","Aberdeen",5
+44,3,"Nearest.settlement","Aberdeen",5
+44,4,"Nearest.settlement","Peterculter",5
+44,5,"Nearest.settlement","Peterculter",5
+44,1,"Total.Population..SAPE.2010.","914",6
+44,2,"Total.Population..SAPE.2010.","795",6
+44,3,"Total.Population..SAPE.2010.","621",6
+44,4,"Total.Population..SAPE.2010.","605",6
+44,5,"Total.Population..SAPE.2010.","643",6
+44,1,"Best.fit.Working.Age.Population....men.16.64..women.16.60.SAPE.2010.","612",7
+44,2,"Best.fit.Working.Age.Population....men.16.64..women.16.60.SAPE.2010.","602",7
+44,3,"Best.fit.Working.Age.Population....men.16.64..women.16.60.SAPE.2010.","453",7
+44,4,"Best.fit.Working.Age.Population....men.16.64..women.16.60.SAPE.2010.","432",7
+44,5,"Best.fit.Working.Age.Population....men.16.64..women.16.60.SAPE.2010.","347",7
+44,1,"Overall.SIMD.2012.Score","10.0436554548751",8
+44,2,"Overall.SIMD.2012.Score","3.73058599518954",8
+44,3,"Overall.SIMD.2012.Score","4.40442154511145",8
+44,4,"Overall.SIMD.2012.Score","5.21835822717013",8
+44,5,"Overall.SIMD.2012.Score","9.63934116339464",8
+44,1,"Overall.SIMD.2012.Rank","4726",9
+44,2,"Overall.SIMD.2012.Rank","6238",9
+44,3,"Overall.SIMD.2012.Rank","6068",9
+44,4,"Overall.SIMD.2012.Rank","5883",9
+44,5,"Overall.SIMD.2012.Rank","4812",9
+44,1,"Income.domain.2012.rate....","0.08",10
+44,2,"Income.domain.2012.rate....","0.02",10
+44,3,"Income.domain.2012.rate....","0",10
+44,4,"Income.domain.2012.rate....","0.05",10
+44,5,"Income.domain.2012.rate....","0.09",10
+44,1,"Number.of.Income.Deprived.People.2012","75",11
+44,2,"Number.of.Income.Deprived.People.2012","15",11
+44,3,"Number.of.Income.Deprived.People.2012","5",11
+44,4,"Number.of.Income.Deprived.People.2012","30",11
+44,5,"Number.of.Income.Deprived.People.2012","55",11
+44,1,"Income.domain.2012.rank","4102",12
+44,2,"Income.domain.2012.rank","6284",12
+44,3,"Income.domain.2012.rank","6494",12
+44,4,"Income.domain.2012.rank","5308",12
+44,5,"Income.domain.2012.rank","4018",12
+44,1,"Employment.domain.2012.rate....","0.07",13
+44,2,"Employment.domain.2012.rate....","0.02",13
+44,3,"Employment.domain.2012.rate....","0.02",13
+44,4,"Employment.domain.2012.rate....","0.04",13
+44,5,"Employment.domain.2012.rate....","0.08",13
+44,1,"Number.of.Employment.Deprived.People.2012.","45",14
+44,2,"Number.of.Employment.Deprived.People.2012.","10",14
+44,3,"Number.of.Employment.Deprived.People.2012.","10",14
+44,4,"Number.of.Employment.Deprived.People.2012.","15",14
+44,5,"Number.of.Employment.Deprived.People.2012.","30",14
+44,1,"Employment.domain.2012.rank","4518",15
+44,2,"Employment.domain.2012.rank","6340",15
+44,3,"Employment.domain.2012.rank","6403",15
+44,4,"Employment.domain.2012.rank","5918",15
+44,5,"Employment.domain.2012.rank","4030",15
+44,1,"Health.domain.2012.score","-0.101463321393871",16
+44,2,"Health.domain.2012.score","-0.778487573494454",16
+44,3,"Health.domain.2012.score","-1.17087763424638",16
+44,4,"Health.domain.2012.score","-0.588107131364608",16
+44,5,"Health.domain.2012.score","-0.385356376495169",16
+44,1,"Health.domain.2012.rank","3490",17
+44,2,"Health.domain.2012.rank","5267",17
+44,3,"Health.domain.2012.rank","5942",17
+44,4,"Health.domain.2012.rank","4812",17
+44,5,"Health.domain.2012.rank","4280",17
+44,1,"Education..Skills.and.Training.domain.2012.score","-0.60178523515391",18
+44,2,"Education..Skills.and.Training.domain.2012.score","-0.765318313228852",18
+44,3,"Education..Skills.and.Training.domain.2012.score","-0.785913619608138",18
+44,4,"Education..Skills.and.Training.domain.2012.score","-0.931596790121216",18
+44,5,"Education..Skills.and.Training.domain.2012.score","-0.386938181762338",18
+44,1,"Education..Skills.and.Training.domain.2012.rank","4795",19
+44,2,"Education..Skills.and.Training.domain.2012.rank","5211",19
+44,3,"Education..Skills.and.Training.domain.2012.rank","5255",19
+44,4,"Education..Skills.and.Training.domain.2012.rank","5558",19
+44,5,"Education..Skills.and.Training.domain.2012.rank","4239",19
+44,1,"Housing.domain.score.2004..2006..2009...2012","13.4751773049645",20
+44,2,"Housing.domain.score.2004..2006..2009...2012","10.381861575179",20
+44,3,"Housing.domain.score.2004..2006..2009...2012","5.77223088923557",20
+44,4,"Housing.domain.score.2004..2006..2009...2012","8.89894419306184",20
+44,5,"Housing.domain.score.2004..2006..2009...2012","13.4907251264755",20
+44,1,"Housing.domain.rank.2004..2006..2009...2012","3929",21
+44,2,"Housing.domain.rank.2004..2006..2009...2012","4784",21
+44,3,"Housing.domain.rank.2004..2006..2009...2012","5755",21
+44,4,"Housing.domain.rank.2004..2006..2009...2012","5149",21
+44,5,"Housing.domain.rank.2004..2006..2009...2012","3924",21
+44,1,"Geographic.Access.domain.2012.score","14.9472822887005",22
+44,2,"Geographic.Access.domain.2012.score","17.3920773168763",22
+44,3,"Geographic.Access.domain.2012.score","32.1656712123462",22
+44,4,"Geographic.Access.domain.2012.score","14.8634938832441",22
+44,5,"Geographic.Access.domain.2012.score","4.05429615884225",22
+44,1,"Geographic.Access.domain.2012.rank","3420",23
+44,2,"Geographic.Access.domain.2012.rank","3036",23
+44,3,"Geographic.Access.domain.2012.rank","1462",23
+44,4,"Geographic.Access.domain.2012.rank","3431",23
+44,5,"Geographic.Access.domain.2012.rank","5577",23
+44,1,"SIMD.Crime.2012.score","144",24
+44,2,"SIMD.Crime.2012.score","128",24
+44,3,"SIMD.Crime.2012.score","122",24
+44,4,"SIMD.Crime.2012.score","185",24
+44,5,"SIMD.Crime.2012.score","140",24
+44,1,"SIMD.Crime.2012.rank","4839",25
+44,2,"SIMD.Crime.2012.rank","5066",25
+44,3,"SIMD.Crime.2012.rank","5133",25
+44,4,"SIMD.Crime.2012.rank","4331",25
+44,5,"SIMD.Crime.2012.rank","4886",25
+45,1,"Restaurant.Name","6M Grocery",1
+45,2,"Restaurant.Name","6M Grocery",1
+45,3,"Restaurant.Name","6M Grocery",1
+45,4,"Restaurant.Name","6M Grocery",1
+45,5,"Restaurant.Name","6M Grocery",1
+45,1,"Inspection.Date","16087",2
+45,2,"Inspection.Date","16552",2
+45,3,"Inspection.Date","16836",2
+45,4,"Inspection.Date","16276",2
+45,5,"Inspection.Date","16729",2
+45,1,"Score","90",3
+45,2,"Score","93",3
+45,3,"Score","88",3
+45,4,"Score","100",3
+45,5,"Score","87",3
+45,1,"Address","805 W FM 1626 RD, AUSTIN, TX 78652",4
+45,2,"Address","805 W FM 1626 RD, AUSTIN, TX 78652",4
+45,3,"Address","805 W FM 1626 RD, AUSTIN, TX 78652",4
+45,4,"Address","805 W FM 1626 RD, AUSTIN, TX 78652",4
+45,5,"Address","805 W FM 1626 RD, AUSTIN, TX 78652",4
+45,1,"Zip.Code","78652",5
+45,2,"Zip.Code","78652",5
+45,3,"Zip.Code","78652",5
+45,4,"Zip.Code","78652",5
+45,5,"Zip.Code","78652",5
+45,1,"Latitude","30.138053",6
+45,2,"Latitude","30.138053",6
+45,3,"Latitude","30.138053",6
+45,4,"Latitude","30.138053",6
+45,5,"Latitude","30.138053",6
+45,1,"Longitude","-97.83102",7
+45,2,"Longitude","-97.83102",7
+45,3,"Longitude","-97.83102",7
+45,4,"Longitude","-97.83102",7
+45,5,"Longitude","-97.83102",7
+45,1,"Facility.ID","2803436",8
+45,2,"Facility.ID","2803436",8
+45,3,"Facility.ID","2803436",8
+45,4,"Facility.ID","2803436",8
+45,5,"Facility.ID","2803436",8
+45,1,"Process.Description","Routine Inspection",9
+45,2,"Process.Description","Routine Inspection",9
+45,3,"Process.Description","Routine Inspection",9
+45,4,"Process.Description","Routine Inspection",9
+45,5,"Process.Description","Routine Inspection",9
+46,1,"Artist","Al Green",1
+46,2,"Artist","Al Green",1
+46,3,"Artist","Al Green",1
+46,4,"Artist","Al Green",1
+46,5,"Artist","Al Green",1
+46,1,"Song.Rank","60",2
+46,2,"Song.Rank","60",2
+46,3,"Song.Rank","60",2
+46,4,"Song.Rank","60",2
+46,5,"Song.Rank","60",2
+46,1,"Song.Title","Let's Stay Together",3
+46,2,"Song.Title","Let's Stay Together",3
+46,3,"Song.Title","Let's Stay Together",3
+46,4,"Song.Title","Let's Stay Together",3
+46,5,"Song.Title","Let's Stay Together",3
+46,1,"Word","alright",4
+46,2,"Word","alright",4
+46,3,"Word","around",4
+46,4,"Word","around",4
+46,5,"Word","bad",4
+46,1,"WordCount","40",5
+46,2,"WordCount","83",5
+46,3,"WordCount","109",5
+46,4,"WordCount","129",5
+46,5,"WordCount","79",5
+47,1,"Cost..Total..","0",1
+47,2,"Cost..Total..","0",1
+47,3,"Cost..Total..","0",1
+47,4,"Cost..Total..","0",1
+47,5,"Cost..Total..","0",1
+47,1,"Effect..Amount.of.damage","None",2
+47,2,"Effect..Amount.of.damage","None",2
+47,3,"Effect..Amount.of.damage","None",2
+47,4,"Effect..Amount.of.damage","None",2
+47,5,"Effect..Amount.of.damage","None",2
+47,1,"Feet.above.ground","100",3
+47,2,"Feet.above.ground","0",3
+47,3,"Feet.above.ground","0",3
+47,4,"Feet.above.ground","0",3
+47,5,"Feet.above.ground","0",3
+47,1,"FlightDate","39424",4
+47,2,"FlightDate","13/08/2007 00:00",4
+47,3,"FlightDate","13/08/2007 00:00",4
+47,4,"FlightDate","13/08/2007 00:00",4
+47,5,"FlightDate","13/08/2007 00:00",4
+47,1,"Record.ID","247829",5
+47,2,"Record.ID","250820",5
+47,3,"Record.ID","246338",5
+47,4,"Record.ID","247440",5
+47,5,"Record.ID","250960",5
+47,1,"Number.of.Strikes","1",6
+47,2,"Number.of.Strikes","1",6
+47,3,"Number.of.Strikes","1",6
+47,4,"Number.of.Strikes","1",6
+47,5,"Number.of.Strikes","1",6
+47,1,"Country","USA",7
+47,2,"Country","USA",7
+47,3,"Country","USA",7
+47,4,"Country","USA",7
+47,5,"Country","USA",7
+47,1,"Origin.State","Kentucky",8
+47,2,"Origin.State","Oklahoma",8
+47,3,"Origin.State","Michigan",8
+47,4,"Origin.State","Illinois",8
+47,5,"Origin.State","Ohio",8
+47,1,"When..Phase.of.flight","Approach",9
+47,2,"When..Phase.of.flight","Landing Roll",9
+47,3,"When..Phase.of.flight","Take-off run",9
+47,4,"When..Phase.of.flight","Take-off run",9
+47,5,"When..Phase.of.flight","Take-off run",9
+47,1,"Remarks","NO DMG. NOTAM WARNING.",10
+47,2,"Remarks","NO DMG INFO. NO REMAINS FOUND ON RWY. FIRST 2500' OF RWY 17R.",10
+47,3,"Remarks","ID BY SMITHSONIAN.  HIT MIXED FLOCK OF BIRDS ON T/O ROLL. 14 CARCASSES WERE RECOVERED FROM RWY. PILOT INFORMED TWR OF STRIKE BUT SAID NO ADVERSE EFFECT TO A/C. FLT CONTD.",10
+47,4,"Remarks","ATIS WARNING",10
+47,5,"Remarks","MOURNING DOVE  REPORTED AT CMH FOR THIS STRIKE BY ARPT OPS. REMAINS OF THAT BIRD WERE REMOVED BY A RED-TAILED HAWK. 2ND STRIKE WHICH WAS ORIGINALLY THOUGHT TO HAVE OCCURRED AT CMH WAS LIKELY A WESTERN STRIKE DUE TO SPECIES IDENTIFIED BY SMITHSONIAN.",10
+47,1,"Wildlife..Species","Unknown bird - small",11
+47,2,"Wildlife..Species","Sparrows",11
+47,3,"Wildlife..Species","European starling",11
+47,4,"Wildlife..Species","Sparrows",11
+47,5,"Wildlife..Species","Mourning dove",11
+47,1,"Origin.State.Code","KY",12
+47,2,"Origin.State.Code","OK",12
+47,3,"Origin.State.Code","MI",12
+47,4,"Origin.State.Code","IL",12
+47,5,"Origin.State.Code","OH",12
+47,1,"When..Time.of.day","Dusk",13
+47,2,"When..Time.of.day","Day",13
+47,3,"When..Time.of.day","Day",13
+47,4,"When..Time.of.day","Day",13
+47,5,"When..Time.of.day","Day",13
+48,1,"Year",1917,1
+48,2,"Year",1918,1
+48,3,"Year",1919,1
+48,4,"Year",1920,1
+48,5,"Year",1921,1
+48,1,"Bottom.90.",0.204876358931306,2
+48,2,"Bottom.90.",0.222356069161792,2
+48,3,"Bottom.90.",0.20634129843219,2
+48,4,"Bottom.90.",0.227405954698081,2
+48,5,"Bottom.90.",0.225899478949647,2
+48,1,"Top.10.",0.795123641068694,3
+48,2,"Top.10.",0.777643930838208,3
+48,3,"Top.10.",0.79365870156781,3
+48,4,"Top.10.",0.772594045301919,3
+48,5,"Top.10.",0.774100521050353,3
+48,1,"Top.5.",0.673100371870463,4
+48,2,"Top.5.",0.646856220264751,4
+48,3,"Top.5.",0.672270933300613,4
+48,4,"Top.5.",0.627439428605651,4
+48,5,"Top.5.",0.62983903109177,4
+48,1,"Top.1.",0.410817423975098,5
+48,2,"Top.1.",0.373897113250468,5
+48,3,"Top.1.",0.399732353525344,5
+48,4,"Top.1.",0.355994224270234,5
+48,5,"Top.1.",0.359489150459351,5
+48,1,"Top.0.5.",0.34837108776891,6
+48,2,"Top.0.5.",0.301797098678412,6
+48,3,"Top.0.5.",0.323707870891332,6
+48,4,"Top.0.5.",0.28279381849709,6
+48,5,"Top.0.5.",0.286252627825166,6
+48,1,"Top.0.1.",0.220017007555753,7
+48,2,"Top.0.1.",0.176360898922465,7
+48,3,"Top.0.1.",0.184814385044375,7
+48,4,"Top.0.1.",0.149546239120481,7
+48,5,"Top.0.1.",0.1507951999603,7
+48,1,"Top.0.1..with.offshore.assets",0.22022674209084,8
+48,2,"Top.0.1..with.offshore.assets",0.176639993431474,8
+48,3,"Top.0.1..with.offshore.assets",0.185089629754869,8
+48,4,"Top.0.1..with.offshore.assets",0.14988373098513,8
+48,5,"Top.0.1..with.offshore.assets",0.151140860837955,8
+48,1,"Top.0.01.",0.0943238369539054,9
+48,2,"Top.0.01.",0.0703506021027501,9
+48,3,"Top.0.01.",0.0694127560562306,9
+48,4,"Top.0.01.",0.0506332033733533,9
+48,5,"Top.0.01.",0.0490497894956863,9
+48,1,"Top.10..to.1.",0.384306217093596,10
+48,2,"Top.10..to.1.",0.40374681758774,10
+48,3,"Top.10..to.1.",0.393926348042466,10
+48,4,"Top.10..to.1.",0.416599821031685,10
+48,5,"Top.10..to.1.",0.414611370591001,10
+48,1,"Top.10..to.5.",0.122023269198232,11
+48,2,"Top.10..to.5.",0.130787710573457,11
+48,3,"Top.10..to.5.",0.121387768267197,11
+48,4,"Top.10..to.5.",0.145154616696268,11
+48,5,"Top.10..to.5.",0.144261489958583,11
+48,1,"Top.5..to.1.",0.262282947895364,12
+48,2,"Top.5..to.1.",0.272959107014283,12
+48,3,"Top.5..to.1.",0.27253857977527,12
+48,4,"Top.5..to.1.",0.271445204335418,12
+48,5,"Top.5..to.1.",0.270349880632419,12
+48,1,"Top.1..to.0.1.",0.190800416419345,13
+48,2,"Top.1..to.0.1.",0.197536214328003,13
+48,3,"Top.1..to.0.1.",0.214917968480969,13
+48,4,"Top.1..to.0.1.",0.206447985149752,13
+48,5,"Top.1..to.0.1.",0.208693950499051,13
+48,1,"Top.1..to.0.5.",0.0624463362061884,14
+48,2,"Top.1..to.0.5.",0.0721000145720566,14
+48,3,"Top.1..to.0.5.",0.0760244826340117,14
+48,4,"Top.1..to.0.5.",0.0732004057731433,14
+48,5,"Top.1..to.0.5.",0.0732365226341856,14
+48,1,"Top.0.5..to.0.1.",0.128354080213157,15
+48,2,"Top.0.5..to.0.1.",0.125436199755947,15
+48,3,"Top.0.5..to.0.1.",0.138893485846957,15
+48,4,"Top.0.5..to.0.1.",0.133247579376609,15
+48,5,"Top.0.5..to.0.1.",0.135457427864866,15
+48,1,"Top.0.1..to.0.01.",0.125693170601848,16
+48,2,"Top.0.1..to.0.01.",0.106010296819715,16
+48,3,"Top.0.1..to.0.01.",0.115401628988144,16
+48,4,"Top.0.1..to.0.01.",0.0989130357471281,16
+48,5,"Top.0.1..to.0.01.",0.101745410464614,16
+49,1,"region_orig","North America",1
+49,2,"region_orig","North America",1
+49,3,"region_orig","North America",1
+49,4,"region_orig","North America",1
+49,1,"region_orig_id","1",2
+49,2,"region_orig_id","1",2
+49,3,"region_orig_id","1",2
+49,4,"region_orig_id","1",2
+49,1,"region_dest","North America",3
+49,2,"region_dest","North America",3
+49,3,"region_dest","North America",3
+49,4,"region_dest","North America",3
+49,1,"region_dest_id","1",4
+49,2,"region_dest_id","1",4
+49,3,"region_dest_id","1",4
+49,4,"region_dest_id","1",4
+49,1,"country_orig","Canada",5
+49,2,"country_orig","Canada",5
+49,3,"country_orig","United States",5
+49,4,"country_orig","United States",5
+49,1,"country_orig_id","CAN",6
+49,2,"country_orig_id","CAN",6
+49,3,"country_orig_id","USA",6
+49,4,"country_orig_id","USA",6
+49,1,"country_dest","Canada",7
+49,2,"country_dest","United States",7
+49,3,"country_dest","Canada",7
+49,4,"country_dest","United States",7
+49,1,"country_dest_id","CAN",8
+49,2,"country_dest_id","USA",8
+49,3,"country_dest_id","CAN",8
+49,4,"country_dest_id","USA",8
+49,1,"regionflow_1990","57617",9
+49,2,"regionflow_1990","57617",9
+49,3,"regionflow_1990","57617",9
+49,4,"regionflow_1990","57617",9
+49,1,"regionflow_1995","191071",10
+49,2,"regionflow_1995","191071",10
+49,3,"regionflow_1995","191071",10
+49,4,"regionflow_1995","191071",10
+49,1,"regionflow_2000","84668",11
+49,2,"regionflow_2000","84668",11
+49,3,"regionflow_2000","84668",11
+49,4,"regionflow_2000","84668",11
+49,1,"regionflow_2005","96102",12
+49,2,"regionflow_2005","96102",12
+49,3,"regionflow_2005","96102",12
+49,4,"regionflow_2005","96102",12
+49,1,"countryflow_1990","0",13
+49,2,"countryflow_1990","1509",13
+49,3,"countryflow_1990","56108",13
+49,4,"countryflow_1990","0",13
+49,1,"countryflow_1995","0",14
+49,2,"countryflow_1995","190436",14
+49,3,"countryflow_1995","635",14
+49,4,"countryflow_1995","0",14
+49,1,"countryflow_2000","0",15
+49,2,"countryflow_2000","238",15
+49,3,"countryflow_2000","84430",15
+49,4,"countryflow_2000","0",15
+49,1,"countryflow_2005","0",16
+49,2,"countryflow_2005","28",16
+49,3,"countryflow_2005","96074",16
+49,4,"countryflow_2005","0",16
+49,1,"metadata","Estimates of bilateral migration flows at region and country levels for 5-year periods (mid-year to mid-year): 1990-1995, 1995-2000, 2000-2005, 2005-2010.  ",17
+49,2,"metadata","The estimates capture the number of people who change their country of residence over 5-year periods.",17
+49,3,"metadata","This is Version 19, released in March 2014.",17
+49,4,"metadata","If you use the data, please cite us: Guy J. Abel and Nikola Sander (2014). Quantifying Global International Migration Flows. Science, 343 (6178). ",17
+50,1,"State","Alabama",1
+50,2,"State","Alaska",1
+50,3,"State","Arizona",1
+50,4,"State","Arkansas",1
+50,5,"State","California",1
+50,1,"Fatalities.Rate.per.100.Million.Vehicle.Miles.Traveled","15",2
+50,2,"Fatalities.Rate.per.100.Million.Vehicle.Miles.Traveled","26",2
+50,3,"Fatalities.Rate.per.100.Million.Vehicle.Miles.Traveled","10",2
+50,4,"Fatalities.Rate.per.100.Million.Vehicle.Miles.Traveled","8",2
+50,5,"Fatalities.Rate.per.100.Million.Vehicle.Miles.Traveled","40",2
+50,1,"Failure.to.Obey..Traffic.Signals..Seat.Belts....Invalid.Driver.License.","14",3
+50,2,"Failure.to.Obey..Traffic.Signals..Seat.Belts....Invalid.Driver.License.","44",3
+50,3,"Failure.to.Obey..Traffic.Signals..Seat.Belts....Invalid.Driver.License.","7",3
+50,4,"Failure.to.Obey..Traffic.Signals..Seat.Belts....Invalid.Driver.License.","8",3
+50,5,"Failure.to.Obey..Traffic.Signals..Seat.Belts....Invalid.Driver.License.","15",3
+50,1,"Drunk.Driving","18",4
+50,2,"Drunk.Driving","46",4
+50,3,"Drunk.Driving","47",4
+50,4,"Drunk.Driving","31",4
+50,5,"Drunk.Driving","33",4
+50,1,"Speeding","29",5
+50,2,"Speeding","5",5
+50,3,"Speeding","17",5
+50,4,"Speeding","50",5
+50,5,"Speeding","23",5
+50,1,"Careless.Driving","26",6
+50,2,"Careless.Driving","42",6
+50,3,"Careless.Driving","3",6
+50,4,"Careless.Driving","19",6
+50,5,"Careless.Driving","9",6
+50,1,"Total.Score","102",7
+50,2,"Total.Score","163",7
+50,3,"Total.Score","84",7
+50,4,"Total.Score","116",7
+50,5,"Total.Score","120",7
+50,1,"Rank","12",8
+50,2,"Rank","40",8
+50,3,"Rank","6",8
+50,4,"Rank","20",8
+50,5,"Rank","22",8
+51,1,"Year","CY 2015",1
+51,2,"Year","CY 2015",1
+51,3,"Year","CY 2015",1
+51,4,"Year","CY 2015",1
+51,5,"Year","CY 2015",1
+51,1,"Month","Apr",2
+51,2,"Month","Aug",2
+51,3,"Month","Dec",2
+51,4,"Month","Feb",2
+51,5,"Month","Jan",2
+51,1,"Bus.On.Time.Performance","0.768",3
+51,2,"Bus.On.Time.Performance","0.804",3
+51,3,"Bus.On.Time.Performance","0.784",3
+51,4,"Bus.On.Time.Performance","0.789",3
+51,5,"Bus.On.Time.Performance","0.799",3
+51,1,"Bus.On.Time.Performance.Target","0.79",4
+51,2,"Bus.On.Time.Performance.Target","0.79",4
+51,3,"Bus.On.Time.Performance.Target","0.79",4
+51,4,"Bus.On.Time.Performance.Target","0.79",4
+51,5,"Bus.On.Time.Performance.Target","0.79",4
+51,1,"Bus.Fleet.Reliability","7016",5
+51,2,"Bus.Fleet.Reliability","7327",5
+51,3,"Bus.Fleet.Reliability","7893",5
+51,4,"Bus.Fleet.Reliability","7434",5
+51,5,"Bus.Fleet.Reliability","6259",5
+51,1,"Bus.Fleet.Reliability.Target","8000",6
+51,2,"Bus.Fleet.Reliability.Target","8000",6
+51,3,"Bus.Fleet.Reliability.Target","8000",6
+51,4,"Bus.Fleet.Reliability.Target","8000",6
+51,5,"Bus.Fleet.Reliability.Target","8000",6
+51,1,"Rail.Fleet.Reliability","60242",7
+51,2,"Rail.Fleet.Reliability","59196",7
+51,3,"Rail.Fleet.Reliability","51599",7
+51,4,"Rail.Fleet.Reliability","41558",7
+51,5,"Rail.Fleet.Reliability","53784",7
+51,1,"Rail.Fleet.Reliability.Target","65000",8
+51,2,"Rail.Fleet.Reliability.Target","65000",8
+51,3,"Rail.Fleet.Reliability.Target","65000",8
+51,4,"Rail.Fleet.Reliability.Target","65000",8
+51,5,"Rail.Fleet.Reliability.Target","65000",8
+51,1,"Rail.On.Time.Performance","0.899",9
+51,2,"Rail.On.Time.Performance","0.828",9
+51,3,"Rail.On.Time.Performance","0.823",9
+51,4,"Rail.On.Time.Performance","0.839",9
+51,5,"Rail.On.Time.Performance","0.873",9
+51,1,"Rail.On.Time.Performance.Target","0.91",10
+51,2,"Rail.On.Time.Performance.Target","0.91",10
+51,3,"Rail.On.Time.Performance.Target","0.91",10
+51,4,"Rail.On.Time.Performance.Target","0.91",10
+51,5,"Rail.On.Time.Performance.Target","0.91",10
+51,1,"Escalator.Reliability","0.935",11
+51,2,"Escalator.Reliability","0.933",11
+51,3,"Escalator.Reliability","0.933",11
+51,4,"Escalator.Reliability","0.939",11
+51,5,"Escalator.Reliability","0.931",11
+51,1,"Escalator.Reliability.Target","0.93",12
+51,2,"Escalator.Reliability.Target","0.93",12
+51,3,"Escalator.Reliability.Target","0.93",12
+51,4,"Escalator.Reliability.Target","0.93",12
+51,5,"Escalator.Reliability.Target","0.93",12
+51,1,"Elevator.Reliability","0.971",13
+51,2,"Elevator.Reliability","0.974",13
+51,3,"Elevator.Reliability","0.972",13
+51,4,"Elevator.Reliability","0.974",13
+51,5,"Elevator.Reliability","0.968",13
+51,1,"Elevator.Reliability.Target","0.97",14
+51,2,"Elevator.Reliability.Target","0.97",14
+51,3,"Elevator.Reliability.Target","0.97",14
+51,4,"Elevator.Reliability.Target","0.97",14
+51,5,"Elevator.Reliability.Target","0.97",14
+51,1,"Customer.Injury.Rate..per.1M.passengers.","2.5",15
+51,2,"Customer.Injury.Rate..per.1M.passengers.","2.5",15
+51,3,"Customer.Injury.Rate..per.1M.passengers.","1.4",15
+51,4,"Customer.Injury.Rate..per.1M.passengers.","1.7",15
+51,5,"Customer.Injury.Rate..per.1M.passengers.","5.2",15
+51,1,"Customer.Injury.Rate.Target","1.75",16
+51,2,"Customer.Injury.Rate.Target","1.75",16
+51,3,"Customer.Injury.Rate.Target","1.75",16
+51,4,"Customer.Injury.Rate.Target","1.75",16
+51,5,"Customer.Injury.Rate.Target","1.75",16
+51,1,"Employee.Injury.Rate..per.200K.hours.","5.6",17
+51,2,"Employee.Injury.Rate..per.200K.hours.","6.1",17
+51,3,"Employee.Injury.Rate..per.200K.hours.","3.7",17
+51,4,"Employee.Injury.Rate..per.200K.hours.","6.4",17
+51,5,"Employee.Injury.Rate..per.200K.hours.","8.7",17
+51,1,"Employee.Injury.Rate.Target","4.5",18
+51,2,"Employee.Injury.Rate.Target","4.5",18
+51,3,"Employee.Injury.Rate.Target","4.5",18
+51,4,"Employee.Injury.Rate.Target","4.5",18
+51,5,"Employee.Injury.Rate.Target","4.5",18
+51,1,"Crimes..per.1M.passengers.","3.8",19
+51,2,"Crimes..per.1M.passengers.","5.5",19
+51,3,"Crimes..per.1M.passengers.","4.7",19
+51,4,"Crimes..per.1M.passengers.","3.6",19
+51,5,"Crimes..per.1M.passengers.","4.3",19
+51,1,"Crimes.Target","5",20
+51,2,"Crimes.Target","5",20
+51,3,"Crimes.Target","5",20
+51,4,"Crimes.Target","5",20
+51,5,"Crimes.Target","5",20
+52,1,"Product.Family","Beers & Lagers",1
+52,2,"Product.Family","Blended Whisky",1
+52,3,"Product.Family","Brandy Butter",1
+52,4,"Product.Family","Brussels Sprouts",1
+52,5,"Product.Family","Carrots",1
+52,1,"X2006","6.73",2
+52,2,"X2006","18.26",2
+52,3,"X2006","1.13",2
+52,4,"X2006","3.66",2
+52,5,"X2006","2.79",2
+52,1,"X2007","6.28",3
+52,2,"X2007","18.42",3
+52,3,"X2007","1.58",3
+52,4,"X2007","4.39",3
+52,5,"X2007","2.96",3
+52,1,"X2008","5.82",4
+52,2,"X2008","18.9",4
+52,3,"X2008","1.3",4
+52,4,"X2008","3.92",4
+52,5,"X2008","2.22",4
+52,1,"X2009","6.07",5
+52,2,"X2009","18.68",5
+52,3,"X2009","1.2",5
+52,4,"X2009","3.23",5
+52,5,"X2009","1.99",5
+52,1,"X2010","5.71",6
+52,2,"X2010","19.54",6
+52,3,"X2010","1.21",6
+52,4,"X2010","9.56",6
+52,5,"X2010","2.2",6
+52,1,"X2011","5.38",7
+52,2,"X2011","20.16",7
+52,3,"X2011","1.2",7
+52,4,"X2011","3.68",7
+52,5,"X2011","2.07",7
+52,1,"X2012","4.99",8
+52,2,"X2012","20.09",8
+52,3,"X2012","0.99",8
+52,4,"X2012","4.07",8
+52,5,"X2012","2.16",8
+52,1,"X2013","4.46",9
+52,2,"X2013","20.18",9
+52,3,"X2013","1.08",9
+52,4,"X2013","4.03",9
+52,5,"X2013","1.98",9
+52,1,"X2014","4.49",10
+52,2,"X2014","21.83",10
+52,3,"X2014","1.12",10
+52,4,"X2014","3.8",10
+52,5,"X2014","2.18",10
+52,1,"X2015","6.36",11
+52,2,"X2015","22.2",11
+52,3,"X2015","1.18",11
+52,4,"X2015","3.57",11
+52,5,"X2015","2.09",11
+52,1,"X2016","5.26",12
+52,2,"X2016","24.98",12
+52,3,"X2016","0.94",12
+52,4,"X2016","4.07",12
+52,5,"X2016","2.04",12

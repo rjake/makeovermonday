@@ -1,0 +1,81 @@
+---
+title: "FINAL_resize_images"
+author: "Jake"
+date: "December 29, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("C:/Users/foxtr/Desktop/makeoverMonday/MotherViz")
+
+library(tidyverse)
+#library(imager)
+library(magick)
+options(scipen = 999)
+
+metadata <- 
+  read.csv("metadata_withLinks.csv", stringsAsFactors = F) %>%
+  mutate(Pin.ID = gsub("(^.*/)(.*)(.jpg)$", "\\2", Image.URL)) %>% 
+  arrange(as.numeric(ID))
+         
+a <- subset(metadata$ID, subset = as.numeric(metadata$ID) < 3)
+
+```
+
+```{r download pics}
+whichURLs <- which(metadata$ID %in% a)
+
+for(i in whichURLs){
+  download.file(url = metadata$Image.URL[i],
+                destfile = paste0("images/", metadata$ID[i],".jpg"),
+                mode = "wb")
+  print(i)
+}
+
+```
+
+
+```{r resize pics}
+#https://cran.r-project.org/web/packages/magick/vignettes/intro.html
+
+pics2resize <- list.files("images/",pattern = ".jpg") %>% 
+                gsub(".jpg", "", .)
+
+for(i in 1:length(pics2resize)){
+  getImage <- image_read(paste0("images/", pics2resize[i], ".jpg"))
+  
+  getSize <- image_info(getImage)
+
+  if(
+    getSize[2] >= 1.6 * getSize[3]
+    ) #w > h
+    {
+      resize0 <- image_scale(getImage, "200") 
+      resize1 <- image_border(image = resize0, 
+                              geometry = 
+                                paste0("0x",
+                                       (125 - image_info(resize0)[3])/2)
+                              )
+    } else {
+      resize0 <- image_scale(getImage, "x125") 
+      resize1 <- image_border(image = resize0,
+                              geometry = 
+                                paste0((200 - image_info(resize0)[2])/2,"x0")
+                              )
+    }
+      plot(resize1, asp = 1)
+
+  image_write(image = resize1, 
+              path = paste0("images/", pics2resize[i], ".png"), 
+              format = "png")
+  
+  print(i)
+}
+
+  
+```
+
